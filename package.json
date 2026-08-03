@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "catalog:import": "node scripts/import-reference-catalog.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
