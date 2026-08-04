@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import './App.css'
 import { partsCatalog, partsCatalogById } from './data/catalog/catalog.ts'
+import { DeckPanel } from './deck/DeckPanel.tsx'
 import type { Part, PartSlot } from './domain/catalog/schema.ts'
 import { getArmorPierceBreakdown } from './domain/calculation/armorPierce.ts'
 import { calculateBaseStats } from './domain/calculation/calculateBaseStats.ts'
@@ -26,6 +27,7 @@ import {
   assemblyValidationMessages,
   validateAssembly,
 } from './domain/calculation/validateAssembly.ts'
+import type { SavedUnit } from './domain/deck/schema.ts'
 
 type EditablePartSlot = PartSlot | 'accessory'
 type MobileView = 'assembly' | 'simulation' | 'stats' | 'deck'
@@ -171,6 +173,19 @@ const defaultAccessoryRandomOptions: AccessoryRandomOptions = {
   health: 0,
   damage: 0,
   armor: 0,
+}
+
+const emptyPartIds: AssemblyPartIds = {
+  leg: 0,
+  body: 0,
+  weapon: 0,
+  accessory: 0,
+}
+
+const emptyReinforcement: Record<PartSlot, PartReinforcement> = {
+  leg: { watt: 0, health: 0, damage: 0 },
+  body: { watt: 0, health: 0, damage: 0 },
+  weapon: { watt: 0, health: 0, damage: 0 },
 }
 
 const airLegIds = new Set([6, 7, 12, 16, 22, 23, 30, 33])
@@ -338,7 +353,6 @@ function App() {
     useState<ActiveReinforcement>(null)
   const [catalogPicker, setCatalogPicker] = useState<CatalogPicker | null>(null)
   const [mobileView, setMobileView] = useState<MobileView>('assembly')
-  const [activeDeckSlot, setActiveDeckSlot] = useState(0)
   const [calculateAsFloat, setCalculateAsFloat] = useState(false)
   const [centerMode, setCenterMode] = useState<CenterMode>('preview')
   const [simulation, setSimulation] =
@@ -552,6 +566,30 @@ function App() {
     setCalculateAsFloat(false)
   }
 
+  const loadSavedUnit = (unit: SavedUnit) => {
+    setPartIds(unit.partIds)
+    setReinforcement(unit.reinforcement)
+    setSubcoreIds(unit.subcoreIds)
+    setAccessoryRandomOptions(unit.accessoryRandomOptions)
+    setCalculateAsFloat(false)
+    setActivePart('weapon')
+    setActiveReinforcement(null)
+    setCatalogPicker(null)
+    setMobileView('assembly')
+  }
+
+  const clearAssemblyForEmptyDeckSlot = () => {
+    setPartIds(emptyPartIds)
+    setReinforcement(emptyReinforcement)
+    setSubcoreIds(defaultSubcoreIds)
+    setAccessoryRandomOptions(defaultAccessoryRandomOptions)
+    setCalculateAsFloat(false)
+    setActivePart('weapon')
+    setActiveReinforcement(null)
+    setCatalogPicker(null)
+    setMobileView('assembly')
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -569,7 +607,7 @@ function App() {
           <button className="is-active" type="button">
             계산기
           </button>
-          <button type="button">내 덱</button>
+          <button type="button" onClick={() => document.getElementById('deck-title')?.scrollIntoView({ behavior: 'smooth' })}>내 덱</button>
           <button type="button">데이터</button>
         </nav>
 
@@ -584,6 +622,22 @@ function App() {
       </header>
 
       <main id="main" className="workspace">
+        <DeckPanel
+          className={`mobile-panel ${mobileView === 'deck' ? 'is-mobile-active' : ''}`}
+          currentUnit={{
+            partIds,
+            subcoreIds,
+            reinforcement,
+            accessoryRandomOptions,
+          }}
+          canRegisterUnit={validation.isValid}
+          registrationIssues={validation.issues.map(
+            (issue) => assemblyValidationIssueMessages[issue],
+          )}
+          onLoadUnit={loadSavedUnit}
+          onClearUnit={clearAssemblyForEmptyDeckSlot}
+        />
+
         <section
           className={`panel builder-panel mobile-panel ${mobileView === 'assembly' ? 'is-mobile-active' : ''}`}
           aria-labelledby="builder-title"
@@ -1060,53 +1114,6 @@ function App() {
           )}
         </aside>
 
-        <section
-          className={`panel deck-panel mobile-panel ${mobileView === 'deck' ? 'is-mobile-active' : ''}`}
-          aria-labelledby="deck-title"
-        >
-          <div className="deck-heading">
-            <div>
-              <span className="micro-label">LOCAL DECK</span>
-              <h2 id="deck-title">내 덱 · ALPHA</h2>
-            </div>
-            <span>10 UNIT SLOTS</span>
-          </div>
-          <div className="deck-slots">
-            {Array.from({ length: 10 }, (_, index) => {
-              const filled = index === 0
-              return (
-                <button
-                  className={`${filled ? 'is-filled' : ''} ${activeDeckSlot === index ? 'is-active' : ''}`}
-                  type="button"
-                  key={index}
-                  onClick={() => setActiveDeckSlot(index)}
-                  aria-label={`${index + 1}번 덱 슬롯${filled ? ', 현재 유닛 저장됨' : ', 비어 있음'}`}
-                >
-                  <span className="slot-index">{String(index + 1).padStart(2, '0')}</span>
-                  {filled ? (
-                    <>
-                      <span className="mini-unit" aria-hidden="true">
-                        <i />
-                      </span>
-                      <strong>UNIT-01</strong>
-                      <small>{selectedParts.weapon?.name}</small>
-                    </>
-                  ) : (
-                    <>
-                      <span className="empty-plus" aria-hidden="true">
-                        +
-                      </span>
-                      <small>EMPTY</small>
-                    </>
-                  )}
-                </button>
-              )
-            })}
-          </div>
-          <button className="save-unit-button" type="button">
-            현재 유닛 저장
-          </button>
-        </section>
       </main>
 
       <nav className="mobile-nav" aria-label="모바일 화면 전환">

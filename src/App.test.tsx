@@ -2,11 +2,48 @@
 
 import '@testing-library/jest-dom/vitest'
 
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
 
 import App from './App.tsx'
+import { partsCatalog } from './data/catalog/catalog.ts'
+import {
+  createBackupExport,
+  createUnitExport,
+  serializeDeckExport,
+} from './deck/transfer.ts'
+import { createDeck, type SavedUnit } from './domain/deck/schema.ts'
+
+function createImportUnit(): SavedUnit {
+  const body = partsCatalog.parts.bodies.find((part) => part.id !== 0)!
+  const weapon = partsCatalog.parts.weapons.find(
+    (part) => part.id !== 0 && part.mountType === body.mountType,
+  )!
+  const leg = partsCatalog.parts.legs.find(
+    (part) => part.id !== 0 && part.loadCapacity >= body.weight + weapon.weight,
+  )!
+
+  return {
+    name: '가져오기 테스트',
+    schemaVersion: 1,
+    catalogVersion: partsCatalog.catalogVersion,
+    partIds: { leg: leg.id, body: body.id, weapon: weapon.id, accessory: 0 },
+    subcoreIds: { leg: 0, body: 0, weapon: 0 },
+    reinforcement: {
+      leg: { watt: 0, health: 0, damage: 0 },
+      body: { watt: 0, health: 0, damage: 0 },
+      weapon: { watt: 0, health: 0, damage: 0 },
+    },
+    accessoryRandomOptions: { health: 0, damage: 0, armor: 0 },
+  }
+}
+
+function createJsonFile(name: string, contents: string) {
+  const file = new File([contents], name, { type: 'application/json' })
+  Object.defineProperty(file, 'text', { value: async () => contents })
+  return file
+}
 
 afterEach(cleanup)
 
@@ -193,6 +230,155 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
     expect(floatMode).not.toBeChecked()
     expect(
       screen.queryByRole('button', { name: '다리 부품 변경, 현재 크루저N' }),
+    ).not.toBeInTheDocument()
+  })
+})
+
+describe('T11-T12 덱 저장 및 편집 UI', () => {
+  it('저장 슬롯은 자동으로 불러오고 빈 슬롯은 계산기를 초기화한다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await screen.findByRole('combobox', { name: '덱 선택' })
+    await user.click(screen.getByRole('button', { name: '유닛 등록' }))
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: '1번 덱 슬롯, UNIT-01 저장됨' }),
+      ).toBeVisible()
+    })
+
+    await user.click(screen.getByRole('button', { name: '유닛 복사' }))
+    await user.click(screen.getByRole('button', { name: '2번 덱 슬롯, 비어 있음' }))
+    await user.click(screen.getByRole('button', { name: '유닛 붙여넣기' }))
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: '2번 덱 슬롯, UNIT-01 저장됨' }),
+      ).toBeVisible()
+    })
+
+    await user.click(screen.getByRole('button', { name: /무기 부품 변경/ }))
+    const dialog = screen.getByRole('dialog', { name: '무기 선택' })
+    await user.click(within(dialog).getByRole('button', { name: '부품 없음' }))
+    await user.click(within(dialog).getByRole('button', { name: '부품 없음 사용' }))
+    expect(
+      screen.getByRole('button', { name: '무기 부품 변경, 현재 부품 없음' }),
+    ).toBeVisible()
+
+    await user.click(
+      screen.getByRole('button', { name: '1번 덱 슬롯, UNIT-01 저장됨' }),
+    )
+    expect(
+      screen.queryByRole('button', { name: '무기 부품 변경, 현재 부품 없음' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: '3번 덱 슬롯, 비어 있음' }))
+    expect(
+      screen.getByRole('button', { name: '다리 부품 변경, 현재 부품 없음' }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: '몸통 부품 변경, 현재 부품 없음' }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: '무기 부품 변경, 현재 부품 없음' }),
+    ).toBeVisible()
+
+    const wattStats = document.querySelectorAll<HTMLButtonElement>(
+      '.part-card-stat-watt',
+    )
+    expect(wattStats).toHaveLength(4)
+    await user.click(wattStats[0])
+    expect(screen.getByRole('spinbutton', { name: '와트 강화 수치' })).toHaveValue(0)
+    expect(screen.getByRole('button', { name: '유닛 등록' })).toBeDisabled()
+    expect(screen.getByText(/유닛 등록 불가/)).toBeVisible()
+
+    expect(
+      screen.getByRole('button', { name: '현재 유닛을 JSON으로 내보내기' }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: '현재 덱을 JSON으로 내보내기' }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: '전체 덱을 JSON으로 내보내기' }),
+    ).toBeVisible()
+    expect(
+      screen.getByRole('button', { name: '유닛/덱 JSON 가져오기' }),
+    ).toBeVisible()
+    expect(screen.queryByRole('combobox', { name: '가져오기 방식' })).not.toBeInTheDocument()
+  })
+
+  it('새 덱을 만들고 이름을 변경한다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const deckSelect = await screen.findByRole('combobox', { name: '덱 선택' })
+    const initialCount = within(deckSelect).getAllByRole('option').length
+    await user.click(screen.getByRole('button', { name: '새 덱' }))
+
+    await waitFor(() => {
+      expect(within(deckSelect).getAllByRole('option')).toHaveLength(initialCount + 1)
+    })
+
+    const nameInput = screen.getByRole('textbox', { name: '덱 이름' })
+    await user.clear(nameInput)
+    await user.type(nameInput, 'BRAVO')
+    await user.tab()
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: '내 덱 · BRAVO' })).toBeVisible()
+    })
+  })
+
+  it('JSON을 분석한 뒤 유닛과 덱에 맞는 가져오기 옵션만 표시한다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await screen.findByRole('combobox', { name: '덱 선택' })
+
+    const unit = createImportUnit()
+    const fileInput = screen.getByLabelText('덱 JSON 파일')
+    await user.upload(
+      fileInput,
+      createJsonFile('unit.json', serializeDeckExport(createUnitExport(unit))),
+    )
+
+    let dialog = await screen.findByRole('dialog', { name: '가져오기 방식 선택' })
+    expect(
+      within(dialog).getByRole('button', { name: '선택한 1번 슬롯에 유닛 붙여넣기' }),
+    ).toBeVisible()
+    expect(
+      within(dialog).getByRole('button', { name: '새 덱을 만들어 유닛 가져오기' }),
+    ).toBeVisible()
+    expect(
+      within(dialog).queryByRole('button', { name: '기존 덱과 병합하기' }),
+    ).not.toBeInTheDocument()
+
+    await user.click(within(dialog).getByRole('button', { name: '가져오기 취소' }))
+
+    const importedDeck = createDeck('IMPORT', partsCatalog.catalogVersion, {
+      id: 'import-deck',
+    })
+    importedDeck.slots[0] = unit
+    await user.upload(
+      screen.getByLabelText('덱 JSON 파일'),
+      createJsonFile(
+        'deck.json',
+        serializeDeckExport(createBackupExport([importedDeck])),
+      ),
+    )
+
+    dialog = await screen.findByRole('dialog', { name: '가져오기 방식 선택' })
+    expect(
+      within(dialog).getByRole('button', { name: '기존 덱과 병합하기' }),
+    ).toBeVisible()
+    expect(
+      within(dialog).getByRole('button', {
+        name: '모든 덱을 가져온 내용으로 교체하기',
+      }),
+    ).toBeVisible()
+    expect(
+      within(dialog).queryByRole('button', {
+        name: '선택한 1번 슬롯에 유닛 붙여넣기',
+      }),
     ).not.toBeInTheDocument()
   })
 })
