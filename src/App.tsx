@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import './App.css'
 import { partsCatalog, partsCatalogById } from './data/catalog/catalog.ts'
@@ -22,6 +22,7 @@ import {
 } from './domain/calculation/simulationSchema.ts'
 import { collectAssemblyAbilities } from './domain/calculation/specialAbilities.ts'
 import {
+  assemblyValidationIssueMessages,
   assemblyValidationMessages,
   validateAssembly,
 } from './domain/calculation/validateAssembly.ts'
@@ -49,6 +50,18 @@ type ActiveReinforcement = {
   slot: PartSlot
   key: keyof PartReinforcement
 } | null
+type AccessoryRandomOptions = BaseCalculationInput['accessoryRandomOptions']
+type CatalogPicker =
+  | { kind: 'part'; slot: EditablePartSlot }
+  | { kind: 'subcore'; slot: PartSlot }
+type PartCatalogFilter =
+  | 'all'
+  | 'npart'
+  | 'ground'
+  | 'air'
+  | 'tower'
+  | 'arm'
+  | 'shoulder'
 
 const slotLabels: Record<EditablePartSlot, string> = {
   leg: '다리',
@@ -65,7 +78,6 @@ const slotMarks: Record<EditablePartSlot, string> = {
 }
 
 const mountLabels = {
-  none: '일반형',
   tower: '탑형',
   arm: '팔형',
   shoulder: '어깨형',
@@ -155,6 +167,14 @@ const defaultSubcoreIds: Record<PartSlot, number> = {
   weapon: defaultSubcoreId,
 }
 
+const defaultAccessoryRandomOptions: AccessoryRandomOptions = {
+  health: 0,
+  damage: 0,
+  armor: 0,
+}
+
+const airLegIds = new Set([6, 7, 12, 16, 22, 23, 30, 33])
+
 function formatNumber(value: number) {
   return new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 }).format(value)
 }
@@ -222,13 +242,101 @@ function getPartOptionLabels(part: Part) {
   return labels
 }
 
+function getPartsForSlot(slot: EditablePartSlot): ReadonlyArray<Part> {
+  if (slot === 'leg') return partsCatalog.parts.legs
+  if (slot === 'body') return partsCatalog.parts.bodies
+  if (slot === 'weapon') return partsCatalog.parts.weapons
+  return partsCatalog.parts.accessories
+}
+
+function getPartDisplayName(part: Part | undefined) {
+  if (!part) return '부품 없음'
+  return part.id === 0 ? '부품 없음' : part.name
+}
+
+function filterCatalogParts(
+  items: ReadonlyArray<Part>,
+  query: string,
+  filter: PartCatalogFilter,
+) {
+  const normalizedQuery = query.trim().toLocaleLowerCase('ko-KR')
+
+  return items.filter((part) => {
+    const matchesQuery =
+      normalizedQuery.length === 0 ||
+      getPartDisplayName(part).toLocaleLowerCase('ko-KR').includes(normalizedQuery)
+    const matchesFilter =
+      filter === 'all' ||
+      part.id === 0 ||
+      (filter === 'npart'
+        ? part.isNPart
+        : filter === 'ground' || filter === 'air'
+          ? part.kind === 'leg' && airLegIds.has(part.id) === (filter === 'air')
+          : 'mountType' in part && part.mountType === filter)
+
+    return matchesQuery && matchesFilter
+  })
+}
+
+function getSubcoreOptionLabels(subcoreId: number, slot: PartSlot) {
+  const subcore = partsCatalogById.subcores.get(subcoreId)
+  if (!subcore) return []
+
+  const stats = subcore.modifiersBySlot[slot]
+  const labels: string[] = []
+  const add = (label: string, value: number, suffix = '') => {
+    if (value !== 0) {
+      labels.push(`${label} ${value > 0 ? '+' : ''}${value}${suffix}`)
+    }
+  }
+
+  add('와트', stats.watt)
+  add('와트', stats.wattPercent, '%')
+  add('체력', stats.health)
+  add('체력', stats.healthPercent, '%')
+  add('공격', stats.damage)
+  add('공격', stats.damagePercent, '%')
+  add('방어', stats.armor)
+  add('속도', stats.speed)
+  add('연사', stats.cooldown)
+  add('사거리', stats.range)
+  add('최소 사거리', stats.minimumRange)
+  add('시야', stats.sight)
+  add('리젠', stats.regenerationPercent, '%')
+  add('체력 비례 피해', stats.damagePerHealthPercent, '%')
+  add('방어 무시', stats.armorPierce)
+  add('스플래시', stats.splashRadius)
+
+  return labels
+}
+
+function clampInteger(value: number, max: number) {
+  return Math.min(max, Math.max(0, Number.isFinite(value) ? Math.trunc(value) : 0))
+}
+
+function countActiveSimulationConditions(simulation: SimulationInput) {
+  const statusCount = Object.values(simulation.statuses).filter(Boolean).length
+  const skillCount = Object.values(simulation.skills).filter(
+    (value) => value === true || (typeof value === 'number' && value > 0),
+  ).length
+  const squareItemCount = Object.values(simulation.squareFormation).filter(
+    (value) => value > 0,
+  ).length
+
+  return statusCount + skillCount + squareItemCount
+}
+
 function App() {
   const [partIds, setPartIds] = useState<AssemblyPartIds>(defaultPartIds)
   const [reinforcement, setReinforcement] = useState(defaultReinforcement)
   const [subcoreIds, setSubcoreIds] = useState(defaultSubcoreIds)
+  const [accessoryRandomOptions, setAccessoryRandomOptions] = useState(
+    defaultAccessoryRandomOptions,
+  )
   const [activePart, setActivePart] = useState<EditablePartSlot>('weapon')
   const [activeReinforcement, setActiveReinforcement] =
     useState<ActiveReinforcement>(null)
+  const [catalogPicker, setCatalogPicker] = useState<CatalogPicker | null>(null)
   const [mobileView, setMobileView] = useState<MobileView>('assembly')
   const [activeDeckSlot, setActiveDeckSlot] = useState(0)
   const [calculateAsFloat, setCalculateAsFloat] = useState(false)
@@ -240,15 +348,19 @@ function App() {
     () => validateAssembly(partIds, partsCatalogById),
     [partIds],
   )
+  const activeSimulationConditionCount = useMemo(
+    () => countActiveSimulationConditions(simulation),
+    [simulation],
+  )
   const baseInput = useMemo<BaseCalculationInput>(
     () => ({
       partIds,
       subcoreIds,
       reinforcement,
-      accessoryRandomOptions: { health: 0, damage: 0, armor: 0 },
+      accessoryRandomOptions,
       calculateAsFloat,
     }),
-    [calculateAsFloat, partIds, reinforcement, subcoreIds],
+    [accessoryRandomOptions, calculateAsFloat, partIds, reinforcement, subcoreIds],
   )
   const stats = useMemo(
     () => calculateBaseStats(baseInput, partsCatalogById),
@@ -351,7 +463,11 @@ function App() {
 
   const updatePart = (slot: EditablePartSlot, id: number) => {
     setPartIds((current) => ({ ...current, [slot]: id }))
+    if (slot === 'accessory' && id !== partIds.accessory) {
+      setAccessoryRandomOptions(defaultAccessoryRandomOptions)
+    }
     setActivePart(slot)
+    setActiveReinforcement(null)
   }
 
   const updateReinforcement = (
@@ -368,6 +484,17 @@ function App() {
   const updateSubcore = (slot: PartSlot, id: number) => {
     setSubcoreIds((current) => ({ ...current, [slot]: id }))
     setActivePart(slot)
+  }
+
+  const updateAccessoryRandomOption = (
+    key: keyof AccessoryRandomOptions,
+    value: number,
+    max: number,
+  ) => {
+    setAccessoryRandomOptions((current) => ({
+      ...current,
+      [key]: clampInteger(value, max),
+    }))
   }
 
   const updateSimulationStatus = (
@@ -418,8 +545,10 @@ function App() {
     setPartIds(defaultPartIds)
     setReinforcement(defaultReinforcement)
     setSubcoreIds(defaultSubcoreIds)
+    setAccessoryRandomOptions(defaultAccessoryRandomOptions)
     setActivePart('weapon')
     setActiveReinforcement(null)
+    setCatalogPicker(null)
     setCalculateAsFloat(false)
   }
 
@@ -482,6 +611,7 @@ function App() {
             <PartSelector
               slot="leg"
               active={activePart === 'leg'}
+              invalid={validation.invalidPartSlots.includes('leg')}
               value={partIds.leg}
               items={partsCatalog.parts.legs}
               subcoreId={subcoreIds.leg}
@@ -491,8 +621,10 @@ function App() {
               }
               calculateAsFloat={calculateAsFloat}
               onFocus={() => setActivePart('leg')}
-              onChange={(id) => updatePart('leg', id)}
-              onSubcoreChange={(id) => updateSubcore('leg', id)}
+              onOpenPartPicker={() => setCatalogPicker({ kind: 'part', slot: 'leg' })}
+              onOpenSubcorePicker={() =>
+                setCatalogPicker({ kind: 'subcore', slot: 'leg' })
+              }
               onReinforcementSelect={(key) =>
                 setActiveReinforcement((current) =>
                   current?.slot === 'leg' && current.key === key ? null : { slot: 'leg', key },
@@ -505,6 +637,7 @@ function App() {
             <PartSelector
               slot="body"
               active={activePart === 'body'}
+              invalid={validation.invalidPartSlots.includes('body')}
               value={partIds.body}
               items={partsCatalog.parts.bodies}
               subcoreId={subcoreIds.body}
@@ -514,8 +647,10 @@ function App() {
               }
               calculateAsFloat={calculateAsFloat}
               onFocus={() => setActivePart('body')}
-              onChange={(id) => updatePart('body', id)}
-              onSubcoreChange={(id) => updateSubcore('body', id)}
+              onOpenPartPicker={() => setCatalogPicker({ kind: 'part', slot: 'body' })}
+              onOpenSubcorePicker={() =>
+                setCatalogPicker({ kind: 'subcore', slot: 'body' })
+              }
               onReinforcementSelect={(key) =>
                 setActiveReinforcement((current) =>
                   current?.slot === 'body' && current.key === key
@@ -530,6 +665,7 @@ function App() {
             <PartSelector
               slot="weapon"
               active={activePart === 'weapon'}
+              invalid={validation.invalidPartSlots.includes('weapon')}
               value={partIds.weapon}
               items={partsCatalog.parts.weapons}
               subcoreId={subcoreIds.weapon}
@@ -541,8 +677,12 @@ function App() {
               }
               calculateAsFloat={calculateAsFloat}
               onFocus={() => setActivePart('weapon')}
-              onChange={(id) => updatePart('weapon', id)}
-              onSubcoreChange={(id) => updateSubcore('weapon', id)}
+              onOpenPartPicker={() =>
+                setCatalogPicker({ kind: 'part', slot: 'weapon' })
+              }
+              onOpenSubcorePicker={() =>
+                setCatalogPicker({ kind: 'subcore', slot: 'weapon' })
+              }
               onReinforcementSelect={(key) =>
                 setActiveReinforcement((current) =>
                   current?.slot === 'weapon' && current.key === key
@@ -557,10 +697,15 @@ function App() {
             <PartSelector
               slot="accessory"
               active={activePart === 'accessory'}
+              invalid={validation.invalidPartSlots.includes('accessory')}
               value={partIds.accessory}
               items={partsCatalog.parts.accessories}
+              accessoryRandomOptions={accessoryRandomOptions}
               onFocus={() => setActivePart('accessory')}
-              onChange={(id) => updatePart('accessory', id)}
+              onOpenPartPicker={() =>
+                setCatalogPicker({ kind: 'part', slot: 'accessory' })
+              }
+              onAccessoryRandomOptionChange={updateAccessoryRandomOption}
             />
           </div>
         </section>
@@ -653,13 +798,24 @@ function App() {
                   <strong>전투 조건을 조정해 최종 능력치를 비교하세요</strong>
                   <p>시뮬레이션 설정은 덱 유닛에 저장되지 않습니다.</p>
                 </div>
-                <button
-                  className="simulation-reset"
-                  type="button"
-                  onClick={() => setSimulation(emptySimulationInput)}
-                >
-                  조건 초기화
-                </button>
+                <div className="simulation-intro-actions">
+                  <span
+                    className={`simulation-active-count ${activeSimulationConditionCount > 0 ? 'is-active' : ''}`}
+                    role="status"
+                  >
+                    {activeSimulationConditionCount > 0
+                      ? `${activeSimulationConditionCount}개 적용 중`
+                      : '적용 조건 없음'}
+                  </span>
+                  <button
+                    className="simulation-reset"
+                    type="button"
+                    disabled={activeSimulationConditionCount === 0}
+                    onClick={() => setSimulation(emptySimulationInput)}
+                  >
+                    조건 초기화
+                  </button>
+                </div>
               </div>
 
               <div className="simulation-grid">
@@ -748,7 +904,12 @@ function App() {
             id="stats-title"
             action={
               <div className="stats-header-actions">
-                {isSimulationMode && <span className="final-result-badge">FINAL</span>}
+                <span
+                  className={`result-mode-badge ${isSimulationMode ? 'is-final' : 'is-base'}`}
+                  aria-label={isSimulationMode ? '시뮬레이션 최종 능력치' : '기본 능력치'}
+                >
+                  {isSimulationMode ? 'FINAL' : 'BASE'}
+                </span>
                 <label className="mode-switch">
                   <input
                     type="checkbox"
@@ -885,9 +1046,16 @@ function App() {
           </div>
 
           {!validation.isValid && (
-            <div className="validation-message" role="status">
-              <strong>조립 불가</strong>
-              <span>{validation.issues.length}개의 조건을 확인해 주세요.</span>
+            <div className="validation-message" role="alert">
+              <div>
+                <strong>조립 불가</strong>
+                <span>{validation.issues.length}개의 조건을 확인해 주세요.</span>
+              </div>
+              <ul>
+                {validation.issues.map((issue) => (
+                  <li key={issue}>{assemblyValidationIssueMessages[issue]}</li>
+                ))}
+              </ul>
             </div>
           )}
         </aside>
@@ -970,6 +1138,32 @@ function App() {
           onClick={() => setMobileView('deck')}
         />
       </nav>
+
+      {catalogPicker?.kind === 'part' && (
+        <PartCatalogDialog
+          key={`part-${catalogPicker.slot}`}
+          slot={catalogPicker.slot}
+          value={partIds[catalogPicker.slot]}
+          onClose={() => setCatalogPicker(null)}
+          onSelect={(id) => {
+            updatePart(catalogPicker.slot, id)
+            setCatalogPicker(null)
+          }}
+        />
+      )}
+
+      {catalogPicker?.kind === 'subcore' && (
+        <SubcoreCatalogDialog
+          key={`subcore-${catalogPicker.slot}`}
+          slot={catalogPicker.slot}
+          value={subcoreIds[catalogPicker.slot]}
+          onClose={() => setCatalogPicker(null)}
+          onSelect={(id) => {
+            updateSubcore(catalogPicker.slot, id)
+            setCatalogPicker(null)
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -999,31 +1193,41 @@ function PanelHeader({
 function PartSelector<T extends Part>({
   slot,
   active,
+  invalid = false,
   value,
   items,
   subcoreId,
   reinforcement,
   activeReinforcementKey,
+  accessoryRandomOptions,
   calculateAsFloat = false,
   onFocus,
-  onChange,
-  onSubcoreChange,
+  onOpenPartPicker,
+  onOpenSubcorePicker,
   onReinforcementSelect,
   onReinforcementChange,
+  onAccessoryRandomOptionChange,
 }: {
   slot: EditablePartSlot
   active: boolean
+  invalid?: boolean
   value: number
   items: ReadonlyArray<T>
   subcoreId?: number
   reinforcement?: PartReinforcement
   activeReinforcementKey?: keyof PartReinforcement
+  accessoryRandomOptions?: AccessoryRandomOptions
   calculateAsFloat?: boolean
   onFocus: () => void
-  onChange: (id: number) => void
-  onSubcoreChange?: (id: number) => void
+  onOpenPartPicker: () => void
+  onOpenSubcorePicker?: () => void
   onReinforcementSelect?: (key: keyof PartReinforcement) => void
   onReinforcementChange?: (key: keyof PartReinforcement, value: number) => void
+  onAccessoryRandomOptionChange?: (
+    key: keyof AccessoryRandomOptions,
+    value: number,
+    max: number,
+  ) => void
 }) {
   const selected = items.find((item) => item.id === value)
   const selectedSubcore =
@@ -1041,7 +1245,8 @@ function PartSelector<T extends Part>({
 
   return (
     <div
-      className={`part-selector ${active ? 'is-active' : ''} ${isExpanded ? 'is-expanded' : ''}`}
+      className={`part-selector ${active ? 'is-active' : ''} ${invalid ? 'is-invalid' : ''} ${isExpanded ? 'is-expanded' : ''}`}
+      aria-invalid={invalid || undefined}
     >
       <button
         className={`part-preview part-preview-${slot}`}
@@ -1073,23 +1278,20 @@ function PartSelector<T extends Part>({
       <div className="part-details">
         <div className="part-card-label">
           <span>{slotLabels[slot]}</span>
-          <small>ID {selected?.id ?? 0}</small>
+          {invalid && <small className="part-error-label">확인 필요</small>}
         </div>
-        <label className="part-select-field">
-          <span className="sr-only">{slotLabels[slot]} 선택</span>
-          <select
-            value={value}
-            onFocus={onFocus}
-            onChange={(event) => onChange(Number(event.target.value))}
-          >
-            {items.map((item) => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
+        <button
+          className="part-select-trigger"
+          type="button"
+          onClick={() => {
+            onFocus()
+            onOpenPartPicker()
+          }}
+          aria-label={`${slotLabels[slot]} 부품 변경, 현재 ${getPartDisplayName(selected)}`}
+        >
+          <span>{getPartDisplayName(selected)}</span>
           <span aria-hidden="true">⌄</span>
-        </label>
+        </button>
         <div className="part-stat-grid">
           {reinforcementLabels.map(({ key, label }) => (
             <PartCardStat
@@ -1131,23 +1333,57 @@ function PartSelector<T extends Part>({
           </div>
         )}
 
-        {subcoreId !== undefined && onSubcoreChange && (
-          <label className="subcore-select-field">
+        {subcoreId !== undefined && onOpenSubcorePicker && (
+          <button
+            className="subcore-select-trigger"
+            type="button"
+            onClick={() => {
+              onFocus()
+              onOpenSubcorePicker()
+            }}
+            aria-label={`${slotLabels[slot]} 서브코어 변경, 현재 ${selectedSubcore?.name ?? '선택 없음'}`}
+          >
             <span>
               <i aria-hidden="true" /> 서브코어
             </span>
-            <select
-              value={subcoreId}
-              onFocus={onFocus}
-              onChange={(event) => onSubcoreChange(Number(event.target.value))}
-            >
-              {partsCatalog.subcores.map((subcore) => (
-                <option value={subcore.id} key={subcore.id}>
-                  {subcore.name}
-                </option>
-              ))}
-            </select>
-          </label>
+            <strong>{selectedSubcore?.name ?? '선택 없음'}</strong>
+            <b aria-hidden="true">⌄</b>
+          </button>
+        )}
+
+        {selected?.kind === 'accessory' &&
+          selected.hasRandomOptions &&
+          accessoryRandomOptions &&
+          onAccessoryRandomOptionChange && (
+            <div className="accessory-random-options" aria-label="액세서리 랜덤 옵션">
+              <span className="micro-label">RANDOM OPTIONS</span>
+              <div>
+                <RandomOptionInput
+                  label="체력"
+                  value={accessoryRandomOptions.health}
+                  max={200}
+                  onChange={(value) =>
+                    onAccessoryRandomOptionChange('health', value, 200)
+                  }
+                />
+                <RandomOptionInput
+                  label="공격"
+                  value={accessoryRandomOptions.damage}
+                  max={20}
+                  onChange={(value) =>
+                    onAccessoryRandomOptionChange('damage', value, 20)
+                  }
+                />
+                <RandomOptionInput
+                  label="방어"
+                  value={accessoryRandomOptions.armor}
+                  max={10}
+                  onChange={(value) =>
+                    onAccessoryRandomOptionChange('armor', value, 10)
+                  }
+                />
+              </div>
+            </div>
         )}
       </div>
 
@@ -1189,6 +1425,392 @@ function PartSelector<T extends Part>({
           </label>
         </div>
       )}
+    </div>
+  )
+}
+
+function RandomOptionInput({
+  label,
+  value,
+  max,
+  onChange,
+}: {
+  label: string
+  value: number
+  max: number
+  onChange: (value: number) => void
+}) {
+  return (
+    <label>
+      <span>{label}</span>
+      <input
+        type="number"
+        min="0"
+        max={max}
+        value={value}
+        aria-label={`액세서리 ${label} 랜덤 옵션`}
+        onChange={(event) => onChange(Number(event.target.value))}
+      />
+      <small>/ {max}</small>
+    </label>
+  )
+}
+
+function useCatalogDialog(
+  onClose: () => void,
+  initialFocusRef: React.RefObject<HTMLInputElement | null>,
+) {
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    initialFocusRef.current?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = previousOverflow
+      previousFocus?.focus()
+    }
+  }, [initialFocusRef, onClose])
+}
+
+function PartCatalogDialog({
+  slot,
+  value,
+  onClose,
+  onSelect,
+}: {
+  slot: EditablePartSlot
+  value: number
+  onClose: () => void
+  onSelect: (id: number) => void
+}) {
+  const items = getPartsForSlot(slot)
+  const [query, setQuery] = useState('')
+  const [filter, setFilter] = useState<PartCatalogFilter>('all')
+  const [highlightedId, setHighlightedId] = useState(value)
+  const searchRef = useRef<HTMLInputElement>(null)
+  useCatalogDialog(onClose, searchRef)
+
+  const filterChoices = useMemo(() => {
+    const choices: Array<{ key: PartCatalogFilter; label: string }> = [
+      { key: 'all', label: '전체' },
+    ]
+
+    if (slot === 'leg') {
+      choices.push(
+        { key: 'ground', label: '지상' },
+        { key: 'air', label: '공중' },
+      )
+    }
+
+    if (items.some((part) => part.isNPart)) {
+      choices.push({ key: 'npart', label: 'N 부품' })
+    }
+
+    ;(['tower', 'arm', 'shoulder'] as const).forEach((mountType) => {
+      if (items.some((part) => 'mountType' in part && part.mountType === mountType)) {
+        choices.push({ key: mountType, label: mountLabels[mountType] })
+      }
+    })
+
+    return choices
+  }, [items, slot])
+  const filteredItems = useMemo(
+    () => filterCatalogParts(items, query, filter),
+    [filter, items, query],
+  )
+  const highlighted =
+    filteredItems.find((part) => part.id === highlightedId) ??
+    filteredItems[0] ??
+    items.find((part) => part.id === value)
+  const optionLabels = highlighted ? getPartOptionLabels(highlighted) : []
+  const attackTarget = highlighted
+    ? [
+        highlighted.attackTargets.ground ? '지상' : null,
+        highlighted.attackTargets.air ? '공중' : null,
+      ]
+        .filter(Boolean)
+        .join(' · ')
+    : ''
+
+  return (
+    <div
+      className="catalog-dialog-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <section
+        className="catalog-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="part-catalog-title"
+      >
+        <header className="catalog-dialog-header">
+          <div>
+            <span className="micro-label">PARTS CATALOG</span>
+            <h2 id="part-catalog-title">{slotLabels[slot]} 선택</h2>
+          </div>
+          <button type="button" onClick={onClose} aria-label="부품 선택 닫기">
+            ×
+          </button>
+        </header>
+
+        <div className="catalog-toolbar">
+          <label className="catalog-search-field">
+            <span aria-hidden="true">⌕</span>
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              placeholder="부품 이름 검색"
+              aria-label={`${slotLabels[slot]} 부품 검색`}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            {query && (
+              <button type="button" onClick={() => setQuery('')}>
+                지우기
+              </button>
+            )}
+          </label>
+          <div className="catalog-filter-list" aria-label="부품 타입 필터">
+            {filterChoices.map((choice) => (
+              <button
+                className={filter === choice.key ? 'is-active' : ''}
+                type="button"
+                key={choice.key}
+                aria-pressed={filter === choice.key}
+                onClick={() => setFilter(choice.key)}
+              >
+                {choice.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="catalog-dialog-body">
+          <div className="catalog-results-panel">
+            <div className="catalog-results-heading">
+              <span>검색 결과</span>
+              <small>{filteredItems.length}개</small>
+            </div>
+            <div className="catalog-result-list">
+              {filteredItems.map((part) => {
+                const displayName = getPartDisplayName(part)
+                const mountLabel =
+                  'mountType' in part && part.mountType !== 'none'
+                    ? mountLabels[part.mountType]
+                    : null
+
+                return (
+                  <button
+                    className={`${highlighted?.id === part.id ? 'is-active' : ''} ${value === part.id ? 'is-equipped' : ''}`}
+                    type="button"
+                    key={part.id}
+                    onClick={() => setHighlightedId(part.id)}
+                    aria-label={`${displayName}${value === part.id ? ', 현재 선택' : ''}`}
+                  >
+                    <span className={`catalog-result-mark catalog-result-mark-${slot}`}>
+                      {slotMarks[slot]}
+                    </span>
+                    <span>
+                      <strong>{displayName}</strong>
+                      {(mountLabel || part.isNPart) && (
+                        <small>
+                          {[mountLabel, part.isNPart ? 'N 부품' : null]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </small>
+                      )}
+                    </span>
+                    <span className="catalog-result-metrics">
+                      <small>W {part.stats.watt}</small>
+                      <small>H {part.stats.health}</small>
+                      <small>D {part.stats.damage}</small>
+                    </span>
+                  </button>
+                )
+              })}
+              {filteredItems.length === 0 && (
+                <div className="catalog-empty-result">
+                  <strong>일치하는 부품이 없습니다</strong>
+                  <span>검색어나 타입 필터를 변경해 주세요.</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <aside className="catalog-detail-panel" aria-live="polite">
+            {highlighted ? (
+              <>
+                <div className="catalog-detail-preview">
+                  <span className="part-grid" aria-hidden="true" />
+                  <span className={`catalog-detail-model catalog-detail-model-${slot}`}>
+                    {slotMarks[slot]}
+                  </span>
+                  {'mountType' in highlighted && highlighted.mountType !== 'none' && (
+                    <span className="catalog-mount-label">
+                      {mountLabels[highlighted.mountType]}
+                    </span>
+                  )}
+                </div>
+                <div className="catalog-detail-title">
+                  <div>
+                    <span className="micro-label">PART DETAIL</span>
+                    <h3>{getPartDisplayName(highlighted)}</h3>
+                  </div>
+                  {highlighted.isNPart && <span className="n-part-badge">N</span>}
+                </div>
+                <div className="catalog-primary-stats">
+                  {reinforcementLabels.map(({ key, label }) => (
+                    <div className={`catalog-primary-stat is-${key}`} key={key}>
+                      <span>{label}</span>
+                      <strong>{formatNumber(highlighted.stats[key])}</strong>
+                    </div>
+                  ))}
+                </div>
+                {optionLabels.length > 0 && (
+                  <div className="part-option-list catalog-option-list">
+                    {optionLabels.map((option) => (
+                      <span
+                        className={option.emphasized ? 'is-key-option' : ''}
+                        key={option.text}
+                      >
+                        {option.text}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {attackTarget && (
+                  <p className="catalog-target-info">
+                    <span>공격 대상</span>
+                    <strong>{attackTarget}</strong>
+                  </p>
+                )}
+                <div className="catalog-special-info">
+                  <span className="micro-label">SPECIAL ABILITY</span>
+                  <p>{highlighted.special || '등록된 특수 능력이 없습니다.'}</p>
+                </div>
+                <button
+                  className="catalog-apply-button"
+                  type="button"
+                  onClick={() => onSelect(highlighted.id)}
+                >
+                  {value === highlighted.id
+                    ? '현재 부품 유지'
+                    : `${getPartDisplayName(highlighted)} 사용`}
+                </button>
+              </>
+            ) : (
+              <div className="catalog-empty-detail">확인할 부품을 선택해 주세요.</div>
+            )}
+          </aside>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+function SubcoreCatalogDialog({
+  slot,
+  value,
+  onClose,
+  onSelect,
+}: {
+  slot: PartSlot
+  value: number
+  onClose: () => void
+  onSelect: (id: number) => void
+}) {
+  const [query, setQuery] = useState('')
+  const searchRef = useRef<HTMLInputElement>(null)
+  useCatalogDialog(onClose, searchRef)
+  const normalizedQuery = query.trim().toLocaleLowerCase('ko-KR')
+  const filteredSubcores = partsCatalog.subcores.filter(
+    (subcore) =>
+      normalizedQuery.length === 0 ||
+      subcore.name.toLocaleLowerCase('ko-KR').includes(normalizedQuery),
+  )
+
+  return (
+    <div
+      className="catalog-dialog-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <section
+        className="catalog-dialog subcore-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="subcore-catalog-title"
+      >
+        <header className="catalog-dialog-header">
+          <div>
+            <span className="micro-label">SUB CORE CATALOG</span>
+            <h2 id="subcore-catalog-title">{slotLabels[slot]} 서브코어 선택</h2>
+          </div>
+          <button type="button" onClick={onClose} aria-label="서브코어 선택 닫기">
+            ×
+          </button>
+        </header>
+
+        <div className="catalog-toolbar">
+          <label className="catalog-search-field">
+            <span aria-hidden="true">⌕</span>
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              placeholder="서브코어 이름 검색"
+              aria-label={`${slotLabels[slot]} 서브코어 검색`}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </label>
+          <span className="subcore-slot-note">슬롯별 적용 수치를 표시합니다</span>
+        </div>
+
+        <div className="subcore-catalog-grid subcore-catalog-grid-standalone">
+          {filteredSubcores.map((subcore) => {
+            const optionLabels = getSubcoreOptionLabels(subcore.id, slot)
+
+            return (
+              <button
+                className={value === subcore.id ? 'is-equipped' : ''}
+                type="button"
+                key={subcore.id}
+                onClick={() => onSelect(subcore.id)}
+                aria-label={`${subcore.name}, ${optionLabels.join(', ') || '추가 능력치 없음'}${value === subcore.id ? ', 현재 선택' : ''}`}
+              >
+                <span className={`subcore-token subcore-token-${subcore.id % 4}`}>
+                  <i aria-hidden="true" />
+                  <b aria-hidden="true" />
+                </span>
+                <strong>{subcore.name}</strong>
+                <span className="subcore-card-tags" aria-hidden="true">
+                  {optionLabels.length > 0 ? (
+                    optionLabels.map((option) => <i key={option}>{option}</i>)
+                  ) : (
+                    <i>추가 능력치 없음</i>
+                  )}
+                </span>
+              </button>
+            )
+          })}
+          {filteredSubcores.length === 0 && (
+            <div className="catalog-empty-result">
+              <strong>일치하는 서브코어가 없습니다</strong>
+              <span>검색어를 변경해 주세요.</span>
+            </div>
+          )}
+        </div>
+      </section>
     </div>
   )
 }
