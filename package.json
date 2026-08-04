@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "catalog:import": "node scripts/import-reference-catalog.mjs",
+    "calculation:golden": "python scripts/generate-calculation-golden.py",
+    "calculation:golden:final": "python scripts/generate-final-calculation-golden.py",
+    "calculation:golden:validation": "python scripts/generate-validation-golden.py",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",

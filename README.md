@@ -23,6 +23,15 @@ npm run test:run
 npm run build
 ```
 
+기준 Python 계산 결과를 사용해 기본 계산 골든 데이터를 다시 생성하려면 다음
+명령을 사용합니다.
+
+```powershell
+npm run calculation:golden
+npm run calculation:golden:final
+npm run calculation:golden:validation
+```
+
 ## 부품 카탈로그 갱신
 
 형제 디렉터리의 `Nova-Parts-Calculator-Python` 기준 저장소에서 카탈로그를

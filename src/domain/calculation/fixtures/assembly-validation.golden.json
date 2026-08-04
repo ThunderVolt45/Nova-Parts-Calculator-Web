@@ -1,0 +1,9235 @@
+{
+  "catalogVersion": "1-c90d7b925163",
+  "sourceRevision": "c90d7b92516379105d51a71900257454535b50ff",
+  "randomSeed": 149206,
+  "randomCases": 512,
+  "cases": [
+    {
+      "name": "valid",
+      "partIds": {
+        "leg": 40,
+        "body": 1,
+        "weapon": 1,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "all-required-parts-missing",
+      "partIds": {
+        "leg": 0,
+        "body": 0,
+        "weapon": 0,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "leg-missing-and-overweight",
+      "partIds": {
+        "leg": 0,
+        "body": 1,
+        "weapon": 1,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "body-missing",
+      "partIds": {
+        "leg": 40,
+        "body": 0,
+        "weapon": 1,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "weapon-missing",
+      "partIds": {
+        "leg": 40,
+        "body": 1,
+        "weapon": 0,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "mount-type-mismatch",
+      "partIds": {
+        "leg": 40,
+        "body": 5,
+        "weapon": 1,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "load-exceeded",
+      "partIds": {
+        "leg": 7,
+        "body": 1,
+        "weapon": 1,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "three-n-parts",
+      "partIds": {
+        "leg": 10,
+        "body": 11,
+        "weapon": 4,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "n-part-limit-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "two-n-parts",
+      "partIds": {
+        "leg": 40,
+        "body": 11,
+        "weapon": 4,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "n-part-limit-exceeded",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "apocalypse-body-too-light",
+      "partIds": {
+        "leg": 18,
+        "body": 10,
+        "weapon": 60,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "apocalypse-body-too-light",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "apocalypse-towering-conflict",
+      "partIds": {
+        "leg": 18,
+        "body": 1,
+        "weapon": 60,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "apocalypse-towering-conflict",
+        "invalidPartSlots": [
+          "accessory"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "missing-load-and-apocalypse-conflicts",
+      "partIds": {
+        "leg": 0,
+        "body": 10,
+        "weapon": 60,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "accessory"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "mismatch-before-load",
+      "partIds": {
+        "leg": 7,
+        "body": 5,
+        "weapon": 1,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "load-before-n-part-limit",
+      "partIds": {
+        "leg": 7,
+        "body": 11,
+        "weapon": 4,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "both-apocalypse-conflicts",
+      "partIds": {
+        "leg": 18,
+        "body": 10,
+        "weapon": 60,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "apocalypse-body-too-light",
+        "invalidPartSlots": [
+          "body",
+          "accessory"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-000",
+      "partIds": {
+        "leg": 28,
+        "body": 58,
+        "weapon": 37,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-001",
+      "partIds": {
+        "leg": 40,
+        "body": 23,
+        "weapon": 63,
+        "accessory": 36
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-002",
+      "partIds": {
+        "leg": 23,
+        "body": 19,
+        "weapon": 46,
+        "accessory": 6
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-003",
+      "partIds": {
+        "leg": 24,
+        "body": 40,
+        "weapon": 41,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-004",
+      "partIds": {
+        "leg": 0,
+        "body": 40,
+        "weapon": 1,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-005",
+      "partIds": {
+        "leg": 39,
+        "body": 39,
+        "weapon": 7,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-006",
+      "partIds": {
+        "leg": 3,
+        "body": 40,
+        "weapon": 34,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-007",
+      "partIds": {
+        "leg": 38,
+        "body": 36,
+        "weapon": 49,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-008",
+      "partIds": {
+        "leg": 22,
+        "body": 4,
+        "weapon": 44,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-009",
+      "partIds": {
+        "leg": 13,
+        "body": 41,
+        "weapon": 34,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-010",
+      "partIds": {
+        "leg": 17,
+        "body": 47,
+        "weapon": 54,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-011",
+      "partIds": {
+        "leg": 9,
+        "body": 8,
+        "weapon": 30,
+        "accessory": 14
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-012",
+      "partIds": {
+        "leg": 38,
+        "body": 23,
+        "weapon": 9,
+        "accessory": 6
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-013",
+      "partIds": {
+        "leg": 37,
+        "body": 47,
+        "weapon": 42,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-014",
+      "partIds": {
+        "leg": 37,
+        "body": 49,
+        "weapon": 18,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-015",
+      "partIds": {
+        "leg": 21,
+        "body": 42,
+        "weapon": 3,
+        "accessory": 36
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-016",
+      "partIds": {
+        "leg": 13,
+        "body": 9,
+        "weapon": 51,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-017",
+      "partIds": {
+        "leg": 11,
+        "body": 25,
+        "weapon": 48,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-018",
+      "partIds": {
+        "leg": 13,
+        "body": 5,
+        "weapon": 1,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-019",
+      "partIds": {
+        "leg": 24,
+        "body": 29,
+        "weapon": 15,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-020",
+      "partIds": {
+        "leg": 36,
+        "body": 26,
+        "weapon": 16,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-021",
+      "partIds": {
+        "leg": 36,
+        "body": 20,
+        "weapon": 10,
+        "accessory": 25
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-022",
+      "partIds": {
+        "leg": 21,
+        "body": 0,
+        "weapon": 19,
+        "accessory": 18
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-023",
+      "partIds": {
+        "leg": 13,
+        "body": 33,
+        "weapon": 24,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-024",
+      "partIds": {
+        "leg": 6,
+        "body": 40,
+        "weapon": 49,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-025",
+      "partIds": {
+        "leg": 0,
+        "body": 17,
+        "weapon": 8,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-026",
+      "partIds": {
+        "leg": 32,
+        "body": 15,
+        "weapon": 58,
+        "accessory": 35
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-027",
+      "partIds": {
+        "leg": 40,
+        "body": 55,
+        "weapon": 2,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-028",
+      "partIds": {
+        "leg": 24,
+        "body": 34,
+        "weapon": 29,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-029",
+      "partIds": {
+        "leg": 9,
+        "body": 34,
+        "weapon": 50,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-030",
+      "partIds": {
+        "leg": 5,
+        "body": 57,
+        "weapon": 8,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-031",
+      "partIds": {
+        "leg": 35,
+        "body": 57,
+        "weapon": 44,
+        "accessory": 1
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-032",
+      "partIds": {
+        "leg": 24,
+        "body": 38,
+        "weapon": 51,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-033",
+      "partIds": {
+        "leg": 39,
+        "body": 48,
+        "weapon": 32,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-034",
+      "partIds": {
+        "leg": 39,
+        "body": 26,
+        "weapon": 12,
+        "accessory": 5
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-035",
+      "partIds": {
+        "leg": 6,
+        "body": 51,
+        "weapon": 46,
+        "accessory": 63
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-036",
+      "partIds": {
+        "leg": 35,
+        "body": 0,
+        "weapon": 8,
+        "accessory": 75
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-037",
+      "partIds": {
+        "leg": 33,
+        "body": 45,
+        "weapon": 6,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-038",
+      "partIds": {
+        "leg": 21,
+        "body": 23,
+        "weapon": 13,
+        "accessory": 13
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-039",
+      "partIds": {
+        "leg": 20,
+        "body": 18,
+        "weapon": 42,
+        "accessory": 62
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-040",
+      "partIds": {
+        "leg": 16,
+        "body": 10,
+        "weapon": 59,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-041",
+      "partIds": {
+        "leg": 38,
+        "body": 50,
+        "weapon": 36,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-042",
+      "partIds": {
+        "leg": 17,
+        "body": 50,
+        "weapon": 46,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-043",
+      "partIds": {
+        "leg": 8,
+        "body": 3,
+        "weapon": 64,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-044",
+      "partIds": {
+        "leg": 32,
+        "body": 48,
+        "weapon": 25,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-045",
+      "partIds": {
+        "leg": 7,
+        "body": 0,
+        "weapon": 38,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-046",
+      "partIds": {
+        "leg": 40,
+        "body": 11,
+        "weapon": 24,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-047",
+      "partIds": {
+        "leg": 20,
+        "body": 12,
+        "weapon": 23,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-048",
+      "partIds": {
+        "leg": 20,
+        "body": 40,
+        "weapon": 31,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-049",
+      "partIds": {
+        "leg": 25,
+        "body": 18,
+        "weapon": 15,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-050",
+      "partIds": {
+        "leg": 34,
+        "body": 20,
+        "weapon": 61,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-051",
+      "partIds": {
+        "leg": 32,
+        "body": 4,
+        "weapon": 58,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-052",
+      "partIds": {
+        "leg": 17,
+        "body": 13,
+        "weapon": 17,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-053",
+      "partIds": {
+        "leg": 27,
+        "body": 3,
+        "weapon": 47,
+        "accessory": 45
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-054",
+      "partIds": {
+        "leg": 37,
+        "body": 28,
+        "weapon": 46,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-055",
+      "partIds": {
+        "leg": 39,
+        "body": 29,
+        "weapon": 18,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-056",
+      "partIds": {
+        "leg": 12,
+        "body": 38,
+        "weapon": 28,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-057",
+      "partIds": {
+        "leg": 33,
+        "body": 32,
+        "weapon": 57,
+        "accessory": 56
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-058",
+      "partIds": {
+        "leg": 37,
+        "body": 42,
+        "weapon": 56,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-059",
+      "partIds": {
+        "leg": 3,
+        "body": 44,
+        "weapon": 12,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-060",
+      "partIds": {
+        "leg": 14,
+        "body": 41,
+        "weapon": 44,
+        "accessory": 56
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-061",
+      "partIds": {
+        "leg": 10,
+        "body": 22,
+        "weapon": 0,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-062",
+      "partIds": {
+        "leg": 5,
+        "body": 46,
+        "weapon": 11,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-063",
+      "partIds": {
+        "leg": 27,
+        "body": 58,
+        "weapon": 36,
+        "accessory": 3
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-064",
+      "partIds": {
+        "leg": 32,
+        "body": 2,
+        "weapon": 61,
+        "accessory": 56
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-065",
+      "partIds": {
+        "leg": 13,
+        "body": 12,
+        "weapon": 24,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-066",
+      "partIds": {
+        "leg": 29,
+        "body": 48,
+        "weapon": 59,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-067",
+      "partIds": {
+        "leg": 6,
+        "body": 27,
+        "weapon": 26,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-068",
+      "partIds": {
+        "leg": 37,
+        "body": 51,
+        "weapon": 16,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-069",
+      "partIds": {
+        "leg": 40,
+        "body": 12,
+        "weapon": 27,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-070",
+      "partIds": {
+        "leg": 23,
+        "body": 8,
+        "weapon": 53,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-071",
+      "partIds": {
+        "leg": 30,
+        "body": 38,
+        "weapon": 60,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-072",
+      "partIds": {
+        "leg": 12,
+        "body": 56,
+        "weapon": 37,
+        "accessory": 36
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-073",
+      "partIds": {
+        "leg": 31,
+        "body": 24,
+        "weapon": 51,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-074",
+      "partIds": {
+        "leg": 31,
+        "body": 44,
+        "weapon": 34,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-075",
+      "partIds": {
+        "leg": 26,
+        "body": 48,
+        "weapon": 18,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-076",
+      "partIds": {
+        "leg": 30,
+        "body": 25,
+        "weapon": 43,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-077",
+      "partIds": {
+        "leg": 22,
+        "body": 26,
+        "weapon": 17,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-078",
+      "partIds": {
+        "leg": 2,
+        "body": 19,
+        "weapon": 34,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-079",
+      "partIds": {
+        "leg": 7,
+        "body": 58,
+        "weapon": 57,
+        "accessory": 67
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-080",
+      "partIds": {
+        "leg": 16,
+        "body": 26,
+        "weapon": 29,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-081",
+      "partIds": {
+        "leg": 10,
+        "body": 29,
+        "weapon": 0,
+        "accessory": 46
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-082",
+      "partIds": {
+        "leg": 2,
+        "body": 43,
+        "weapon": 33,
+        "accessory": 31
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-083",
+      "partIds": {
+        "leg": 0,
+        "body": 20,
+        "weapon": 27,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-084",
+      "partIds": {
+        "leg": 33,
+        "body": 12,
+        "weapon": 7,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-085",
+      "partIds": {
+        "leg": 26,
+        "body": 18,
+        "weapon": 4,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-086",
+      "partIds": {
+        "leg": 11,
+        "body": 6,
+        "weapon": 10,
+        "accessory": 13
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-087",
+      "partIds": {
+        "leg": 30,
+        "body": 36,
+        "weapon": 25,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-088",
+      "partIds": {
+        "leg": 12,
+        "body": 19,
+        "weapon": 8,
+        "accessory": 49
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-089",
+      "partIds": {
+        "leg": 17,
+        "body": 28,
+        "weapon": 56,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-090",
+      "partIds": {
+        "leg": 26,
+        "body": 48,
+        "weapon": 33,
+        "accessory": 15
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-091",
+      "partIds": {
+        "leg": 3,
+        "body": 19,
+        "weapon": 5,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-092",
+      "partIds": {
+        "leg": 20,
+        "body": 17,
+        "weapon": 8,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-093",
+      "partIds": {
+        "leg": 28,
+        "body": 57,
+        "weapon": 5,
+        "accessory": 74
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-094",
+      "partIds": {
+        "leg": 0,
+        "body": 23,
+        "weapon": 49,
+        "accessory": 15
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-095",
+      "partIds": {
+        "leg": 14,
+        "body": 9,
+        "weapon": 36,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-096",
+      "partIds": {
+        "leg": 32,
+        "body": 43,
+        "weapon": 13,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-097",
+      "partIds": {
+        "leg": 34,
+        "body": 16,
+        "weapon": 61,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-098",
+      "partIds": {
+        "leg": 20,
+        "body": 51,
+        "weapon": 12,
+        "accessory": 35
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-099",
+      "partIds": {
+        "leg": 11,
+        "body": 15,
+        "weapon": 36,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-100",
+      "partIds": {
+        "leg": 14,
+        "body": 23,
+        "weapon": 24,
+        "accessory": 75
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-101",
+      "partIds": {
+        "leg": 36,
+        "body": 39,
+        "weapon": 56,
+        "accessory": 51
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-102",
+      "partIds": {
+        "leg": 20,
+        "body": 37,
+        "weapon": 31,
+        "accessory": 67
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-103",
+      "partIds": {
+        "leg": 33,
+        "body": 13,
+        "weapon": 25,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-104",
+      "partIds": {
+        "leg": 9,
+        "body": 58,
+        "weapon": 52,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-105",
+      "partIds": {
+        "leg": 19,
+        "body": 43,
+        "weapon": 41,
+        "accessory": 76
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-106",
+      "partIds": {
+        "leg": 40,
+        "body": 15,
+        "weapon": 22,
+        "accessory": 62
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-107",
+      "partIds": {
+        "leg": 23,
+        "body": 1,
+        "weapon": 31,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-108",
+      "partIds": {
+        "leg": 14,
+        "body": 27,
+        "weapon": 10,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-109",
+      "partIds": {
+        "leg": 4,
+        "body": 50,
+        "weapon": 36,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-110",
+      "partIds": {
+        "leg": 39,
+        "body": 32,
+        "weapon": 41,
+        "accessory": 34
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-111",
+      "partIds": {
+        "leg": 9,
+        "body": 44,
+        "weapon": 44,
+        "accessory": 15
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-112",
+      "partIds": {
+        "leg": 34,
+        "body": 18,
+        "weapon": 40,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-113",
+      "partIds": {
+        "leg": 18,
+        "body": 49,
+        "weapon": 50,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-114",
+      "partIds": {
+        "leg": 34,
+        "body": 44,
+        "weapon": 11,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-115",
+      "partIds": {
+        "leg": 36,
+        "body": 35,
+        "weapon": 49,
+        "accessory": 12
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-116",
+      "partIds": {
+        "leg": 19,
+        "body": 23,
+        "weapon": 21,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-117",
+      "partIds": {
+        "leg": 5,
+        "body": 29,
+        "weapon": 12,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-118",
+      "partIds": {
+        "leg": 37,
+        "body": 17,
+        "weapon": 59,
+        "accessory": 38
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-119",
+      "partIds": {
+        "leg": 40,
+        "body": 46,
+        "weapon": 36,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-120",
+      "partIds": {
+        "leg": 38,
+        "body": 0,
+        "weapon": 54,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-121",
+      "partIds": {
+        "leg": 13,
+        "body": 38,
+        "weapon": 12,
+        "accessory": 67
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-122",
+      "partIds": {
+        "leg": 17,
+        "body": 31,
+        "weapon": 16,
+        "accessory": 1
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-123",
+      "partIds": {
+        "leg": 17,
+        "body": 52,
+        "weapon": 25,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-124",
+      "partIds": {
+        "leg": 19,
+        "body": 5,
+        "weapon": 43,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-125",
+      "partIds": {
+        "leg": 0,
+        "body": 45,
+        "weapon": 11,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-126",
+      "partIds": {
+        "leg": 1,
+        "body": 15,
+        "weapon": 45,
+        "accessory": 21
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-127",
+      "partIds": {
+        "leg": 38,
+        "body": 42,
+        "weapon": 19,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-128",
+      "partIds": {
+        "leg": 19,
+        "body": 6,
+        "weapon": 14,
+        "accessory": 68
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-129",
+      "partIds": {
+        "leg": 19,
+        "body": 35,
+        "weapon": 3,
+        "accessory": 2
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-130",
+      "partIds": {
+        "leg": 5,
+        "body": 13,
+        "weapon": 34,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-131",
+      "partIds": {
+        "leg": 35,
+        "body": 7,
+        "weapon": 37,
+        "accessory": 48
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-132",
+      "partIds": {
+        "leg": 10,
+        "body": 4,
+        "weapon": 24,
+        "accessory": 53
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-133",
+      "partIds": {
+        "leg": 30,
+        "body": 20,
+        "weapon": 39,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-134",
+      "partIds": {
+        "leg": 32,
+        "body": 31,
+        "weapon": 61,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-135",
+      "partIds": {
+        "leg": 2,
+        "body": 25,
+        "weapon": 26,
+        "accessory": 74
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-136",
+      "partIds": {
+        "leg": 19,
+        "body": 55,
+        "weapon": 30,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-137",
+      "partIds": {
+        "leg": 33,
+        "body": 31,
+        "weapon": 60,
+        "accessory": 47
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-138",
+      "partIds": {
+        "leg": 36,
+        "body": 7,
+        "weapon": 18,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-139",
+      "partIds": {
+        "leg": 23,
+        "body": 6,
+        "weapon": 4,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-140",
+      "partIds": {
+        "leg": 33,
+        "body": 7,
+        "weapon": 43,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-141",
+      "partIds": {
+        "leg": 25,
+        "body": 2,
+        "weapon": 56,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-142",
+      "partIds": {
+        "leg": 38,
+        "body": 7,
+        "weapon": 28,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-143",
+      "partIds": {
+        "leg": 21,
+        "body": 10,
+        "weapon": 64,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-144",
+      "partIds": {
+        "leg": 6,
+        "body": 15,
+        "weapon": 1,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-145",
+      "partIds": {
+        "leg": 29,
+        "body": 49,
+        "weapon": 29,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-146",
+      "partIds": {
+        "leg": 34,
+        "body": 22,
+        "weapon": 37,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-147",
+      "partIds": {
+        "leg": 23,
+        "body": 51,
+        "weapon": 27,
+        "accessory": 23
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-148",
+      "partIds": {
+        "leg": 31,
+        "body": 54,
+        "weapon": 21,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-149",
+      "partIds": {
+        "leg": 29,
+        "body": 42,
+        "weapon": 52,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-150",
+      "partIds": {
+        "leg": 21,
+        "body": 16,
+        "weapon": 57,
+        "accessory": 54
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-151",
+      "partIds": {
+        "leg": 27,
+        "body": 5,
+        "weapon": 25,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-152",
+      "partIds": {
+        "leg": 5,
+        "body": 54,
+        "weapon": 30,
+        "accessory": 4
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-153",
+      "partIds": {
+        "leg": 12,
+        "body": 45,
+        "weapon": 7,
+        "accessory": 5
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-154",
+      "partIds": {
+        "leg": 15,
+        "body": 40,
+        "weapon": 22,
+        "accessory": 75
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-155",
+      "partIds": {
+        "leg": 10,
+        "body": 31,
+        "weapon": 18,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-156",
+      "partIds": {
+        "leg": 36,
+        "body": 45,
+        "weapon": 64,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-157",
+      "partIds": {
+        "leg": 14,
+        "body": 57,
+        "weapon": 16,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-158",
+      "partIds": {
+        "leg": 0,
+        "body": 40,
+        "weapon": 56,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-159",
+      "partIds": {
+        "leg": 25,
+        "body": 31,
+        "weapon": 45,
+        "accessory": 13
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-160",
+      "partIds": {
+        "leg": 12,
+        "body": 38,
+        "weapon": 37,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-161",
+      "partIds": {
+        "leg": 15,
+        "body": 10,
+        "weapon": 36,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-162",
+      "partIds": {
+        "leg": 22,
+        "body": 55,
+        "weapon": 63,
+        "accessory": 21
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-163",
+      "partIds": {
+        "leg": 37,
+        "body": 44,
+        "weapon": 35,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-164",
+      "partIds": {
+        "leg": 9,
+        "body": 27,
+        "weapon": 46,
+        "accessory": 51
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-165",
+      "partIds": {
+        "leg": 14,
+        "body": 41,
+        "weapon": 13,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-166",
+      "partIds": {
+        "leg": 37,
+        "body": 33,
+        "weapon": 47,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-167",
+      "partIds": {
+        "leg": 32,
+        "body": 45,
+        "weapon": 61,
+        "accessory": 45
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-168",
+      "partIds": {
+        "leg": 35,
+        "body": 39,
+        "weapon": 19,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-169",
+      "partIds": {
+        "leg": 38,
+        "body": 23,
+        "weapon": 32,
+        "accessory": 62
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-170",
+      "partIds": {
+        "leg": 30,
+        "body": 30,
+        "weapon": 35,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-171",
+      "partIds": {
+        "leg": 3,
+        "body": 2,
+        "weapon": 50,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-172",
+      "partIds": {
+        "leg": 15,
+        "body": 31,
+        "weapon": 31,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-173",
+      "partIds": {
+        "leg": 34,
+        "body": 35,
+        "weapon": 5,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-174",
+      "partIds": {
+        "leg": 14,
+        "body": 10,
+        "weapon": 20,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-175",
+      "partIds": {
+        "leg": 18,
+        "body": 58,
+        "weapon": 52,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-176",
+      "partIds": {
+        "leg": 8,
+        "body": 48,
+        "weapon": 52,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-177",
+      "partIds": {
+        "leg": 5,
+        "body": 3,
+        "weapon": 47,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-178",
+      "partIds": {
+        "leg": 34,
+        "body": 16,
+        "weapon": 31,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-179",
+      "partIds": {
+        "leg": 2,
+        "body": 44,
+        "weapon": 48,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-180",
+      "partIds": {
+        "leg": 17,
+        "body": 51,
+        "weapon": 44,
+        "accessory": 51
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-181",
+      "partIds": {
+        "leg": 31,
+        "body": 8,
+        "weapon": 62,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-182",
+      "partIds": {
+        "leg": 24,
+        "body": 34,
+        "weapon": 35,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-183",
+      "partIds": {
+        "leg": 40,
+        "body": 14,
+        "weapon": 47,
+        "accessory": 2
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-184",
+      "partIds": {
+        "leg": 15,
+        "body": 43,
+        "weapon": 1,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-185",
+      "partIds": {
+        "leg": 25,
+        "body": 8,
+        "weapon": 25,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-186",
+      "partIds": {
+        "leg": 2,
+        "body": 32,
+        "weapon": 27,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-187",
+      "partIds": {
+        "leg": 15,
+        "body": 37,
+        "weapon": 35,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-188",
+      "partIds": {
+        "leg": 5,
+        "body": 24,
+        "weapon": 14,
+        "accessory": 18
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-189",
+      "partIds": {
+        "leg": 37,
+        "body": 20,
+        "weapon": 21,
+        "accessory": 18
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-190",
+      "partIds": {
+        "leg": 22,
+        "body": 0,
+        "weapon": 30,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-191",
+      "partIds": {
+        "leg": 2,
+        "body": 5,
+        "weapon": 33,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-192",
+      "partIds": {
+        "leg": 10,
+        "body": 55,
+        "weapon": 62,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-193",
+      "partIds": {
+        "leg": 27,
+        "body": 48,
+        "weapon": 23,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-194",
+      "partIds": {
+        "leg": 5,
+        "body": 22,
+        "weapon": 8,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-195",
+      "partIds": {
+        "leg": 32,
+        "body": 46,
+        "weapon": 27,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-196",
+      "partIds": {
+        "leg": 39,
+        "body": 47,
+        "weapon": 9,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-197",
+      "partIds": {
+        "leg": 37,
+        "body": 52,
+        "weapon": 2,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-198",
+      "partIds": {
+        "leg": 34,
+        "body": 50,
+        "weapon": 56,
+        "accessory": 31
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-199",
+      "partIds": {
+        "leg": 40,
+        "body": 25,
+        "weapon": 32,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-200",
+      "partIds": {
+        "leg": 28,
+        "body": 45,
+        "weapon": 24,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": false,
+        "status": "n-part-limit-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-201",
+      "partIds": {
+        "leg": 6,
+        "body": 8,
+        "weapon": 49,
+        "accessory": 51
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-202",
+      "partIds": {
+        "leg": 8,
+        "body": 28,
+        "weapon": 32,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-203",
+      "partIds": {
+        "leg": 2,
+        "body": 1,
+        "weapon": 54,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-204",
+      "partIds": {
+        "leg": 18,
+        "body": 20,
+        "weapon": 7,
+        "accessory": 45
+      },
+      "expected": {
+        "isValid": false,
+        "status": "n-part-limit-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-205",
+      "partIds": {
+        "leg": 32,
+        "body": 23,
+        "weapon": 32,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-206",
+      "partIds": {
+        "leg": 39,
+        "body": 11,
+        "weapon": 51,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-207",
+      "partIds": {
+        "leg": 29,
+        "body": 31,
+        "weapon": 32,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-208",
+      "partIds": {
+        "leg": 2,
+        "body": 23,
+        "weapon": 9,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-209",
+      "partIds": {
+        "leg": 17,
+        "body": 27,
+        "weapon": 33,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-210",
+      "partIds": {
+        "leg": 12,
+        "body": 19,
+        "weapon": 24,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-211",
+      "partIds": {
+        "leg": 16,
+        "body": 12,
+        "weapon": 50,
+        "accessory": 74
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-212",
+      "partIds": {
+        "leg": 13,
+        "body": 41,
+        "weapon": 41,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-213",
+      "partIds": {
+        "leg": 7,
+        "body": 48,
+        "weapon": 35,
+        "accessory": 36
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-214",
+      "partIds": {
+        "leg": 40,
+        "body": 43,
+        "weapon": 8,
+        "accessory": 75
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-215",
+      "partIds": {
+        "leg": 5,
+        "body": 32,
+        "weapon": 63,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-216",
+      "partIds": {
+        "leg": 17,
+        "body": 20,
+        "weapon": 54,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-217",
+      "partIds": {
+        "leg": 25,
+        "body": 40,
+        "weapon": 43,
+        "accessory": 47
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-218",
+      "partIds": {
+        "leg": 14,
+        "body": 30,
+        "weapon": 64,
+        "accessory": 38
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-219",
+      "partIds": {
+        "leg": 28,
+        "body": 15,
+        "weapon": 60,
+        "accessory": 14
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-220",
+      "partIds": {
+        "leg": 2,
+        "body": 17,
+        "weapon": 51,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-221",
+      "partIds": {
+        "leg": 13,
+        "body": 22,
+        "weapon": 58,
+        "accessory": 35
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-222",
+      "partIds": {
+        "leg": 4,
+        "body": 27,
+        "weapon": 19,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-223",
+      "partIds": {
+        "leg": 10,
+        "body": 57,
+        "weapon": 62,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-224",
+      "partIds": {
+        "leg": 19,
+        "body": 40,
+        "weapon": 10,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-225",
+      "partIds": {
+        "leg": 7,
+        "body": 23,
+        "weapon": 5,
+        "accessory": 76
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-226",
+      "partIds": {
+        "leg": 2,
+        "body": 41,
+        "weapon": 6,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-227",
+      "partIds": {
+        "leg": 8,
+        "body": 4,
+        "weapon": 39,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-228",
+      "partIds": {
+        "leg": 2,
+        "body": 17,
+        "weapon": 62,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-229",
+      "partIds": {
+        "leg": 4,
+        "body": 31,
+        "weapon": 57,
+        "accessory": 46
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-230",
+      "partIds": {
+        "leg": 18,
+        "body": 48,
+        "weapon": 0,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-231",
+      "partIds": {
+        "leg": 23,
+        "body": 39,
+        "weapon": 35,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-232",
+      "partIds": {
+        "leg": 38,
+        "body": 47,
+        "weapon": 22,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-233",
+      "partIds": {
+        "leg": 29,
+        "body": 17,
+        "weapon": 14,
+        "accessory": 3
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-234",
+      "partIds": {
+        "leg": 13,
+        "body": 13,
+        "weapon": 36,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-235",
+      "partIds": {
+        "leg": 28,
+        "body": 47,
+        "weapon": 56,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-236",
+      "partIds": {
+        "leg": 29,
+        "body": 57,
+        "weapon": 5,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-237",
+      "partIds": {
+        "leg": 5,
+        "body": 19,
+        "weapon": 52,
+        "accessory": 1
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-238",
+      "partIds": {
+        "leg": 4,
+        "body": 21,
+        "weapon": 49,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-239",
+      "partIds": {
+        "leg": 5,
+        "body": 14,
+        "weapon": 32,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-240",
+      "partIds": {
+        "leg": 39,
+        "body": 32,
+        "weapon": 58,
+        "accessory": 49
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-241",
+      "partIds": {
+        "leg": 30,
+        "body": 32,
+        "weapon": 24,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-242",
+      "partIds": {
+        "leg": 13,
+        "body": 27,
+        "weapon": 61,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-243",
+      "partIds": {
+        "leg": 39,
+        "body": 3,
+        "weapon": 28,
+        "accessory": 6
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-244",
+      "partIds": {
+        "leg": 20,
+        "body": 50,
+        "weapon": 55,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-245",
+      "partIds": {
+        "leg": 27,
+        "body": 28,
+        "weapon": 44,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-246",
+      "partIds": {
+        "leg": 5,
+        "body": 42,
+        "weapon": 64,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-247",
+      "partIds": {
+        "leg": 29,
+        "body": 47,
+        "weapon": 23,
+        "accessory": 30
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-248",
+      "partIds": {
+        "leg": 38,
+        "body": 1,
+        "weapon": 2,
+        "accessory": 74
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-249",
+      "partIds": {
+        "leg": 23,
+        "body": 24,
+        "weapon": 14,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-250",
+      "partIds": {
+        "leg": 7,
+        "body": 37,
+        "weapon": 18,
+        "accessory": 18
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-251",
+      "partIds": {
+        "leg": 12,
+        "body": 25,
+        "weapon": 18,
+        "accessory": 30
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-252",
+      "partIds": {
+        "leg": 18,
+        "body": 39,
+        "weapon": 32,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-253",
+      "partIds": {
+        "leg": 11,
+        "body": 51,
+        "weapon": 55,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-254",
+      "partIds": {
+        "leg": 13,
+        "body": 49,
+        "weapon": 40,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-255",
+      "partIds": {
+        "leg": 24,
+        "body": 29,
+        "weapon": 42,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-256",
+      "partIds": {
+        "leg": 11,
+        "body": 48,
+        "weapon": 9,
+        "accessory": 42
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-257",
+      "partIds": {
+        "leg": 40,
+        "body": 19,
+        "weapon": 36,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-258",
+      "partIds": {
+        "leg": 27,
+        "body": 33,
+        "weapon": 4,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-259",
+      "partIds": {
+        "leg": 7,
+        "body": 58,
+        "weapon": 32,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-260",
+      "partIds": {
+        "leg": 19,
+        "body": 45,
+        "weapon": 50,
+        "accessory": 53
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-261",
+      "partIds": {
+        "leg": 13,
+        "body": 16,
+        "weapon": 56,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-262",
+      "partIds": {
+        "leg": 33,
+        "body": 17,
+        "weapon": 27,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-263",
+      "partIds": {
+        "leg": 39,
+        "body": 25,
+        "weapon": 25,
+        "accessory": 25
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-264",
+      "partIds": {
+        "leg": 34,
+        "body": 56,
+        "weapon": 21,
+        "accessory": 12
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-265",
+      "partIds": {
+        "leg": 10,
+        "body": 25,
+        "weapon": 7,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": false,
+        "status": "n-part-limit-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-266",
+      "partIds": {
+        "leg": 0,
+        "body": 14,
+        "weapon": 41,
+        "accessory": 63
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-267",
+      "partIds": {
+        "leg": 30,
+        "body": 35,
+        "weapon": 32,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-268",
+      "partIds": {
+        "leg": 11,
+        "body": 29,
+        "weapon": 17,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-269",
+      "partIds": {
+        "leg": 39,
+        "body": 51,
+        "weapon": 18,
+        "accessory": 49
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-270",
+      "partIds": {
+        "leg": 32,
+        "body": 8,
+        "weapon": 8,
+        "accessory": 58
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-271",
+      "partIds": {
+        "leg": 34,
+        "body": 23,
+        "weapon": 36,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-272",
+      "partIds": {
+        "leg": 5,
+        "body": 58,
+        "weapon": 42,
+        "accessory": 51
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-273",
+      "partIds": {
+        "leg": 33,
+        "body": 23,
+        "weapon": 50,
+        "accessory": 30
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-274",
+      "partIds": {
+        "leg": 40,
+        "body": 6,
+        "weapon": 31,
+        "accessory": 45
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-275",
+      "partIds": {
+        "leg": 29,
+        "body": 28,
+        "weapon": 49,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-276",
+      "partIds": {
+        "leg": 29,
+        "body": 4,
+        "weapon": 42,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-277",
+      "partIds": {
+        "leg": 5,
+        "body": 19,
+        "weapon": 58,
+        "accessory": 77
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-278",
+      "partIds": {
+        "leg": 30,
+        "body": 16,
+        "weapon": 40,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-279",
+      "partIds": {
+        "leg": 30,
+        "body": 22,
+        "weapon": 52,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-280",
+      "partIds": {
+        "leg": 2,
+        "body": 8,
+        "weapon": 64,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-281",
+      "partIds": {
+        "leg": 24,
+        "body": 55,
+        "weapon": 62,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-282",
+      "partIds": {
+        "leg": 18,
+        "body": 8,
+        "weapon": 44,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-283",
+      "partIds": {
+        "leg": 18,
+        "body": 53,
+        "weapon": 62,
+        "accessory": 1
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-284",
+      "partIds": {
+        "leg": 5,
+        "body": 37,
+        "weapon": 9,
+        "accessory": 35
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-285",
+      "partIds": {
+        "leg": 33,
+        "body": 41,
+        "weapon": 54,
+        "accessory": 76
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-286",
+      "partIds": {
+        "leg": 25,
+        "body": 46,
+        "weapon": 43,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-287",
+      "partIds": {
+        "leg": 15,
+        "body": 46,
+        "weapon": 19,
+        "accessory": 25
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-288",
+      "partIds": {
+        "leg": 19,
+        "body": 53,
+        "weapon": 44,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-289",
+      "partIds": {
+        "leg": 2,
+        "body": 33,
+        "weapon": 45,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-290",
+      "partIds": {
+        "leg": 22,
+        "body": 20,
+        "weapon": 9,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-291",
+      "partIds": {
+        "leg": 31,
+        "body": 5,
+        "weapon": 37,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-292",
+      "partIds": {
+        "leg": 32,
+        "body": 43,
+        "weapon": 37,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-293",
+      "partIds": {
+        "leg": 9,
+        "body": 17,
+        "weapon": 10,
+        "accessory": 49
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-294",
+      "partIds": {
+        "leg": 25,
+        "body": 46,
+        "weapon": 10,
+        "accessory": 62
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-295",
+      "partIds": {
+        "leg": 23,
+        "body": 13,
+        "weapon": 47,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-296",
+      "partIds": {
+        "leg": 19,
+        "body": 53,
+        "weapon": 16,
+        "accessory": 40
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-297",
+      "partIds": {
+        "leg": 9,
+        "body": 38,
+        "weapon": 25,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-298",
+      "partIds": {
+        "leg": 33,
+        "body": 0,
+        "weapon": 20,
+        "accessory": 69
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-299",
+      "partIds": {
+        "leg": 34,
+        "body": 38,
+        "weapon": 51,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-300",
+      "partIds": {
+        "leg": 37,
+        "body": 41,
+        "weapon": 3,
+        "accessory": 25
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-301",
+      "partIds": {
+        "leg": 5,
+        "body": 29,
+        "weapon": 14,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-302",
+      "partIds": {
+        "leg": 25,
+        "body": 7,
+        "weapon": 15,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-303",
+      "partIds": {
+        "leg": 6,
+        "body": 27,
+        "weapon": 21,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-304",
+      "partIds": {
+        "leg": 25,
+        "body": 48,
+        "weapon": 6,
+        "accessory": 31
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-305",
+      "partIds": {
+        "leg": 3,
+        "body": 7,
+        "weapon": 46,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-306",
+      "partIds": {
+        "leg": 18,
+        "body": 7,
+        "weapon": 46,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-307",
+      "partIds": {
+        "leg": 15,
+        "body": 47,
+        "weapon": 50,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-308",
+      "partIds": {
+        "leg": 2,
+        "body": 7,
+        "weapon": 47,
+        "accessory": 14
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-309",
+      "partIds": {
+        "leg": 12,
+        "body": 19,
+        "weapon": 31,
+        "accessory": 46
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-310",
+      "partIds": {
+        "leg": 20,
+        "body": 30,
+        "weapon": 19,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-311",
+      "partIds": {
+        "leg": 32,
+        "body": 19,
+        "weapon": 3,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-312",
+      "partIds": {
+        "leg": 39,
+        "body": 51,
+        "weapon": 18,
+        "accessory": 49
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-313",
+      "partIds": {
+        "leg": 3,
+        "body": 18,
+        "weapon": 54,
+        "accessory": 4
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-314",
+      "partIds": {
+        "leg": 37,
+        "body": 9,
+        "weapon": 30,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-315",
+      "partIds": {
+        "leg": 39,
+        "body": 34,
+        "weapon": 35,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-316",
+      "partIds": {
+        "leg": 15,
+        "body": 2,
+        "weapon": 25,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-317",
+      "partIds": {
+        "leg": 9,
+        "body": 44,
+        "weapon": 22,
+        "accessory": 23
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-318",
+      "partIds": {
+        "leg": 3,
+        "body": 52,
+        "weapon": 40,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-319",
+      "partIds": {
+        "leg": 15,
+        "body": 50,
+        "weapon": 2,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-320",
+      "partIds": {
+        "leg": 8,
+        "body": 22,
+        "weapon": 45,
+        "accessory": 40
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-321",
+      "partIds": {
+        "leg": 26,
+        "body": 55,
+        "weapon": 50,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-322",
+      "partIds": {
+        "leg": 20,
+        "body": 10,
+        "weapon": 29,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-323",
+      "partIds": {
+        "leg": 32,
+        "body": 50,
+        "weapon": 64,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-324",
+      "partIds": {
+        "leg": 21,
+        "body": 37,
+        "weapon": 27,
+        "accessory": 1
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-325",
+      "partIds": {
+        "leg": 10,
+        "body": 50,
+        "weapon": 17,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-326",
+      "partIds": {
+        "leg": 33,
+        "body": 30,
+        "weapon": 61,
+        "accessory": 54
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-327",
+      "partIds": {
+        "leg": 7,
+        "body": 49,
+        "weapon": 14,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-328",
+      "partIds": {
+        "leg": 15,
+        "body": 44,
+        "weapon": 46,
+        "accessory": 68
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-329",
+      "partIds": {
+        "leg": 6,
+        "body": 57,
+        "weapon": 42,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-330",
+      "partIds": {
+        "leg": 10,
+        "body": 8,
+        "weapon": 29,
+        "accessory": 67
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-331",
+      "partIds": {
+        "leg": 15,
+        "body": 29,
+        "weapon": 21,
+        "accessory": 30
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-332",
+      "partIds": {
+        "leg": 11,
+        "body": 22,
+        "weapon": 56,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-333",
+      "partIds": {
+        "leg": 0,
+        "body": 12,
+        "weapon": 36,
+        "accessory": 6
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-334",
+      "partIds": {
+        "leg": 34,
+        "body": 11,
+        "weapon": 55,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-335",
+      "partIds": {
+        "leg": 15,
+        "body": 4,
+        "weapon": 24,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-336",
+      "partIds": {
+        "leg": 14,
+        "body": 19,
+        "weapon": 14,
+        "accessory": 23
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-337",
+      "partIds": {
+        "leg": 40,
+        "body": 0,
+        "weapon": 50,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-338",
+      "partIds": {
+        "leg": 40,
+        "body": 31,
+        "weapon": 61,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-339",
+      "partIds": {
+        "leg": 8,
+        "body": 40,
+        "weapon": 14,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-340",
+      "partIds": {
+        "leg": 0,
+        "body": 10,
+        "weapon": 58,
+        "accessory": 31
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-341",
+      "partIds": {
+        "leg": 34,
+        "body": 46,
+        "weapon": 51,
+        "accessory": 31
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-342",
+      "partIds": {
+        "leg": 3,
+        "body": 28,
+        "weapon": 35,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-343",
+      "partIds": {
+        "leg": 3,
+        "body": 20,
+        "weapon": 25,
+        "accessory": 5
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-344",
+      "partIds": {
+        "leg": 39,
+        "body": 25,
+        "weapon": 22,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-345",
+      "partIds": {
+        "leg": 20,
+        "body": 0,
+        "weapon": 31,
+        "accessory": 38
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-346",
+      "partIds": {
+        "leg": 3,
+        "body": 39,
+        "weapon": 60,
+        "accessory": 63
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-347",
+      "partIds": {
+        "leg": 10,
+        "body": 44,
+        "weapon": 58,
+        "accessory": 13
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-348",
+      "partIds": {
+        "leg": 23,
+        "body": 12,
+        "weapon": 6,
+        "accessory": 25
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-349",
+      "partIds": {
+        "leg": 35,
+        "body": 48,
+        "weapon": 8,
+        "accessory": 12
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-350",
+      "partIds": {
+        "leg": 30,
+        "body": 28,
+        "weapon": 56,
+        "accessory": 3
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-351",
+      "partIds": {
+        "leg": 24,
+        "body": 2,
+        "weapon": 18,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-352",
+      "partIds": {
+        "leg": 26,
+        "body": 26,
+        "weapon": 8,
+        "accessory": 69
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-353",
+      "partIds": {
+        "leg": 28,
+        "body": 10,
+        "weapon": 19,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-354",
+      "partIds": {
+        "leg": 14,
+        "body": 29,
+        "weapon": 28,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-355",
+      "partIds": {
+        "leg": 13,
+        "body": 58,
+        "weapon": 12,
+        "accessory": 23
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-356",
+      "partIds": {
+        "leg": 4,
+        "body": 55,
+        "weapon": 36,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-357",
+      "partIds": {
+        "leg": 1,
+        "body": 48,
+        "weapon": 51,
+        "accessory": 14
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-358",
+      "partIds": {
+        "leg": 13,
+        "body": 28,
+        "weapon": 62,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-359",
+      "partIds": {
+        "leg": 2,
+        "body": 13,
+        "weapon": 20,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-360",
+      "partIds": {
+        "leg": 39,
+        "body": 33,
+        "weapon": 16,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-361",
+      "partIds": {
+        "leg": 18,
+        "body": 23,
+        "weapon": 45,
+        "accessory": 40
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-362",
+      "partIds": {
+        "leg": 38,
+        "body": 47,
+        "weapon": 17,
+        "accessory": 21
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-363",
+      "partIds": {
+        "leg": 5,
+        "body": 39,
+        "weapon": 57,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-364",
+      "partIds": {
+        "leg": 35,
+        "body": 15,
+        "weapon": 28,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-365",
+      "partIds": {
+        "leg": 10,
+        "body": 57,
+        "weapon": 58,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-366",
+      "partIds": {
+        "leg": 26,
+        "body": 34,
+        "weapon": 0,
+        "accessory": 67
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-367",
+      "partIds": {
+        "leg": 37,
+        "body": 52,
+        "weapon": 21,
+        "accessory": 3
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-368",
+      "partIds": {
+        "leg": 25,
+        "body": 31,
+        "weapon": 12,
+        "accessory": 69
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-369",
+      "partIds": {
+        "leg": 19,
+        "body": 55,
+        "weapon": 18,
+        "accessory": 16
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-370",
+      "partIds": {
+        "leg": 24,
+        "body": 8,
+        "weapon": 56,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-371",
+      "partIds": {
+        "leg": 7,
+        "body": 9,
+        "weapon": 10,
+        "accessory": 21
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-372",
+      "partIds": {
+        "leg": 4,
+        "body": 26,
+        "weapon": 45,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-373",
+      "partIds": {
+        "leg": 8,
+        "body": 35,
+        "weapon": 28,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-374",
+      "partIds": {
+        "leg": 25,
+        "body": 41,
+        "weapon": 35,
+        "accessory": 38
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-375",
+      "partIds": {
+        "leg": 11,
+        "body": 43,
+        "weapon": 5,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-376",
+      "partIds": {
+        "leg": 37,
+        "body": 57,
+        "weapon": 35,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-377",
+      "partIds": {
+        "leg": 14,
+        "body": 34,
+        "weapon": 2,
+        "accessory": 36
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-378",
+      "partIds": {
+        "leg": 22,
+        "body": 31,
+        "weapon": 22,
+        "accessory": 2
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-379",
+      "partIds": {
+        "leg": 22,
+        "body": 6,
+        "weapon": 52,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-380",
+      "partIds": {
+        "leg": 10,
+        "body": 56,
+        "weapon": 8,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-381",
+      "partIds": {
+        "leg": 29,
+        "body": 26,
+        "weapon": 55,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-382",
+      "partIds": {
+        "leg": 38,
+        "body": 18,
+        "weapon": 3,
+        "accessory": 0
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-383",
+      "partIds": {
+        "leg": 32,
+        "body": 58,
+        "weapon": 47,
+        "accessory": 63
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-384",
+      "partIds": {
+        "leg": 30,
+        "body": 7,
+        "weapon": 49,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-385",
+      "partIds": {
+        "leg": 22,
+        "body": 24,
+        "weapon": 41,
+        "accessory": 74
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-386",
+      "partIds": {
+        "leg": 7,
+        "body": 0,
+        "weapon": 62,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-387",
+      "partIds": {
+        "leg": 0,
+        "body": 37,
+        "weapon": 49,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-388",
+      "partIds": {
+        "leg": 12,
+        "body": 0,
+        "weapon": 63,
+        "accessory": 36
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-389",
+      "partIds": {
+        "leg": 17,
+        "body": 23,
+        "weapon": 21,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-390",
+      "partIds": {
+        "leg": 19,
+        "body": 39,
+        "weapon": 1,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-391",
+      "partIds": {
+        "leg": 32,
+        "body": 13,
+        "weapon": 47,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-392",
+      "partIds": {
+        "leg": 25,
+        "body": 3,
+        "weapon": 46,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-393",
+      "partIds": {
+        "leg": 36,
+        "body": 25,
+        "weapon": 19,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-394",
+      "partIds": {
+        "leg": 6,
+        "body": 4,
+        "weapon": 63,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-395",
+      "partIds": {
+        "leg": 20,
+        "body": 40,
+        "weapon": 48,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-396",
+      "partIds": {
+        "leg": 23,
+        "body": 37,
+        "weapon": 11,
+        "accessory": 53
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-397",
+      "partIds": {
+        "leg": 13,
+        "body": 3,
+        "weapon": 58,
+        "accessory": 53
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-398",
+      "partIds": {
+        "leg": 25,
+        "body": 39,
+        "weapon": 46,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-399",
+      "partIds": {
+        "leg": 10,
+        "body": 46,
+        "weapon": 31,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-400",
+      "partIds": {
+        "leg": 35,
+        "body": 25,
+        "weapon": 19,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-401",
+      "partIds": {
+        "leg": 22,
+        "body": 17,
+        "weapon": 32,
+        "accessory": 31
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-402",
+      "partIds": {
+        "leg": 4,
+        "body": 18,
+        "weapon": 63,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-403",
+      "partIds": {
+        "leg": 0,
+        "body": 43,
+        "weapon": 58,
+        "accessory": 74
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-404",
+      "partIds": {
+        "leg": 11,
+        "body": 1,
+        "weapon": 47,
+        "accessory": 14
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-405",
+      "partIds": {
+        "leg": 37,
+        "body": 47,
+        "weapon": 21,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-406",
+      "partIds": {
+        "leg": 33,
+        "body": 25,
+        "weapon": 18,
+        "accessory": 61
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-407",
+      "partIds": {
+        "leg": 20,
+        "body": 18,
+        "weapon": 58,
+        "accessory": 45
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-408",
+      "partIds": {
+        "leg": 3,
+        "body": 30,
+        "weapon": 54,
+        "accessory": 76
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-409",
+      "partIds": {
+        "leg": 14,
+        "body": 55,
+        "weapon": 5,
+        "accessory": 15
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-410",
+      "partIds": {
+        "leg": 21,
+        "body": 52,
+        "weapon": 8,
+        "accessory": 2
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-411",
+      "partIds": {
+        "leg": 13,
+        "body": 48,
+        "weapon": 8,
+        "accessory": 19
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-412",
+      "partIds": {
+        "leg": 33,
+        "body": 52,
+        "weapon": 22,
+        "accessory": 12
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-413",
+      "partIds": {
+        "leg": 20,
+        "body": 12,
+        "weapon": 56,
+        "accessory": 63
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-414",
+      "partIds": {
+        "leg": 36,
+        "body": 37,
+        "weapon": 51,
+        "accessory": 75
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-415",
+      "partIds": {
+        "leg": 40,
+        "body": 1,
+        "weapon": 55,
+        "accessory": 2
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-416",
+      "partIds": {
+        "leg": 37,
+        "body": 58,
+        "weapon": 47,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-417",
+      "partIds": {
+        "leg": 7,
+        "body": 21,
+        "weapon": 0,
+        "accessory": 60
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-418",
+      "partIds": {
+        "leg": 9,
+        "body": 50,
+        "weapon": 1,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-419",
+      "partIds": {
+        "leg": 9,
+        "body": 35,
+        "weapon": 53,
+        "accessory": 11
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-420",
+      "partIds": {
+        "leg": 35,
+        "body": 55,
+        "weapon": 49,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-421",
+      "partIds": {
+        "leg": 4,
+        "body": 36,
+        "weapon": 0,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-422",
+      "partIds": {
+        "leg": 13,
+        "body": 8,
+        "weapon": 28,
+        "accessory": 54
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-423",
+      "partIds": {
+        "leg": 40,
+        "body": 21,
+        "weapon": 11,
+        "accessory": 20
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-424",
+      "partIds": {
+        "leg": 35,
+        "body": 46,
+        "weapon": 19,
+        "accessory": 33
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-425",
+      "partIds": {
+        "leg": 14,
+        "body": 54,
+        "weapon": 8,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-426",
+      "partIds": {
+        "leg": 39,
+        "body": 36,
+        "weapon": 17,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-427",
+      "partIds": {
+        "leg": 40,
+        "body": 19,
+        "weapon": 19,
+        "accessory": 76
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-428",
+      "partIds": {
+        "leg": 31,
+        "body": 4,
+        "weapon": 9,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-429",
+      "partIds": {
+        "leg": 7,
+        "body": 35,
+        "weapon": 58,
+        "accessory": 15
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-430",
+      "partIds": {
+        "leg": 27,
+        "body": 47,
+        "weapon": 57,
+        "accessory": 58
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-431",
+      "partIds": {
+        "leg": 38,
+        "body": 8,
+        "weapon": 9,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-432",
+      "partIds": {
+        "leg": 22,
+        "body": 39,
+        "weapon": 4,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-433",
+      "partIds": {
+        "leg": 20,
+        "body": 25,
+        "weapon": 51,
+        "accessory": 10
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-434",
+      "partIds": {
+        "leg": 33,
+        "body": 18,
+        "weapon": 16,
+        "accessory": 54
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-435",
+      "partIds": {
+        "leg": 4,
+        "body": 58,
+        "weapon": 62,
+        "accessory": 50
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-436",
+      "partIds": {
+        "leg": 13,
+        "body": 35,
+        "weapon": 8,
+        "accessory": 24
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-437",
+      "partIds": {
+        "leg": 16,
+        "body": 3,
+        "weapon": 28,
+        "accessory": 40
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-438",
+      "partIds": {
+        "leg": 0,
+        "body": 32,
+        "weapon": 5,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-439",
+      "partIds": {
+        "leg": 12,
+        "body": 25,
+        "weapon": 23,
+        "accessory": 54
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-440",
+      "partIds": {
+        "leg": 23,
+        "body": 7,
+        "weapon": 9,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-441",
+      "partIds": {
+        "leg": 40,
+        "body": 50,
+        "weapon": 46,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-442",
+      "partIds": {
+        "leg": 15,
+        "body": 19,
+        "weapon": 20,
+        "accessory": 70
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-443",
+      "partIds": {
+        "leg": 4,
+        "body": 51,
+        "weapon": 1,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-444",
+      "partIds": {
+        "leg": 26,
+        "body": 28,
+        "weapon": 52,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-445",
+      "partIds": {
+        "leg": 9,
+        "body": 6,
+        "weapon": 32,
+        "accessory": 44
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-446",
+      "partIds": {
+        "leg": 37,
+        "body": 34,
+        "weapon": 47,
+        "accessory": 65
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-447",
+      "partIds": {
+        "leg": 27,
+        "body": 10,
+        "weapon": 49,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-448",
+      "partIds": {
+        "leg": 36,
+        "body": 16,
+        "weapon": 15,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-449",
+      "partIds": {
+        "leg": 13,
+        "body": 34,
+        "weapon": 32,
+        "accessory": 34
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-450",
+      "partIds": {
+        "leg": 32,
+        "body": 11,
+        "weapon": 36,
+        "accessory": 2
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-451",
+      "partIds": {
+        "leg": 39,
+        "body": 16,
+        "weapon": 35,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-452",
+      "partIds": {
+        "leg": 39,
+        "body": 9,
+        "weapon": 35,
+        "accessory": 57
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-453",
+      "partIds": {
+        "leg": 36,
+        "body": 40,
+        "weapon": 14,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-454",
+      "partIds": {
+        "leg": 15,
+        "body": 22,
+        "weapon": 20,
+        "accessory": 69
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-455",
+      "partIds": {
+        "leg": 6,
+        "body": 52,
+        "weapon": 29,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-456",
+      "partIds": {
+        "leg": 30,
+        "body": 16,
+        "weapon": 50,
+        "accessory": 26
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-457",
+      "partIds": {
+        "leg": 6,
+        "body": 16,
+        "weapon": 2,
+        "accessory": 30
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-458",
+      "partIds": {
+        "leg": 10,
+        "body": 33,
+        "weapon": 9,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-459",
+      "partIds": {
+        "leg": 26,
+        "body": 5,
+        "weapon": 14,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-460",
+      "partIds": {
+        "leg": 16,
+        "body": 0,
+        "weapon": 30,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "leg",
+          "body"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-461",
+      "partIds": {
+        "leg": 37,
+        "body": 50,
+        "weapon": 44,
+        "accessory": 22
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-462",
+      "partIds": {
+        "leg": 32,
+        "body": 15,
+        "weapon": 45,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-463",
+      "partIds": {
+        "leg": 17,
+        "body": 57,
+        "weapon": 15,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-464",
+      "partIds": {
+        "leg": 12,
+        "body": 56,
+        "weapon": 23,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-465",
+      "partIds": {
+        "leg": 17,
+        "body": 52,
+        "weapon": 36,
+        "accessory": 8
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-466",
+      "partIds": {
+        "leg": 23,
+        "body": 15,
+        "weapon": 64,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-467",
+      "partIds": {
+        "leg": 35,
+        "body": 46,
+        "weapon": 6,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-468",
+      "partIds": {
+        "leg": 38,
+        "body": 16,
+        "weapon": 44,
+        "accessory": 38
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-469",
+      "partIds": {
+        "leg": 29,
+        "body": 50,
+        "weapon": 40,
+        "accessory": 69
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-470",
+      "partIds": {
+        "leg": 24,
+        "body": 55,
+        "weapon": 11,
+        "accessory": 9
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-471",
+      "partIds": {
+        "leg": 21,
+        "body": 37,
+        "weapon": 41,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-472",
+      "partIds": {
+        "leg": 16,
+        "body": 49,
+        "weapon": 23,
+        "accessory": 48
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-473",
+      "partIds": {
+        "leg": 18,
+        "body": 17,
+        "weapon": 14,
+        "accessory": 48
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-474",
+      "partIds": {
+        "leg": 11,
+        "body": 46,
+        "weapon": 51,
+        "accessory": 43
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-475",
+      "partIds": {
+        "leg": 7,
+        "body": 21,
+        "weapon": 20,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-476",
+      "partIds": {
+        "leg": 24,
+        "body": 40,
+        "weapon": 19,
+        "accessory": 55
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-477",
+      "partIds": {
+        "leg": 25,
+        "body": 0,
+        "weapon": 8,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "parts-missing",
+        "invalidPartSlots": [
+          "body"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-478",
+      "partIds": {
+        "leg": 37,
+        "body": 4,
+        "weapon": 52,
+        "accessory": 71
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-479",
+      "partIds": {
+        "leg": 9,
+        "body": 55,
+        "weapon": 59,
+        "accessory": 17
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-480",
+      "partIds": {
+        "leg": 18,
+        "body": 29,
+        "weapon": 19,
+        "accessory": 29
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-481",
+      "partIds": {
+        "leg": 37,
+        "body": 51,
+        "weapon": 58,
+        "accessory": 15
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-482",
+      "partIds": {
+        "leg": 18,
+        "body": 31,
+        "weapon": 22,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-483",
+      "partIds": {
+        "leg": 32,
+        "body": 15,
+        "weapon": 63,
+        "accessory": 39
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-484",
+      "partIds": {
+        "leg": 25,
+        "body": 16,
+        "weapon": 33,
+        "accessory": 66
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-485",
+      "partIds": {
+        "leg": 10,
+        "body": 4,
+        "weapon": 26,
+        "accessory": 52
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-486",
+      "partIds": {
+        "leg": 8,
+        "body": 8,
+        "weapon": 52,
+        "accessory": 73
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-487",
+      "partIds": {
+        "leg": 3,
+        "body": 28,
+        "weapon": 27,
+        "accessory": 72
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-488",
+      "partIds": {
+        "leg": 7,
+        "body": 42,
+        "weapon": 26,
+        "accessory": 59
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-489",
+      "partIds": {
+        "leg": 1,
+        "body": 40,
+        "weapon": 41,
+        "accessory": 25
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-490",
+      "partIds": {
+        "leg": 33,
+        "body": 18,
+        "weapon": 16,
+        "accessory": 34
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-491",
+      "partIds": {
+        "leg": 13,
+        "body": 33,
+        "weapon": 49,
+        "accessory": 68
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-492",
+      "partIds": {
+        "leg": 34,
+        "body": 45,
+        "weapon": 63,
+        "accessory": 64
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-493",
+      "partIds": {
+        "leg": 4,
+        "body": 20,
+        "weapon": 18,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-494",
+      "partIds": {
+        "leg": 10,
+        "body": 10,
+        "weapon": 8,
+        "accessory": 21
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-495",
+      "partIds": {
+        "leg": 30,
+        "body": 32,
+        "weapon": 57,
+        "accessory": 34
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-496",
+      "partIds": {
+        "leg": 35,
+        "body": 34,
+        "weapon": 61,
+        "accessory": 28
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-497",
+      "partIds": {
+        "leg": 25,
+        "body": 7,
+        "weapon": 48,
+        "accessory": 48
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-498",
+      "partIds": {
+        "leg": 35,
+        "body": 33,
+        "weapon": 57,
+        "accessory": 75
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-499",
+      "partIds": {
+        "leg": 39,
+        "body": 46,
+        "weapon": 57,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-500",
+      "partIds": {
+        "leg": 28,
+        "body": 40,
+        "weapon": 22,
+        "accessory": 27
+      },
+      "expected": {
+        "isValid": false,
+        "status": "n-part-limit-exceeded",
+        "invalidPartSlots": [
+          "leg",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-501",
+      "partIds": {
+        "leg": 5,
+        "body": 49,
+        "weapon": 10,
+        "accessory": 51
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-502",
+      "partIds": {
+        "leg": 30,
+        "body": 17,
+        "weapon": 39,
+        "accessory": 18
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-503",
+      "partIds": {
+        "leg": 26,
+        "body": 29,
+        "weapon": 51,
+        "accessory": 37
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-504",
+      "partIds": {
+        "leg": 13,
+        "body": 57,
+        "weapon": 35,
+        "accessory": 40
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-505",
+      "partIds": {
+        "leg": 21,
+        "body": 4,
+        "weapon": 30,
+        "accessory": 5
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-506",
+      "partIds": {
+        "leg": 10,
+        "body": 47,
+        "weapon": 60,
+        "accessory": 32
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "leg",
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-507",
+      "partIds": {
+        "leg": 37,
+        "body": 50,
+        "weapon": 28,
+        "accessory": 7
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-508",
+      "partIds": {
+        "leg": 27,
+        "body": 41,
+        "weapon": 19,
+        "accessory": 48
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-509",
+      "partIds": {
+        "leg": 37,
+        "body": 5,
+        "weapon": 2,
+        "accessory": 5
+      },
+      "expected": {
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
+      }
+    },
+    {
+      "name": "random-validation-510",
+      "partIds": {
+        "leg": 13,
+        "body": 31,
+        "weapon": 29,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "load-exceeded",
+        "invalidPartSlots": [
+          "leg"
+        ],
+        "weightInvalid": true
+      }
+    },
+    {
+      "name": "random-validation-511",
+      "partIds": {
+        "leg": 37,
+        "body": 47,
+        "weapon": 19,
+        "accessory": 41
+      },
+      "expected": {
+        "isValid": false,
+        "status": "mount-type-mismatch",
+        "invalidPartSlots": [
+          "body",
+          "weapon"
+        ],
+        "weightInvalid": false
+      }
+    }
+  ]
+}
