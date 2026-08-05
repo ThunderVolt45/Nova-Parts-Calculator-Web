@@ -1,0 +1,2397 @@
+{
+  "mappingVersion": "1-c8c6866c6cbc",
+  "sourceRevision": "c8c6866c6cbccbb499176f0be458861cfa1f0ca2",
+  "catalogVersion": "1-c90d7b925163",
+  "items": [
+    {
+      "kind": "leg",
+      "partId": 1,
+      "partName": "로드런너",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs1_rdrn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 2,
+      "partName": "토들러",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs2_tdr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 3,
+      "partName": "캔터",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs4_kt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 4,
+      "partName": "토들러N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs41_tdr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 5,
+      "partName": "캐터필러",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs3_ktpr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 6,
+      "partName": "패트롤",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs9_ptr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 7,
+      "partName": "패트롤N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs43_ptr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 8,
+      "partName": "키위",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs5_ko.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 9,
+      "partName": "워커",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs6_ok.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 10,
+      "partName": "워커N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs39_wk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 11,
+      "partName": "호버",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs7_hb.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 12,
+      "partName": "코벳",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs12_kb.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 13,
+      "partName": "앰블러",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs8_obr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 14,
+      "partName": "스트라이더",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs11_strod.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 15,
+      "partName": "스트라이더N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs45_strod.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 16,
+      "partName": "프리깃",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs10_prg.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 17,
+      "partName": "크롤러",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs15_krr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 18,
+      "partName": "크롤러N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs42_krr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 19,
+      "partName": "갤로퍼",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs14_grp.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 20,
+      "partName": "갤로퍼N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs38_grp.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 21,
+      "partName": "쿼더",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs25_kd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 22,
+      "partName": "크루저",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs13_krz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 23,
+      "partName": "크루저N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs40_krz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 24,
+      "partName": "스플리터",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs16_sprt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 25,
+      "partName": "오프로더",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs17_oprd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 26,
+      "partName": "스파이더",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs20_spod.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 27,
+      "partName": "하이로더",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs18_hord.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 28,
+      "partName": "하이로더N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_legs44_hord.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 29,
+      "partName": "탱커",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs23_tk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 30,
+      "partName": "스타쉽",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs24_sts.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 31,
+      "partName": "카소와리",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs21_ksor.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 32,
+      "partName": "옵테릭스",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs49_otrs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 33,
+      "partName": "포퍼스",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs50_pps.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 34,
+      "partName": "델피누스",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs34_dpns.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 35,
+      "partName": "라운시",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs54_ros.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 36,
+      "partName": "피파울",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs51_ppo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 37,
+      "partName": "피코크",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs52_pkk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 38,
+      "partName": "래거드",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs53_rgd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 39,
+      "partName": "사이드크롤",
+      "mappingStatus": "mapped",
+      "sourceGx": "legs112.gx",
+      "confidence": "medium",
+      "evidence": "Unlabeled slot 22 in gxdesc.ini and nvpartdesc ID 1401",
+      "note": null
+    },
+    {
+      "kind": "leg",
+      "partId": 40,
+      "partName": "오스트릭",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "Name is present in calculator JSON/nvpartdesc, but no Ostrich model is registered in gxdesc.ini and no distinct legs GX exists."
+    },
+    {
+      "kind": "body",
+      "partId": 1,
+      "partName": "코포럴",
+      "mappingStatus": "mapped",
+      "sourceGx": "body4_kpr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 2,
+      "partName": "스쿼드",
+      "mappingStatus": "mapped",
+      "sourceGx": "body6_skd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 3,
+      "partName": "스쿼미쉬",
+      "mappingStatus": "mapped",
+      "sourceGx": "body5_skms.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 4,
+      "partName": "플래툰",
+      "mappingStatus": "mapped",
+      "sourceGx": "body2_prt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 5,
+      "partName": "플래툰N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body43_prt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 6,
+      "partName": "뱅가드",
+      "mappingStatus": "mapped",
+      "sourceGx": "body3_bgd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 7,
+      "partName": "스쿼드론",
+      "mappingStatus": "mapped",
+      "sourceGx": "body10_skdr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 8,
+      "partName": "블릿츠",
+      "mappingStatus": "mapped",
+      "sourceGx": "body8_brc.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 9,
+      "partName": "서전",
+      "mappingStatus": "mapped",
+      "sourceGx": "body1_sz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 10,
+      "partName": "스파덱",
+      "mappingStatus": "mapped",
+      "sourceGx": "body19_spd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 11,
+      "partName": "스파덱N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body46_spd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 12,
+      "partName": "바탈리언",
+      "mappingStatus": "mapped",
+      "sourceGx": "body9_btro.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 13,
+      "partName": "메인포스",
+      "mappingStatus": "mapped",
+      "sourceGx": "body7_mops.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 14,
+      "partName": "캡틴",
+      "mappingStatus": "mapped",
+      "sourceGx": "body12_kt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 15,
+      "partName": "레지먼트",
+      "mappingStatus": "mapped",
+      "sourceGx": "body17_rzmt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 16,
+      "partName": "센추리언",
+      "mappingStatus": "mapped",
+      "sourceGx": "body13_scro.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 17,
+      "partName": "센추리언N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body45_scro.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 18,
+      "partName": "커널",
+      "mappingStatus": "mapped",
+      "sourceGx": "body11_kn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 19,
+      "partName": "쿼터덱",
+      "mappingStatus": "mapped",
+      "sourceGx": "body22_kdd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 20,
+      "partName": "쿼터덱N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body42_kdd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 21,
+      "partName": "브리게이드",
+      "mappingStatus": "mapped",
+      "sourceGx": "body18_brgod.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 22,
+      "partName": "브리게이드N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body39_brgod.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 23,
+      "partName": "트리뷴",
+      "mappingStatus": "mapped",
+      "sourceGx": "body14_trb.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 24,
+      "partName": "코모도어",
+      "mappingStatus": "mapped",
+      "sourceGx": "body16_kmdo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 25,
+      "partName": "코모도어N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body41_kmdo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 26,
+      "partName": "스쿼칸",
+      "mappingStatus": "mapped",
+      "sourceGx": "body55_sqk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 27,
+      "partName": "레지온",
+      "mappingStatus": "mapped",
+      "sourceGx": "body21_rzo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 28,
+      "partName": "그라비스",
+      "mappingStatus": "mapped",
+      "sourceGx": "body24_grbs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 29,
+      "partName": "블릿칸",
+      "mappingStatus": "mapped",
+      "sourceGx": "body56_brk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 30,
+      "partName": "그라비스N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body48_grbs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 31,
+      "partName": "제너럴",
+      "mappingStatus": "mapped",
+      "sourceGx": "body15_znr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 32,
+      "partName": "플러시덱",
+      "mappingStatus": "mapped",
+      "sourceGx": "body20_prsd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 33,
+      "partName": "코포칸",
+      "mappingStatus": "mapped",
+      "sourceGx": "body57_kpk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 34,
+      "partName": "캡티널",
+      "mappingStatus": "mapped",
+      "sourceGx": "body37_ktn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 35,
+      "partName": "마샬",
+      "mappingStatus": "mapped",
+      "sourceGx": "body23_ms.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 36,
+      "partName": "레지널",
+      "mappingStatus": "mapped",
+      "sourceGx": "body36_rzn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 37,
+      "partName": "트리뷰널",
+      "mappingStatus": "mapped",
+      "sourceGx": "body35_trbn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 38,
+      "partName": "제니스",
+      "mappingStatus": "mapped",
+      "sourceGx": "body27_zns.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 39,
+      "partName": "제니스N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body40_zns.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 40,
+      "partName": "킹핀",
+      "mappingStatus": "mapped",
+      "sourceGx": "body26_kp.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 41,
+      "partName": "킹핀N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body47_kp.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 42,
+      "partName": "바이스로이",
+      "mappingStatus": "mapped",
+      "sourceGx": "body25_bosro.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 43,
+      "partName": "킹핀II",
+      "mappingStatus": "mapped",
+      "sourceGx": "body28_kp2.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 44,
+      "partName": "플랫피쉬",
+      "mappingStatus": "mapped",
+      "sourceGx": "body32_brps.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 45,
+      "partName": "플랫피쉬N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_body44_brps.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 46,
+      "partName": "센추러스",
+      "mappingStatus": "mapped",
+      "sourceGx": "body58_scrs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 47,
+      "partName": "버서커",
+      "mappingStatus": "mapped",
+      "sourceGx": "body61_bsk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 48,
+      "partName": "퀴러시어",
+      "mappingStatus": "mapped",
+      "sourceGx": "body38_qrso.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 49,
+      "partName": "홉라이트",
+      "mappingStatus": "mapped",
+      "sourceGx": "body59_hrot.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 50,
+      "partName": "인펜트리",
+      "mappingStatus": "mapped",
+      "sourceGx": "body60_optr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 51,
+      "partName": "커맨더",
+      "mappingStatus": "mapped",
+      "sourceGx": "body62_cmd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 52,
+      "partName": "벤투스",
+      "mappingStatus": "mapped",
+      "sourceGx": "body63_vts.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "body",
+      "partId": 53,
+      "partName": "러멜러",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Lamellar body GX is present in this client build."
+    },
+    {
+      "kind": "body",
+      "partId": 54,
+      "partName": "벤디드",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Banded body GX is present in this client build."
+    },
+    {
+      "kind": "body",
+      "partId": 55,
+      "partName": "브리건딘",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Brigandine body GX is present in this client build."
+    },
+    {
+      "kind": "body",
+      "partId": 56,
+      "partName": "아쿼버스",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Arquebus body GX is present in this client build."
+    },
+    {
+      "kind": "body",
+      "partId": 57,
+      "partName": "재즈레인트",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Jazeraint body GX is present in this client build."
+    },
+    {
+      "kind": "body",
+      "partId": 58,
+      "partName": "하마타",
+      "mappingStatus": "mapped",
+      "sourceGx": "body33_hmt.gx",
+      "confidence": "medium",
+      "evidence": "gxdesc.ini comment names Hamata but marks the model unused",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 1,
+      "partName": "데미시즈",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm5_dmsz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 2,
+      "partName": "배럴",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm7_br.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 3,
+      "partName": "아모건",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm9_omg.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 4,
+      "partName": "데미시즈N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm59_dmsz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 5,
+      "partName": "머신건",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm6_msg.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 6,
+      "partName": "듀얼건",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm8_do.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 7,
+      "partName": "에너맥스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm12_onms.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 8,
+      "partName": "시즈",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm1_sz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 9,
+      "partName": "헤비배럴",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm2_hbbr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 10,
+      "partName": "클러스터",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm3_krst.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 11,
+      "partName": "클러스터N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm63_krst.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 12,
+      "partName": "파워맥스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm11_poms.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 13,
+      "partName": "발칸",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm4_bk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 14,
+      "partName": "쇼크웨이브",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm25_skoob.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 15,
+      "partName": "블레이즈",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm10_broz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 16,
+      "partName": "핸드케넌",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm15_hdkn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 17,
+      "partName": "핸드케넌N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm64_hdkn.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 18,
+      "partName": "레이저",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm19_roz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 19,
+      "partName": "팔랑스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm13_prs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 20,
+      "partName": "스카이킬러",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm31_skokr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 21,
+      "partName": "메가배럴",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm16_mgbr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 22,
+      "partName": "메가배럴N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm60_mgbr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 23,
+      "partName": "캐니스터",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm18_knst.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 24,
+      "partName": "캐니스터N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm62_knst.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 25,
+      "partName": "헤비시즈",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm14_hbsz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 26,
+      "partName": "사라만다",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm26_srmd.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 27,
+      "partName": "스핏파이어",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm32_sppoo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 28,
+      "partName": "프롤릭스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm17_prrs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 29,
+      "partName": "바실리스크",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm22_bsrsk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 30,
+      "partName": "바실리스크N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm61_bsrsk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 31,
+      "partName": "이지스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm28_ozs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 32,
+      "partName": "리코일건",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm23_rkog.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 33,
+      "partName": "리코일건N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm69_rkog.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 34,
+      "partName": "로켓티어",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm20_rkto.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 35,
+      "partName": "네메시즈",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm21_nmsz.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 36,
+      "partName": "호크아이",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm33_hkoo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 37,
+      "partName": "슈팅스타",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm27_stst.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 38,
+      "partName": "바주카",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm24_bzk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 39,
+      "partName": "스콜피오",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm34_skpo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 40,
+      "partName": "스콜피오N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm66_skpo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 41,
+      "partName": "서먼",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm30_sm.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 42,
+      "partName": "선더볼트",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm29_sdbt.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 43,
+      "partName": "오닉스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm35_ons.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 44,
+      "partName": "해머쇼크",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm39_hmsk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 45,
+      "partName": "해머쇼크N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm70_hmsk.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 46,
+      "partName": "아누아이",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm41_onoo.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 47,
+      "partName": "멀티샷건",
+      "mappingStatus": "mapped",
+      "sourceGx": "amr38_mtsg.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 48,
+      "partName": "스틱스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm37_sts.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 49,
+      "partName": "스틱스N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm67_sts.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 50,
+      "partName": "버닝소울",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm36_bnso.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 51,
+      "partName": "데빌클로",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm46_dbkr.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 52,
+      "partName": "프리징소울",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm43_przso.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 53,
+      "partName": "스나이퍼",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm79_snop.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 54,
+      "partName": "에리니스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm76_orns.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 55,
+      "partName": "인센디어리",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm77_osdor.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 56,
+      "partName": "베베세",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm55_bbs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 57,
+      "partName": "베베세N",
+      "mappingStatus": "mapped",
+      "sourceGx": "n_arm65_bbs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 58,
+      "partName": "레디에이트",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm78_rdoot.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 59,
+      "partName": "립타리온",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm81_rtro.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 60,
+      "partName": "아포칼립스",
+      "mappingStatus": "mapped",
+      "sourceGx": "arm80_opkrs.gx",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "weapon",
+      "partId": 61,
+      "partName": "디퓨전",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Diffusion weapon GX is present in this client build."
+    },
+    {
+      "kind": "weapon",
+      "partId": 62,
+      "partName": "브랜디쉬",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Brandish weapon GX is present in this client build."
+    },
+    {
+      "kind": "weapon",
+      "partId": 63,
+      "partName": "스팅거",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Stinger weapon GX is present in this client build."
+    },
+    {
+      "kind": "weapon",
+      "partId": 64,
+      "partName": "파운드건",
+      "mappingStatus": "unresolved",
+      "sourceGx": null,
+      "confidence": "unresolved",
+      "evidence": "No distinct registered GX in this installed client build",
+      "note": "No Pound-Gun weapon GX is present in this client build."
+    },
+    {
+      "kind": "accessory",
+      "partId": 1,
+      "partName": "체력100",
+      "mappingStatus": "mapped",
+      "sourceGx": "acphp100.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 2,
+      "partName": "파워5",
+      "mappingStatus": "mapped",
+      "sourceGx": "acppw5.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 3,
+      "partName": "와트30",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpwt30.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 4,
+      "partName": "와트50",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpwt50.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 5,
+      "partName": "파워10",
+      "mappingStatus": "mapped",
+      "sourceGx": "acppw10.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 6,
+      "partName": "체력150",
+      "mappingStatus": "mapped",
+      "sourceGx": "acphp150.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 7,
+      "partName": "체력듀얼",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpdualh.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 8,
+      "partName": "파워듀얼",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpdualp.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 9,
+      "partName": "듀얼",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpdual.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 10,
+      "partName": "체력180",
+      "mappingStatus": "mapped",
+      "sourceGx": "acphp180.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 11,
+      "partName": "와트80",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpwt80.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 12,
+      "partName": "파워15",
+      "mappingStatus": "mapped",
+      "sourceGx": "acppw15.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 13,
+      "partName": "H트라이",
+      "mappingStatus": "mapped",
+      "sourceGx": "superwattac.GX",
+      "confidence": "high",
+      "evidence": "Visual identification: this GX is the H-Trial model despite its legacy filename",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 14,
+      "partName": "P트라이",
+      "mappingStatus": "mapped",
+      "sourceGx": "superattackac.GX",
+      "confidence": "high",
+      "evidence": "Visual identification: this GX is the P-Trial model",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 15,
+      "partName": "W트라이",
+      "mappingStatus": "mapped",
+      "sourceGx": "superhpac.GX",
+      "confidence": "high",
+      "evidence": "Visual identification: this GX is the W-Trial model despite its legacy filename",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 16,
+      "partName": "와트100",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpwt100.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 17,
+      "partName": "체력210",
+      "mappingStatus": "mapped",
+      "sourceGx": "acphp210.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 18,
+      "partName": "파워20",
+      "mappingStatus": "mapped",
+      "sourceGx": "acppw20.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 19,
+      "partName": "타워링II",
+      "mappingStatus": "mapped",
+      "sourceGx": "acptwr2.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 20,
+      "partName": "와트110",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpwt110.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 21,
+      "partName": "P파나틱",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique11.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order and power-arrow texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 22,
+      "partName": "H파나틱",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique10.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order and HP-themed texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 23,
+      "partName": "R파나틱",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpRP.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 24,
+      "partName": "A파나틱",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpAP.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 25,
+      "partName": "S파나틱",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpSP.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 26,
+      "partName": "D파나틱",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpDP.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 27,
+      "partName": "와트120",
+      "mappingStatus": "mapped",
+      "sourceGx": "acpwt120.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 28,
+      "partName": "타워링",
+      "mappingStatus": "mapped",
+      "sourceGx": "acptwr.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 29,
+      "partName": "올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique06.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order and multi-color texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 30,
+      "partName": "골든볼",
+      "mappingStatus": "mapped",
+      "sourceGx": "soccerball_gold.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 31,
+      "partName": "SR트라이",
+      "mappingStatus": "mapped",
+      "sourceGx": "SRtry.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 32,
+      "partName": "RA트라이",
+      "mappingStatus": "mapped",
+      "sourceGx": "RAtry.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 33,
+      "partName": "DP트라이",
+      "mappingStatus": "mapped",
+      "sourceGx": "DPtry.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 34,
+      "partName": "H-제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "deup2.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed shared up2 model with blue H texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 35,
+      "partName": "P-제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "attup2.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed shared up2 model with orange P texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 36,
+      "partName": "W-제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "srup2.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed shared up2 model with purple W texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 37,
+      "partName": "H-올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "deup2.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed reuse of the blue H-generator model and texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 38,
+      "partName": "P-올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "attup2.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed reuse of the orange P-generator model and texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 39,
+      "partName": "W-올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "srup2.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed reuse of the purple W-generator model and texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 40,
+      "partName": "S-제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "S_allinone.GX",
+      "confidence": "high",
+      "evidence": "S-generator reuses the S-all-in-one model",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 41,
+      "partName": "A-제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "A_allinone.GX",
+      "confidence": "high",
+      "evidence": "A-generator reuses the A-all-in-one model",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 42,
+      "partName": "D-제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "D_allinone.GX",
+      "confidence": "high",
+      "evidence": "D-generator reuses the D-all-in-one model",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 43,
+      "partName": "S-올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "S_allinone.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 44,
+      "partName": "A-올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "A_allinone.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 45,
+      "partName": "D-올인원",
+      "mappingStatus": "mapped",
+      "sourceGx": "D_allinone.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 46,
+      "partName": "엔젤하트",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique04.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 47,
+      "partName": "미니맥시",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique02.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 48,
+      "partName": "투파",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique09.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 49,
+      "partName": "브론즈볼",
+      "mappingStatus": "mapped",
+      "sourceGx": "soccerball_copper.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 50,
+      "partName": "튜브",
+      "mappingStatus": "mapped",
+      "sourceGx": "tube.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 51,
+      "partName": "쿼드디케",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique08.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order and four-color texture",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 52,
+      "partName": "지비킹",
+      "mappingStatus": "mapped",
+      "sourceGx": "지비킹.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 53,
+      "partName": "제너러",
+      "mappingStatus": "mapped",
+      "sourceGx": "superdefenceac.GX",
+      "confidence": "high",
+      "evidence": "User-confirmed visual match against the in-game 2x2-panel generator model",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 54,
+      "partName": "실버볼",
+      "mappingStatus": "mapped",
+      "sourceGx": "soccerball_silver.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 55,
+      "partName": "파라솔",
+      "mappingStatus": "mapped",
+      "sourceGx": "parasol.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 56,
+      "partName": "듀얼맥시",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique01.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 57,
+      "partName": "엠디킹",
+      "mappingStatus": "mapped",
+      "sourceGx": "엠디킹.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 58,
+      "partName": "타워링S",
+      "mappingStatus": "mapped",
+      "sourceGx": "acptwr.GX",
+      "confidence": "medium",
+      "evidence": "nvpartdesc maps Towering and Towering-S to resource 6040",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 59,
+      "partName": "자이킹",
+      "mappingStatus": "mapped",
+      "sourceGx": "자이킹.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 60,
+      "partName": "타워링III",
+      "mappingStatus": "mapped",
+      "sourceGx": "acptwr3.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 61,
+      "partName": "P쥬얼",
+      "mappingStatus": "mapped",
+      "sourceGx": "공격up.gx",
+      "confidence": "high",
+      "evidence": "gxdesc resource ID 6049",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 62,
+      "partName": "A쥬얼",
+      "mappingStatus": "mapped",
+      "sourceGx": "방어up.gx",
+      "confidence": "high",
+      "evidence": "gxdesc resource ID 6050",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 63,
+      "partName": "C쥬얼",
+      "mappingStatus": "mapped",
+      "sourceGx": "시야up.gx",
+      "confidence": "high",
+      "evidence": "gxdesc resource ID 6051",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 64,
+      "partName": "빅포암",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique03.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 65,
+      "partName": "오픈스토",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique05.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 66,
+      "partName": "마이저",
+      "mappingStatus": "mapped",
+      "sourceGx": "AcpUnique07.GX",
+      "confidence": "high",
+      "evidence": "AcpUnique registration order",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 67,
+      "partName": "노바컵",
+      "mappingStatus": "mapped",
+      "sourceGx": "novacup.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 68,
+      "partName": "데빌하트",
+      "mappingStatus": "mapped",
+      "sourceGx": "devilheart.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 69,
+      "partName": "체력240",
+      "mappingStatus": "mapped",
+      "sourceGx": "Hp240.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 70,
+      "partName": "파워25",
+      "mappingStatus": "mapped",
+      "sourceGx": "Pw25.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 71,
+      "partName": "트리플맥시",
+      "mappingStatus": "mapped",
+      "sourceGx": "TrMax.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 72,
+      "partName": "쿼드맥시",
+      "mappingStatus": "mapped",
+      "sourceGx": "Qumax.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 73,
+      "partName": "미니투파",
+      "mappingStatus": "mapped",
+      "sourceGx": "mini2pa.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 74,
+      "partName": "스피드스타",
+      "mappingStatus": "mapped",
+      "sourceGx": "S_star.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 75,
+      "partName": "P-스타",
+      "mappingStatus": "mapped",
+      "sourceGx": "P_star.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 76,
+      "partName": "H-스타",
+      "mappingStatus": "mapped",
+      "sourceGx": "H_star.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    },
+    {
+      "kind": "accessory",
+      "partId": 77,
+      "partName": "초신성",
+      "mappingStatus": "mapped",
+      "sourceGx": "supernova.GX",
+      "confidence": "high",
+      "evidence": "gxdesc.ini CP949 part registration comment",
+      "note": null
+    }
+  ]
+}

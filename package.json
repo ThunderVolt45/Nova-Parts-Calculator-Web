@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "catalog:import": "node scripts/import-reference-catalog.mjs",
+    "gx:mapping": "python scripts/generate-gx-resource-map.py",
+    "gx:inspect": "node --experimental-strip-types scripts/inspect-gx-parser.mjs",
+    "gx:assembly": "node --experimental-strip-types scripts/inspect-unit-sockets.mjs",
+    "gx:convert": "node --experimental-strip-types scripts/convert-gx-glb.mjs",
     "calculation:golden": "python scripts/generate-calculation-golden.py",
     "calculation:golden:final": "python scripts/generate-final-calculation-golden.py",
     "calculation:golden:validation": "python scripts/generate-validation-golden.py",

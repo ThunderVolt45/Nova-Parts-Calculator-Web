@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import './App.css'
 import { partsCatalog, partsCatalogById } from './data/catalog/catalog.ts'
@@ -28,10 +28,25 @@ import {
   validateAssembly,
 } from './domain/calculation/validateAssembly.ts'
 import type { SavedUnit } from './domain/deck/schema.ts'
+import { LocalResourceConnector } from './gx/LocalResourceConnector.tsx'
+import { LabUiSprite, LabUiSpriteProvider } from './gx/LabUiSprites.tsx'
+import {
+  getMountSpriteKey,
+  getSubcoreSpriteKey,
+} from './gx/lab-ui-atlas.ts'
+import type { LocalResourceIndex } from './gx/local-files.ts'
+import type { ViewerDisplayState } from './viewer/StandalonePartViewer.tsx'
+import { AssembledUnitViewer } from './viewer/AssembledUnitViewer.tsx'
+import { PartModelThumbnail } from './viewer/ModelThumbnail.tsx'
+import {
+  UNIT_ANIMATION_CLIPS,
+  type UnitAnimationClip,
+  type UnitAnimationPlayback,
+} from './viewer/unit-animation.ts'
 
 type EditablePartSlot = PartSlot | 'accessory'
 type MobileView = 'assembly' | 'simulation' | 'stats' | 'deck'
-type CenterMode = 'preview' | 'simulation'
+type CenterMode = 'assembly' | 'simulation'
 type BooleanSkillKey =
   | 'attackBase'
   | 'defenseBase'
@@ -72,6 +87,12 @@ const slotLabels: Record<EditablePartSlot, string> = {
   accessory: '액세서리',
 }
 
+const animationClipLabels: Record<UnitAnimationClip, string> = {
+  idle: 'Idle',
+  move: 'Move',
+  attack: 'Attack',
+}
+
 const slotMarks: Record<EditablePartSlot, string> = {
   leg: 'L',
   body: 'B',
@@ -84,6 +105,27 @@ const mountLabels = {
   arm: '팔형',
   shoulder: '어깨형',
 } as const
+
+const mountFallbackLabels = {
+  tower: '탑',
+  arm: '팔',
+  shoulder: '어깨',
+} as const
+
+const subcoreFallbackLabels: Readonly<Record<number, string>> = {
+  1: 'Ar',
+  2: 'Ta',
+  3: 'Ge',
+  4: 'Ca',
+  5: 'Le',
+  6: 'Vi',
+  7: 'Li',
+  8: 'Sc',
+  9: 'Sa',
+  10: 'Cp',
+  11: 'Aq',
+  12: 'Pi',
+}
 
 const reinforcementLabels: Array<{
   key: keyof PartReinforcement
@@ -354,7 +396,21 @@ function App() {
   const [catalogPicker, setCatalogPicker] = useState<CatalogPicker | null>(null)
   const [mobileView, setMobileView] = useState<MobileView>('assembly')
   const [calculateAsFloat, setCalculateAsFloat] = useState(false)
-  const [centerMode, setCenterMode] = useState<CenterMode>('preview')
+  const [centerMode, setCenterMode] = useState<CenterMode>('assembly')
+  const [gxFileIndex, setGxFileIndex] = useState<LocalResourceIndex | null>(null)
+  const [viewerResetToken, setViewerResetToken] = useState(0)
+  const [viewerDisplay, setViewerDisplay] = useState<ViewerDisplayState>({
+    status: 'offline',
+    message: '게임 리소스 폴더를 연결하면 조립 유닛을 표시합니다.',
+  })
+  const [unitAnimation, setUnitAnimation] = useState<UnitAnimationPlayback>({
+    clip: 'idle',
+    playing: false,
+    restartToken: 0,
+  })
+  const [availableAnimationClips, setAvailableAnimationClips] = useState<
+    readonly UnitAnimationClip[]
+  >([])
   const [simulation, setSimulation] =
     useState<SimulationInput>(emptySimulationInput)
 
@@ -366,6 +422,28 @@ function App() {
     () => countActiveSimulationConditions(simulation),
     [simulation],
   )
+  const handleAnimationClipsChange = useCallback((clips: readonly UnitAnimationClip[]) => {
+    setAvailableAnimationClips((current) =>
+      current.length === clips.length && current.every((clip, index) => clip === clips[index])
+        ? current
+        : [...clips],
+    )
+    setUnitAnimation((current) => {
+      if (clips.length === 0) {
+        return current.playing ? { ...current, playing: false } : current
+      }
+      const clip = clips.includes(current.clip)
+        ? current.clip
+        : clips.includes('idle')
+          ? 'idle'
+          : clips[0]
+      return {
+        clip,
+        playing: true,
+        restartToken: current.restartToken + 1,
+      }
+    })
+  }, [])
   const baseInput = useMemo<BaseCalculationInput>(
     () => ({
       partIds,
@@ -591,7 +669,8 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
+    <LabUiSpriteProvider index={gxFileIndex}>
+      <div className="app-shell">
       <header className="topbar">
         <a className="brand" href="#main" aria-label="노바 어셈블리 홈">
           <span className="brand-mark" aria-hidden="true">
@@ -636,6 +715,7 @@ function App() {
           )}
           onLoadUnit={loadSavedUnit}
           onClearUnit={clearAssemblyForEmptyDeckSlot}
+          resourceIndex={gxFileIndex}
         />
 
         <section
@@ -674,6 +754,7 @@ function App() {
                 activeReinforcement?.slot === 'leg' ? activeReinforcement.key : undefined
               }
               calculateAsFloat={calculateAsFloat}
+              resourceIndex={gxFileIndex}
               onFocus={() => setActivePart('leg')}
               onOpenPartPicker={() => setCatalogPicker({ kind: 'part', slot: 'leg' })}
               onOpenSubcorePicker={() =>
@@ -700,6 +781,7 @@ function App() {
                 activeReinforcement?.slot === 'body' ? activeReinforcement.key : undefined
               }
               calculateAsFloat={calculateAsFloat}
+              resourceIndex={gxFileIndex}
               onFocus={() => setActivePart('body')}
               onOpenPartPicker={() => setCatalogPicker({ kind: 'part', slot: 'body' })}
               onOpenSubcorePicker={() =>
@@ -730,6 +812,7 @@ function App() {
                   : undefined
               }
               calculateAsFloat={calculateAsFloat}
+              resourceIndex={gxFileIndex}
               onFocus={() => setActivePart('weapon')}
               onOpenPartPicker={() =>
                 setCatalogPicker({ kind: 'part', slot: 'weapon' })
@@ -755,6 +838,7 @@ function App() {
               value={partIds.accessory}
               items={partsCatalog.parts.accessories}
               accessoryRandomOptions={accessoryRandomOptions}
+              resourceIndex={gxFileIndex}
               onFocus={() => setActivePart('accessory')}
               onOpenPartPicker={() =>
                 setCatalogPicker({ kind: 'part', slot: 'accessory' })
@@ -774,16 +858,18 @@ function App() {
                 {isSimulationMode ? 'COMBAT LAB' : 'LIVE PREVIEW'}
               </span>
               <h2 id="viewer-title">
-                {isSimulationMode ? '전투 시뮬레이션' : '유닛 프리뷰'}
+                {isSimulationMode
+                  ? '전투 시뮬레이션'
+                  : '조립 유닛 프리뷰'}
               </h2>
             </div>
             <div className="segmented-control center-mode-control" aria-label="중앙 화면 방식">
               <button
-                className={centerMode === 'preview' ? 'is-active' : ''}
+                className={centerMode === 'assembly' ? 'is-active' : ''}
                 type="button"
-                onClick={() => setCenterMode('preview')}
+                onClick={() => setCenterMode('assembly')}
               >
-                3D 프리뷰
+                조립 3D
               </button>
               <button
                 className={centerMode === 'simulation' ? 'is-active' : ''}
@@ -795,31 +881,44 @@ function App() {
             </div>
           </div>
 
-          {centerMode === 'preview' ? (
+          {centerMode !== 'simulation' ? (
             <>
               <div className="model-stage">
                 <div className="stage-grid" aria-hidden="true" />
                 <div className="stage-readout stage-readout-left" aria-hidden="true">
-                  <span>ROT 14.2</span>
-                  <span>ZOOM 1.00</span>
+                  <span>DRAG ROTATE</span>
+                  <span>WHEEL ZOOM</span>
                 </div>
                 <div className="stage-readout stage-readout-right" aria-hidden="true">
-                  <span>GX OFFLINE</span>
+                  <span>{gxFileIndex ? `${gxFileIndex.size} FILES` : 'GX OFFLINE'}</span>
                   <span>LOCAL ONLY</span>
                 </div>
-                <div className="unit-silhouette" aria-label="3D 모델 자리 표시자">
-                  <div className="unit-weapon" />
-                  <div className="unit-head" />
-                  <div className="unit-body" />
-                  <div className="unit-leg unit-leg-left" />
-                  <div className="unit-leg unit-leg-right" />
-                  <span className="scan-line" />
-                </div>
-                <div className="model-placeholder-copy">
-                  <span className="prototype-badge">PROTOTYPE VIEW</span>
-                  <strong>3D 리소스 연결 대기</strong>
-                  <p>레이아웃 검증용 실루엣입니다</p>
-                </div>
+                <AssembledUnitViewer
+                  parts={{
+                    leg: {
+                      id: partIds.leg,
+                      name: selectedParts.leg?.name ?? '다리 없음',
+                    },
+                    body: {
+                      id: partIds.body,
+                      name: selectedParts.body?.name ?? '몸통 없음',
+                    },
+                    weapon: {
+                      id: partIds.weapon,
+                      name: selectedParts.weapon?.name ?? '무기 없음',
+                    },
+                  }}
+                  mountCompatible={!validation.issues.includes('mount-type-mismatch')}
+                  index={gxFileIndex}
+                  resetToken={viewerResetToken}
+                  animation={unitAnimation}
+                  onStateChange={setViewerDisplay}
+                  onAnimationClipsChange={handleAnimationClipsChange}
+                />
+                <LocalResourceConnector
+                  index={gxFileIndex}
+                  onIndexChange={setGxFileIndex}
+                />
               </div>
 
               <div className="viewer-footer">
@@ -827,19 +926,69 @@ function App() {
                   <button
                     className="play-button"
                     type="button"
-                    aria-label="애니메이션 재생"
+                    aria-label={unitAnimation.playing
+                      ? '애니메이션 일시정지'
+                      : '애니메이션 재생'}
+                    disabled={
+                      viewerDisplay.status !== 'ready'
+                      || !availableAnimationClips.includes(unitAnimation.clip)
+                    }
+                    onClick={() => setUnitAnimation((current) => ({
+                      ...current,
+                      playing: !current.playing,
+                    }))}
                   >
-                    <span aria-hidden="true">▶</span>
+                    <span aria-hidden="true">{unitAnimation.playing ? 'Ⅱ' : '▶'}</span>
                   </button>
                   <div>
                     <span>ANIMATION</span>
-                    <strong>Idle</strong>
+                    <strong>{animationClipLabels[unitAnimation.clip]}</strong>
                   </div>
                 </div>
-                <div className="timeline" aria-hidden="true">
-                  <i />
+                <div className="animation-toolbar">
+                  <div className="animation-clips" role="group" aria-label="애니메이션 클립 선택">
+                    {UNIT_ANIMATION_CLIPS.map((clip) => (
+                      <button
+                        key={clip}
+                        className={unitAnimation.clip === clip ? 'is-active' : ''}
+                        type="button"
+                        aria-pressed={unitAnimation.clip === clip}
+                        disabled={
+                          viewerDisplay.status !== 'ready'
+                          || !availableAnimationClips.includes(clip)
+                        }
+                        onClick={() => setUnitAnimation((current) => ({
+                          clip,
+                          playing: true,
+                          restartToken: current.restartToken + 1,
+                        }))}
+                      >
+                        {animationClipLabels[clip]}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    className="animation-restart"
+                    type="button"
+                    disabled={
+                      viewerDisplay.status !== 'ready'
+                      || !availableAnimationClips.includes(unitAnimation.clip)
+                    }
+                    onClick={() => setUnitAnimation((current) => ({
+                      ...current,
+                      playing: true,
+                      restartToken: current.restartToken + 1,
+                    }))}
+                  >
+                    처음부터
+                  </button>
                 </div>
-                <button className="camera-button" type="button">
+                <button
+                  className="camera-button"
+                  type="button"
+                  disabled={viewerDisplay.status !== 'ready'}
+                  onClick={() => setViewerResetToken((token) => token + 1)}
+                >
                   카메라 초기화
                 </button>
               </div>
@@ -1171,7 +1320,8 @@ function App() {
           }}
         />
       )}
-    </div>
+      </div>
+    </LabUiSpriteProvider>
   )
 }
 
@@ -1208,6 +1358,7 @@ function PartSelector<T extends Part>({
   activeReinforcementKey,
   accessoryRandomOptions,
   calculateAsFloat = false,
+  resourceIndex,
   onFocus,
   onOpenPartPicker,
   onOpenSubcorePicker,
@@ -1225,6 +1376,7 @@ function PartSelector<T extends Part>({
   activeReinforcementKey?: keyof PartReinforcement
   accessoryRandomOptions?: AccessoryRandomOptions
   calculateAsFloat?: boolean
+  resourceIndex: LocalResourceIndex | null
   onFocus: () => void
   onOpenPartPicker: () => void
   onOpenSubcorePicker?: () => void
@@ -1262,22 +1414,27 @@ function PartSelector<T extends Part>({
         aria-label={`${slotLabels[slot]} 프리뷰 선택`}
       >
         <span className="part-grid" aria-hidden="true" />
-        <span className="part-model" aria-hidden="true">
-          <i />
-        </span>
+        <PartModelThumbnail
+          kind={slot}
+          partId={selected?.id ?? 0}
+          partName={getPartDisplayName(selected)}
+          index={resourceIndex}
+        />
         {selectedSubcore && selectedSubcore.id !== 0 && (
-          <span className={`subcore-sprite subcore-sprite-${slot}`}>
-            <i aria-hidden="true" />
-            <b aria-hidden="true" />
-            <span className="sr-only">{selectedSubcore.name} 오버레이</span>
-          </span>
+          <LabUiSprite
+            className={`subcore-sprite subcore-sprite-${slot}`}
+            spriteKey={getSubcoreSpriteKey(selectedSubcore.id)}
+            label={`${selectedSubcore.name} 오버레이`}
+            fallback={<span className="sprite-fallback-text">{subcoreFallbackLabels[selectedSubcore.id]}</span>}
+          />
         )}
         {selected && 'mountType' in selected && selected.mountType !== 'none' && (
-          <span className={`mount-sprite mount-sprite-${selected.mountType}`}>
-            <i aria-hidden="true" />
-            <b aria-hidden="true" />
-            <span className="sr-only">{mountLabels[selected.mountType]}</span>
-          </span>
+          <LabUiSprite
+            className={`mount-sprite mount-sprite-${selected.mountType}`}
+            spriteKey={getMountSpriteKey(selected.mountType)}
+            label={mountLabels[selected.mountType]}
+            fallback={<span className="sprite-fallback-text">{mountFallbackLabels[selected.mountType]}</span>}
+          />
         )}
         <small>{slotMarks[slot]}</small>
       </button>
@@ -1795,10 +1952,12 @@ function SubcoreCatalogDialog({
                 onClick={() => onSelect(subcore.id)}
                 aria-label={`${subcore.name}, ${optionLabels.join(', ') || '추가 능력치 없음'}${value === subcore.id ? ', 현재 선택' : ''}`}
               >
-                <span className={`subcore-token subcore-token-${subcore.id % 4}`}>
-                  <i aria-hidden="true" />
-                  <b aria-hidden="true" />
-                </span>
+                <LabUiSprite
+                  className={`subcore-token subcore-token-${subcore.id % 4}`}
+                  spriteKey={getSubcoreSpriteKey(subcore.id)}
+                  label={`${subcore.name} 아이콘`}
+                  fallback={<span className="sprite-fallback-text">{subcoreFallbackLabels[subcore.id]}</span>}
+                />
                 <strong>{subcore.name}</strong>
                 <span className="subcore-card-tags" aria-hidden="true">
                   {optionLabels.length > 0 ? (

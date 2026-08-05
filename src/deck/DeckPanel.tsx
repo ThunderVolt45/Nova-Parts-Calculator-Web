@@ -17,6 +17,8 @@ import {
   serializeDeckExport,
   type ImportResult,
 } from './transfer.ts'
+import type { LocalResourceIndex } from '../gx/local-files.ts'
+import { UnitModelThumbnail } from '../viewer/ModelThumbnail.tsx'
 
 type UnitDraft = Omit<SavedUnit, 'name' | 'schemaVersion' | 'catalogVersion'>
 
@@ -27,6 +29,7 @@ type DeckPanelProps = {
   registrationIssues: string[]
   onLoadUnit: (unit: SavedUnit) => void
   onClearUnit: () => void
+  resourceIndex: LocalResourceIndex | null
 }
 
 type Notice = { tone: 'success' | 'warning' | 'error'; text: string } | null
@@ -39,6 +42,7 @@ export function DeckPanel({
   registrationIssues,
   onLoadUnit,
   onClearUnit,
+  resourceIndex,
 }: DeckPanelProps) {
   const {
     decks,
@@ -303,7 +307,13 @@ export function DeckPanel({
               <span className="slot-index">{String(index + 1).padStart(2, '0')}</span>
               {unit ? (
                 <>
-                  <span className="mini-unit" aria-hidden="true"><i /></span>
+                  <span className="deck-unit-thumbnail">
+                    <UnitModelThumbnail
+                      parts={unit.partIds}
+                      name={unit.name}
+                      index={resourceIndex}
+                    />
+                  </span>
                   <strong>{unit.name}</strong>
                   <small>{weaponName}</small>
                 </>

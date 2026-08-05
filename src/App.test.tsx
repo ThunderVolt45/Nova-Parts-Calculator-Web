@@ -101,6 +101,9 @@ describe('T09 부품 선택 및 강화 UI', () => {
 
     await user.click(screen.getByRole('button', { name: /다리 서브코어 변경/ }))
     const dialog = screen.getByRole('dialog', { name: '다리 서브코어 선택' })
+    expect(
+      within(dialog).getByRole('button', { name: /^에어리움,/ }),
+    ).toHaveTextContent('Ar')
     const subcoreButton = within(dialog).getByRole('button', { name: /^레오늄,/ })
     expect(subcoreButton.querySelector('.subcore-card-tags')).toHaveTextContent(/\S/)
     expect(within(dialog).queryByText('SUB CORE DETAIL')).not.toBeInTheDocument()
@@ -162,6 +165,26 @@ describe('T09 부품 선택 및 강화 UI', () => {
 })
 
 describe('T10 계산 결과 및 시뮬레이션 UI', () => {
+  it('중앙은 조립 유닛 전용이고 각 부품 카드가 개별 프리뷰 공간을 제공한다', () => {
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: '조립 유닛 프리뷰' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: '부품 3D' })).not.toBeInTheDocument()
+    for (const slot of ['다리', '몸통', '무기', '액세서리']) {
+      const preview = screen.getByRole('button', { name: `${slot} 프리뷰 선택` })
+      expect(preview.querySelector('.model-thumbnail-empty')).toBeInTheDocument()
+      expect(preview.querySelector('.part-model')).not.toBeInTheDocument()
+    }
+    const bodyPreview = screen.getByRole('button', { name: '몸통 프리뷰 선택' })
+    expect(bodyPreview.querySelector('.mount-sprite')).toHaveTextContent('탑')
+    expect(bodyPreview.querySelector('.mount-sprite')).not.toHaveClass('has-game-sprite')
+    expect(screen.getByRole('button', { name: '애니메이션 재생' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: '처음부터' })).toBeDisabled()
+    for (const clip of ['Idle', 'Move', 'Attack']) {
+      expect(screen.getByRole('button', { name: clip })).toBeDisabled()
+    }
+  })
+
   it('기본과 최종 능력치를 구분하고 적용 조건을 초기화한다', async () => {
     const user = userEvent.setup()
     render(<App />)
@@ -243,9 +266,10 @@ describe('T11-T12 덱 저장 및 편집 UI', () => {
     await user.click(screen.getByRole('button', { name: '유닛 등록' }))
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: '1번 덱 슬롯, UNIT-01 저장됨' }),
-      ).toBeVisible()
+      const slot = screen.getByRole('button', { name: '1번 덱 슬롯, UNIT-01 저장됨' })
+      expect(slot).toBeVisible()
+      expect(slot.querySelector('.deck-unit-thumbnail')).toBeInTheDocument()
+      expect(slot.querySelector('.mini-unit')).not.toBeInTheDocument()
     })
 
     await user.click(screen.getByRole('button', { name: '유닛 복사' }))
