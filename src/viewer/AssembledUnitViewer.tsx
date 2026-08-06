@@ -34,6 +34,7 @@ import {
 } from '../gx/socket-assembly.ts'
 import { useViewerCapability, type ViewerCapability } from './capability.ts'
 import type { AssembledUnitCanvasProps } from './AssembledUnitCanvas.tsx'
+import type { ViewerCameraState } from './camera-state.ts'
 import type { ViewerDisplayState } from './StandalonePartViewer.tsx'
 import type {
   UnitAnimationClip,
@@ -62,6 +63,8 @@ interface AssembledUnitViewerProps {
   readonly animation?: UnitAnimationPlayback
   onStateChange?(state: ViewerDisplayState): void
   onAnimationClipsChange?(clips: readonly UnitAnimationClip[]): void
+  onCameraStateChange?(state: ViewerCameraState): void
+  onInteractionStart?(): void
   readonly capabilityOverride?: ViewerCapability
   readonly cache?: ModelCacheRepository
   readonly workerFactory?: () => WorkerWithLifecycle
@@ -106,6 +109,8 @@ export function AssembledUnitViewer({
   animation,
   onStateChange,
   onAnimationClipsChange,
+  onCameraStateChange,
+  onInteractionStart,
   capabilityOverride,
   cache = modelCacheRepository,
   workerFactory = createParserWorker,
@@ -300,12 +305,14 @@ export function AssembledUnitViewer({
         animation,
         label: `${parts.leg.name}, ${parts.body.name}, ${parts.weapon.name} 조립 유닛 3D 모델`,
         onAnimationClipsChange,
+        onCameraStateChange,
+        onInteractionStart,
         onReady: () => updateDisplay({
           status: 'ready',
           message: missingKinds.length > 0
             ? '일부 부품만 진단용으로 표시 중'
             : mountCompatible
-              ? '3부품 소켓 조립 완료'
+              ? '프리뷰 준비 완료'
               : '진단용 3D 조립 표시 중',
           cacheStatus,
           warning: warnings.length > 0 ? `조립 불가 · ${warnings.join(' · ')}` : undefined,
@@ -343,16 +350,13 @@ export function AssembledUnitViewer({
           <span>{warnings.join(' · ')} · 소켓 배치는 진단용입니다.</span>
         </div>
       )}
-      <div className="model-viewer-status" role="status" aria-live="polite">
-        <span className={`model-viewer-status-dot is-${display.status}`} aria-hidden="true" />
-        <strong>조립 유닛</strong>
-        <span>{display.message}</span>
-        {display.cacheStatus && (
-          <em>{display.cacheStatus === 'hit'
-            ? `CACHE HIT ×${loadedModels.length}`
-            : 'CACHE BUILD'}</em>
-        )}
-      </div>
+      {display.status !== 'ready' && (
+        <div className="model-viewer-status" role="status" aria-live="polite">
+          <span className={`model-viewer-status-dot is-${display.status}`} aria-hidden="true" />
+          <strong>조립 유닛</strong>
+          <span>{display.message}</span>
+        </div>
+      )}
     </div>
   )
 }

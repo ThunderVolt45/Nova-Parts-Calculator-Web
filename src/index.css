@@ -10,9 +10,9 @@
   --text-dim: #52616a;
   --line: rgba(135, 169, 181, 0.14);
   --line-strong: rgba(135, 181, 194, 0.24);
-  --display: 'Segoe UI Variable Display', 'Pretendard', 'Noto Sans KR', sans-serif;
-  --sans: 'Segoe UI Variable Text', 'Pretendard', 'Noto Sans KR', sans-serif;
-  --mono: 'Cascadia Mono', 'SFMono-Regular', Consolas, monospace;
+  --display: 'Segoe UI Variable Display', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --sans: 'Segoe UI Variable Text', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+  --mono: 'Cascadia Mono', 'SFMono-Regular', 'Malgun Gothic', 'Apple SD Gothic Neo', Consolas, monospace;
 
   color: var(--text-muted);
   background: #080d12;

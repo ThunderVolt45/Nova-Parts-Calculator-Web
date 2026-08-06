@@ -1,7 +1,7 @@
 import { OrbitControls } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { Group, PerspectiveCamera } from 'three'
+import { Box3, Group, PerspectiveCamera, Vector3 } from 'three'
 import type { OrbitControls as OrbitControlsImplementation } from 'three-stdlib'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
@@ -13,7 +13,11 @@ import {
   createPartialAssembledUnitObject,
   createSocketDrivenUnitObject,
 } from './assembled-object.ts'
-import { fitPerspectiveCameraToObject } from './camera-fit.ts'
+import { fitPerspectiveCameraToBounds } from './camera-fit.ts'
+import {
+  calculateViewerCameraState,
+  type ViewerCameraState,
+} from './camera-state.ts'
 import { disposeModelObject } from './disposeModel.ts'
 import { centerModelPivot } from './model-pivot.ts'
 import {
@@ -36,11 +40,14 @@ export interface AssembledUnitCanvasProps {
   onReady(): void
   onError(error: Error): void
   onAnimationClipsChange?(clips: readonly UnitAnimationClip[]): void
+  onCameraStateChange?(state: ViewerCameraState): void
+  onInteractionStart?(): void
 }
 
 interface AssemblyCanvasScene {
   readonly object: Group
   readonly animatedParts: readonly AnimatedUnitPart[]
+  readonly tPoseBounds: Box3
 }
 
 const defaultAnimation: UnitAnimationPlayback = {
@@ -49,18 +56,24 @@ const defaultAnimation: UnitAnimationPlayback = {
   restartToken: 0,
 }
 
+const DEFAULT_ASSEMBLY_VIEW_DIRECTION = new Vector3(2.8, 2, 4.2)
+
 function AnimatedAssembly({
   scene,
   resetToken,
   controls,
   animation,
   onAnimationClipsChange,
+  onCameraStateChange,
+  publishCameraStateRef,
 }: {
   readonly scene: AssemblyCanvasScene
   readonly resetToken: number
   readonly controls: React.RefObject<OrbitControlsImplementation | null>
   readonly animation: UnitAnimationPlayback
   onAnimationClipsChange?(clips: readonly UnitAnimationClip[]): void
+  onCameraStateChange?(state: ViewerCameraState): void
+  readonly publishCameraStateRef: { current: () => void }
 }) {
   const camera = useThree((state) => state.camera)
   const size = useThree((state) => state.size)
@@ -72,8 +85,26 @@ function AnimatedAssembly({
   const restartTokenRef = useRef(animation.restartToken)
   const playingRef = useRef(animation.playing)
   const onClipsChangeRef = useRef(onAnimationClipsChange)
+  const onCameraStateChangeRef = useRef(onCameraStateChange)
+  const previousResetTokenRef = useRef(resetToken)
+  const fittedDistanceRef = useRef(0)
   playingRef.current = animation.playing
   onClipsChangeRef.current = onAnimationClipsChange
+  onCameraStateChangeRef.current = onCameraStateChange
+
+  const publishCameraState = () => {
+    const orbitControls = controls.current
+    if (!orbitControls) return
+    const distance = camera.position.distanceTo(orbitControls.target)
+    const fittedDistance = fittedDistanceRef.current || distance
+    onCameraStateChangeRef.current?.(calculateViewerCameraState(
+      orbitControls.getAzimuthalAngle(),
+      orbitControls.getPolarAngle(),
+      fittedDistance,
+      distance,
+    ))
+  }
+  publishCameraStateRef.current = publishCameraState
 
   useEffect(() => {
     onClipsChangeRef.current?.(controller.availableClips)
@@ -101,9 +132,30 @@ function AnimatedAssembly({
 
   useLayoutEffect(() => {
     if (!(camera instanceof PerspectiveCamera) || !controls.current) return
-    fitPerspectiveCameraToObject(camera, scene.object, controls.current, size)
+    const resetRotation = previousResetTokenRef.current !== resetToken
+    previousResetTokenRef.current = resetToken
+    const fitted = fitPerspectiveCameraToBounds(
+      camera,
+      scene.tPoseBounds,
+      controls.current,
+      size,
+      1.25,
+      resetRotation ? DEFAULT_ASSEMBLY_VIEW_DIRECTION : undefined,
+    )
+    if (fitted) {
+      fittedDistanceRef.current = camera.position.distanceTo(controls.current.target)
+      publishCameraStateRef.current()
+    }
     invalidate()
-  }, [animation.clip, camera, controls, invalidate, resetToken, scene.object, size])
+  }, [
+    camera,
+    controls,
+    invalidate,
+    publishCameraStateRef,
+    resetToken,
+    scene.tPoseBounds,
+    size,
+  ])
 
   useFrame((_, delta) => {
     if (!controller.isAnimating) return
@@ -128,9 +180,12 @@ export function AssembledUnitCanvas({
   onReady,
   onError,
   onAnimationClipsChange,
+  onCameraStateChange,
+  onInteractionStart,
 }: AssembledUnitCanvasProps) {
   const [scene, setScene] = useState<AssemblyCanvasScene | null>(null)
   const controls = useRef<OrbitControlsImplementation>(null)
+  const publishCameraStateRef = useRef<() => void>(() => undefined)
   const onReadyRef = useRef(onReady)
   const onErrorRef = useRef(onError)
   onReadyRef.current = onReady
@@ -177,12 +232,15 @@ export function AssembledUnitCanvas({
               weaponTransform,
             )
         centerModelPivot(assembled)
+        assembled.updateWorldMatrix(true, true)
+        const tPoseBounds = new Box3().setFromObject(assembled)
         if (cancelled) {
           disposeModelObject(assembled)
           return
         }
         setScene({
           object: assembled,
+          tPoseBounds,
           animatedParts: loaded.map(({ kind, scene, animations }) => ({
             role: kind,
             root: scene,
@@ -222,6 +280,8 @@ export function AssembledUnitCanvas({
           dampingFactor={0.08}
           minDistance={0.01}
           maxDistance={100_000}
+          onChange={() => publishCameraStateRef.current()}
+          onStart={onInteractionStart}
         />
         {scene && (
           <AnimatedAssembly
@@ -230,6 +290,8 @@ export function AssembledUnitCanvas({
             controls={controls}
             animation={animation}
             onAnimationClipsChange={onAnimationClipsChange}
+            onCameraStateChange={onCameraStateChange}
+            publishCameraStateRef={publishCameraStateRef}
           />
         )}
       </Canvas>

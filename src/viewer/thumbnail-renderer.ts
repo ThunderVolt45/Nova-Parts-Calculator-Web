@@ -16,6 +16,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
 import type { GltfMatrix } from '../gx/socket-assembly.ts'
 import { createAssembledUnitObject } from './assembled-object.ts'
+import { createConcurrentTaskScheduler } from './concurrent-task-queue.ts'
 import { disposeModelObject } from './disposeModel.ts'
 
 export interface UnitThumbnailInput {
@@ -26,12 +27,35 @@ export interface UnitThumbnailInput {
   readonly weaponTransform: GltfMatrix
 }
 
-let renderQueue = Promise.resolve()
+const THUMBNAIL_RENDER_CONCURRENCY = 2
+const scheduleThumbnail = createConcurrentTaskScheduler(THUMBNAIL_RENDER_CONCURRENCY)
 
-function scheduleThumbnail<T>(task: () => Promise<T>) {
-  const result = renderQueue.then(task, task)
-  renderQueue = result.then(() => undefined, () => undefined)
-  return result
+interface ThumbnailRendererSlot {
+  readonly canvas: HTMLCanvasElement
+  readonly renderer: WebGLRenderer
+}
+
+const rendererSlots: Array<ThumbnailRendererSlot | undefined> = []
+
+function createRendererSlot(): ThumbnailRendererSlot {
+  const canvas = document.createElement('canvas')
+  canvas.width = 512
+  canvas.height = 384
+  const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true })
+  renderer.outputColorSpace = SRGBColorSpace
+  renderer.setPixelRatio(1)
+  renderer.setSize(canvas.width, canvas.height, false)
+  renderer.setClearColor(new Color(0x000000), 0)
+  return { canvas, renderer }
+}
+
+function getRendererSlot(workerIndex: number) {
+  const current = rendererSlots[workerIndex]
+  if (current && !current.renderer.getContext().isContextLost()) return current
+  current?.renderer.dispose()
+  const replacement = createRendererSlot()
+  rendererSlots[workerIndex] = replacement
+  return replacement
 }
 
 function fitCamera(camera: PerspectiveCamera, object: Object3D) {
@@ -53,15 +77,8 @@ function fitCamera(camera: PerspectiveCamera, object: Object3D) {
   camera.updateProjectionMatrix()
 }
 
-async function renderObjectThumbnail(object: Object3D) {
-  const canvas = document.createElement('canvas')
-  canvas.width = 512
-  canvas.height = 384
-  const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true })
-  renderer.outputColorSpace = SRGBColorSpace
-  renderer.setPixelRatio(1)
-  renderer.setSize(canvas.width, canvas.height, false)
-  renderer.setClearColor(new Color(0x000000), 0)
+async function renderObjectThumbnail(object: Object3D, slot: ThumbnailRendererSlot) {
+  const { canvas, renderer } = slot
   const scene = new Scene()
   const camera = new PerspectiveCamera(38, canvas.width / canvas.height, 0.01, 1000)
   scene.add(
@@ -78,25 +95,27 @@ async function renderObjectThumbnail(object: Object3D) {
 
   try {
     fitCamera(camera, object)
+    renderer.setRenderTarget(null)
+    renderer.clear()
     renderer.render(scene, camera)
     return canvas.toDataURL('image/png')
   } finally {
     scene.remove(object)
     disposeModelObject(object)
-    renderer.dispose()
-    renderer.forceContextLoss()
+    renderer.renderLists.dispose()
+    renderer.info.reset()
   }
 }
 
 export function renderPartThumbnail(glb: ArrayBuffer) {
-  return scheduleThumbnail(async () => {
+  return scheduleThumbnail(async (workerIndex) => {
     const result = await new GLTFLoader().parseAsync(glb, '')
-    return renderObjectThumbnail(result.scene)
+    return renderObjectThumbnail(result.scene, getRendererSlot(workerIndex))
   })
 }
 
 export function renderUnitThumbnail(input: UnitThumbnailInput) {
-  return scheduleThumbnail(async () => {
+  return scheduleThumbnail(async (workerIndex) => {
     const loader = new GLTFLoader()
     const scenes: Object3D[] = []
     try {
@@ -111,7 +130,7 @@ export function renderUnitThumbnail(input: UnitThumbnailInput) {
         input.weaponTransform,
       )
       scenes.length = 0
-      return await renderObjectThumbnail(assembled)
+      return await renderObjectThumbnail(assembled, getRendererSlot(workerIndex))
     } finally {
       for (const scene of scenes) disposeModelObject(scene)
     }

@@ -17,7 +17,7 @@ function labUiFile() {
 afterEach(() => vi.unstubAllGlobals())
 
 describe('lab_ui 스프라이트 Provider', () => {
-  it('승인된 아틀라스의 조각 URL을 공급하고 해제한다', async () => {
+  it('승인된 아틀라스 조각을 캐시하고 다음 실행에는 폴더 연결 없이 공급한다', async () => {
     const file = labUiFile()
     const index = new LocalResourceIndex([
       {
@@ -51,9 +51,22 @@ describe('lab_ui 스프라이트 Provider', () => {
     )
     const revokeObjectURL = vi.fn()
     vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
+    let cachedSprites: ReadonlyMap<import('./lab-ui-atlas.ts').LabUiSpriteKey, Blob> | null = null
+    const cache = {
+      get: vi.fn(async () => cachedSprites),
+      findLatest: vi.fn(async () => cachedSprites),
+      put: vi.fn(async (
+        _fingerprint: unknown,
+        sprites: ReadonlyMap<import('./lab-ui-atlas.ts').LabUiSpriteKey, Blob>,
+      ) => {
+        cachedSprites = new Map(sprites)
+      }),
+      clear: vi.fn(async () => undefined),
+      stats: vi.fn(async () => ({ entryCount: cachedSprites?.size ?? 0, totalBytes: 0 })),
+    }
 
     const result = render(
-      <LabUiSpriteProvider index={index}>
+      <LabUiSpriteProvider index={index} cache={cache}>
         <LabUiSprite
           spriteKey="subcore:5"
           className="sprite"
@@ -71,8 +84,27 @@ describe('lab_ui 스프라이트 Provider', () => {
     })
     expect(createObjectURL).toHaveBeenCalledTimes(15)
     expect(close).toHaveBeenCalledTimes(15)
+    expect(cache.put).toHaveBeenCalledTimes(1)
 
     result.unmount()
     expect(revokeObjectURL).toHaveBeenCalledTimes(15)
+
+    const cachedResult = render(
+      <LabUiSpriteProvider index={null} cache={cache}>
+        <LabUiSprite
+          spriteKey="subcore:5"
+          className="sprite"
+          label="레오늄 아이콘"
+        />
+      </LabUiSpriteProvider>,
+    )
+    await waitFor(() => {
+      expect(cachedResult.container.querySelector('img')).toHaveAttribute(
+        'src',
+        'blob:sprite-23',
+      )
+    })
+    expect(cache.findLatest).toHaveBeenCalledTimes(1)
+    expect(close).toHaveBeenCalledTimes(15)
   })
 })

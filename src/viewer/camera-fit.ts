@@ -18,9 +18,28 @@ export function fitPerspectiveCameraToObject(
   controls: CameraTargetControls,
   viewport: { readonly width: number; readonly height: number },
   margin = 1.25,
+  viewDirection?: Vector3,
 ) {
   object.updateWorldMatrix(true, true)
   const bounds = new Box3().setFromObject(object)
+  return fitPerspectiveCameraToBounds(
+    camera,
+    bounds,
+    controls,
+    viewport,
+    margin,
+    viewDirection,
+  )
+}
+
+export function fitPerspectiveCameraToBounds(
+  camera: PerspectiveCamera,
+  bounds: Box3,
+  controls: CameraTargetControls,
+  viewport: { readonly width: number; readonly height: number },
+  margin = 1.25,
+  viewDirection?: Vector3,
+) {
   if (bounds.isEmpty()) return false
 
   const center = bounds.getCenter(new Vector3())
@@ -30,7 +49,8 @@ export function fitPerspectiveCameraToObject(
   const verticalFov = MathUtils.degToRad(camera.fov)
   const heightDistance = maximum / (2 * Math.tan(verticalFov / 2))
   const distance = margin * Math.max(heightDistance, heightDistance / aspect)
-  const direction = camera.position.clone().sub(controls.target)
+  const direction = viewDirection?.clone()
+    ?? camera.position.clone().sub(controls.target)
   if (direction.lengthSq() < 1e-8) direction.set(0.52, 0.37, 0.78)
   direction.normalize()
 

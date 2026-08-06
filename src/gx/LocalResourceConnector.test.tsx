@@ -16,7 +16,7 @@ describe('로컬 GX 폴더 연결 UI', () => {
     expect(screen.getByText(/파일은 서버로 전송되지 않습니다/)).toBeVisible()
     expect(screen.queryByRole('button', { name: '읽기 전용 폴더 선택' }))
       .not.toBeInTheDocument()
-    expect(screen.getByText('다른 방식으로 선택')).toBeVisible()
+    expect(screen.getByText('common 폴더 선택')).toBeVisible()
     expect(screen.getByText(String.raw`C:\Program Files (x86)\Nova1492\datan\common`))
       .toBeVisible()
 
@@ -53,13 +53,43 @@ describe('로컬 GX 폴더 연결 UI', () => {
         index={null}
         onIndexChange={vi.fn()}
         cache={{ stats, clear }}
+        spriteCache={{
+          stats: vi.fn(async () => ({ entryCount: 15, totalBytes: 512 })),
+          clear: vi.fn(async () => undefined),
+        }}
       />,
     )
 
-    expect(await screen.findByText('모델 캐시 2개 · 1.5 KB')).toBeVisible()
+    expect(await screen.findByText('리소스 캐시 17개 · 2.0 KB')).toBeVisible()
     await user.click(screen.getByRole('button', { name: '전체 삭제' }))
 
     expect(clear).toHaveBeenCalledTimes(1)
-    await waitFor(() => expect(screen.getByText('모델 캐시 0개 · 0 B')).toBeVisible())
+    await waitFor(() => expect(screen.getByText('리소스 캐시 15개 · 512 B')).toBeVisible())
+  })
+
+  it('GLB 캐시로 프리뷰가 준비되면 연결 전에도 우하단의 축소 상태를 사용한다', async () => {
+    const { container } = render(
+      <LocalResourceConnector
+        index={null}
+        onIndexChange={vi.fn()}
+        compact
+        cache={{
+          stats: vi.fn(async () => ({
+            entryCount: 1,
+            totalBytes: 1024,
+            oldestAccessedAt: null,
+            newestAccessedAt: null,
+          })),
+          clear: vi.fn(async () => undefined),
+        }}
+        spriteCache={{
+          stats: vi.fn(async () => ({ entryCount: 0, totalBytes: 0 })),
+          clear: vi.fn(async () => undefined),
+        }}
+      />,
+    )
+
+    expect(container.firstElementChild).toHaveClass('is-ready')
+    expect(screen.getByText('저장된 3D 캐시 사용 중')).toBeVisible()
   })
 })

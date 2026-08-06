@@ -89,7 +89,6 @@ export const useDeckStore = create<DeckState>((set, get) => {
       initializationTask ??= (async () => {
         try {
           let decks = await repository.listDecks()
-          const preferences = await repository.loadPreferences()
           const normalized = removeInvalidUnitsFromDecks(decks)
           decks = normalized.decks
 
@@ -103,10 +102,8 @@ export const useDeckStore = create<DeckState>((set, get) => {
             decks = [initialDeck]
           }
 
-          const activeDeckId = decks.some((deck) => deck.id === preferences?.activeDeckId)
-            ? (preferences?.activeDeckId ?? decks[0].id)
-            : decks[0].id
-          const activeSlot = preferences?.activeSlot ?? 0
+          const activeDeckId = decks[0].id
+          const activeSlot = 0
 
           set({
             decks,

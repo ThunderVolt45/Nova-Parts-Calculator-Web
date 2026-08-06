@@ -11,6 +11,11 @@ import {
   type LabUiSpriteKey,
 } from './lab-ui-atlas.ts'
 import {
+  LAB_UI_SPRITE_CACHE_VERSION,
+  labUiSpriteCacheRepository,
+  type LabUiSpriteCacheRepository,
+} from './lab-ui-sprite-cache.ts'
+import {
   emptyLabUiSpriteState,
   LabUiSpriteContext,
   type LabUiSpriteState,
@@ -20,9 +25,11 @@ import {
 export function LabUiSpriteProvider({
   index,
   children,
+  cache = labUiSpriteCacheRepository,
 }: {
   index: LocalResourceIndex | null
   children: ReactNode
+  cache?: LabUiSpriteCacheRepository
 }) {
   const [state, setState] = useState<LabUiSpriteState>(emptyLabUiSpriteState)
 
@@ -31,19 +38,31 @@ export function LabUiSpriteProvider({
     let cancelled = false
     let createdUrls: string[] = []
 
-    if (!index) {
-      setState(emptyLabUiSpriteState)
-      return
-    }
-    if (!atlas) {
-      setState({ status: 'missing', urls: new Map(), error: null })
-      return
-    }
     setState({ status: 'loading', urls: new Map(), error: null })
 
     const load = async () => {
       try {
-        const sprites = await extractLabUiSprites(await atlas.getFile())
+        const fingerprint = atlas ? {
+          sourceId: atlas.relativePath,
+          size: atlas.size,
+          lastModified: atlas.lastModified,
+          extractorVersion: LAB_UI_SPRITE_CACHE_VERSION,
+        } : null
+        let sprites = fingerprint
+          ? await cache.get(fingerprint)
+          : await cache.findLatest(LAB_UI_SPRITE_CACHE_VERSION)
+        if (!sprites && atlas && fingerprint) {
+          sprites = await extractLabUiSprites(await atlas.getFile())
+          await cache.put(fingerprint, sprites)
+        }
+        if (!sprites) {
+          if (!cancelled) {
+            setState(index
+              ? { status: 'missing', urls: new Map(), error: null }
+              : emptyLabUiSpriteState)
+          }
+          return
+        }
         const nextUrls = new Map<LabUiSpriteKey, string>()
         for (const [key, sprite] of sprites) {
           const url = URL.createObjectURL(sprite)
@@ -73,7 +92,7 @@ export function LabUiSpriteProvider({
       cancelled = true
       createdUrls.forEach((url) => URL.revokeObjectURL(url))
     }
-  }, [index])
+  }, [cache, index])
 
   return (
     <LabUiSpriteContext.Provider value={state}>

@@ -69,6 +69,7 @@ export function DeckPanel({
   const [pendingImport, setPendingImport] = useState<PendingImport>(null)
   const [notice, setNotice] = useState<Notice>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const didApplyInitialUnitRef = useRef(false)
 
   useEffect(() => {
     void initialize()
@@ -79,6 +80,25 @@ export function DeckPanel({
     [activeDeckId, decks],
   )
   const selectedUnit = activeDeck?.slots[activeSlot] ?? null
+
+  useEffect(() => {
+    if (!isHydrated || didApplyInitialUnitRef.current) return
+    didApplyInitialUnitRef.current = true
+
+    const firstDeck = decks[0]
+    const firstUnit = firstDeck?.slots[0] ?? null
+    if (firstDeck && (activeDeckId !== firstDeck.id || activeSlot !== 0)) {
+      void selectDeck(firstDeck.id)
+    }
+    if (firstUnit) onLoadUnit(firstUnit)
+  }, [
+    activeDeckId,
+    activeSlot,
+    decks,
+    isHydrated,
+    onLoadUnit,
+    selectDeck,
+  ])
 
   useEffect(() => {
     setDeckName(activeDeck?.name ?? '')

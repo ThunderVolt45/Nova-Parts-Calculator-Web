@@ -80,6 +80,8 @@ describe('3부품 조립 뷰어', () => {
     const terminate = vi.fn()
     const onStateChange = vi.fn()
     const onAnimationClipsChange = vi.fn()
+    const onCameraStateChange = vi.fn()
+    const onInteractionStart = vi.fn()
     const loadModel = vi.fn(async (options) => loaded(options.source.name))
     const result = render(
       <AssembledUnitViewer
@@ -93,15 +95,25 @@ describe('3부품 조립 뷰어', () => {
         loadModel={loadModel}
         onStateChange={onStateChange}
         onAnimationClipsChange={onAnimationClipsChange}
+        onCameraStateChange={onCameraStateChange}
+        onInteractionStart={onInteractionStart}
         renderScene={({
           onReady,
           label,
           resetToken,
           animation,
           onAnimationClipsChange,
+          onCameraStateChange,
+          onInteractionStart,
         }) => (
           <button type="button" onClick={() => {
             onAnimationClipsChange?.(['idle', 'move', 'attack'])
+            onCameraStateChange?.({
+              azimuthDegrees: 34,
+              polarDegrees: 68,
+              zoom: 1,
+            })
+            onInteractionStart?.()
             onReady()
           }}>
             {label} · reset {resetToken} · {animation?.clip}
@@ -110,17 +122,24 @@ describe('3부품 조립 뷰어', () => {
       />,
     )
 
-    expect(await screen.findByText('CACHE HIT ×3')).toBeVisible()
+    expect(await screen.findByText('Three.js 부품 장면 준비 중…')).toBeVisible()
+    expect(screen.queryByText(/CACHE HIT/)).not.toBeInTheDocument()
     expect(loadModel).toHaveBeenCalledTimes(3)
     for (const [options] of loadModel.mock.calls) {
       expect(options.includeSocketMetadata).toBe(true)
     }
     await user.click(screen.getByRole('button', { name: /조립 유닛 3D 모델/ }))
     expect(onAnimationClipsChange).toHaveBeenCalledWith(['idle', 'move', 'attack'])
-    expect(await screen.findByText('3부품 소켓 조립 완료')).toBeVisible()
+    expect(onCameraStateChange).toHaveBeenCalledWith({
+      azimuthDegrees: 34,
+      polarDegrees: 68,
+      zoom: 1,
+    })
+    expect(onInteractionStart).toHaveBeenCalledTimes(1)
+    expect(result.container.querySelector('.model-viewer-status')).not.toBeInTheDocument()
     expect(onStateChange).toHaveBeenLastCalledWith({
       status: 'ready',
-      message: '3부품 소켓 조립 완료',
+      message: '프리뷰 준비 완료',
       cacheStatus: 'hit',
       warning: undefined,
     })
@@ -148,7 +167,7 @@ describe('3부품 조립 뷰어', () => {
 
     expect(screen.getByRole('alert')).toHaveTextContent('조립 불가')
     await user.click(await screen.findByRole('button', { name: '장면 준비' }))
-    expect(await screen.findByText('진단용 3D 조립 표시 중')).toBeVisible()
+    expect(document.querySelector('.model-viewer-status')).not.toBeInTheDocument()
   })
 
   it('한 부품의 GX 파일이 누락되어도 나머지 모델로 프리뷰를 만든다', async () => {
@@ -169,10 +188,11 @@ describe('3부품 조립 뷰어', () => {
       />,
     )
 
-    expect(await screen.findByText('CACHE HIT ×2')).toBeVisible()
+    expect(await screen.findByText('Three.js 부품 장면 준비 중…')).toBeVisible()
+    expect(screen.queryByText(/CACHE HIT/)).not.toBeInTheDocument()
     await waitFor(() => expect(loadModel).toHaveBeenCalledTimes(2))
     expect(await screen.findByRole('alert')).toHaveTextContent('무기 누락')
     await user.click(screen.getByRole('button', { name: '부분 장면 준비' }))
-    expect(await screen.findByText('일부 부품만 진단용으로 표시 중')).toBeVisible()
+    expect(document.querySelector('.model-viewer-status')).not.toBeInTheDocument()
   })
 })

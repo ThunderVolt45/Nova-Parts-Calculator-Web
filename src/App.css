@@ -1564,20 +1564,12 @@ button.part-card-stat:hover,
   mask-image: linear-gradient(transparent 12%, black 82%);
 }
 
-.model-stage::before,
 .model-stage::after {
   content: '';
   position: absolute;
   width: 22px;
   height: 22px;
   border-color: rgba(100, 224, 237, 0.36);
-}
-
-.model-stage::before {
-  top: 20px;
-  left: 20px;
-  border-top: 1px solid;
-  border-left: 1px solid;
 }
 
 .model-stage::after {
@@ -1598,11 +1590,44 @@ button.part-card-stat:hover,
 }
 
 .stage-readout-left {
-  left: 52px;
+  left: 20px;
 }
 
 .stage-readout-right {
-  right: 52px;
+  right: 20px;
+}
+
+.viewer-interaction-help {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  z-index: 5;
+  min-width: 190px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 7px 16px;
+  border: 1px solid rgba(78, 218, 234, 0.34);
+  border-radius: 6px;
+  color: rgba(190, 225, 230, 0.76);
+  background: rgba(5, 14, 19, 0.88);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.42), 0 0 24px rgba(78, 218, 234, 0.08);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: viewer-help-enter 180ms ease-out;
+  font: 650 8px/1.25 var(--sans);
+  text-align: center;
+}
+
+.viewer-interaction-help strong {
+  grid-column: 1 / -1;
+  color: var(--text-strong);
+  font-size: 10px;
+}
+
+@keyframes viewer-help-enter {
+  from { opacity: 0; transform: translate(-50%, calc(-50% + 5px)); }
 }
 
 .unit-silhouette {
@@ -2171,7 +2196,6 @@ button.part-card-stat:hover,
 
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
-button:focus-visible,
 .catalog-dialog-backdrop {
   position: fixed;
   inset: 0;
@@ -2218,12 +2242,42 @@ button:focus-visible,
 .catalog-dialog-header > button {
   width: 34px;
   height: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
   border: 1px solid var(--line);
   border-radius: 5px;
   color: var(--text-muted);
   background: rgba(255, 255, 255, 0.02);
-  font-size: 21px;
   cursor: pointer;
+}
+
+.catalog-close-icon {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.catalog-close-icon::before,
+.catalog-close-icon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 13px;
+  height: 1.5px;
+  border-radius: 999px;
+  background: currentColor;
+  transform-origin: center;
+}
+
+.catalog-close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.catalog-close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .catalog-dialog-header > button:hover {
@@ -2342,6 +2396,7 @@ button:focus-visible,
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: auto;
   align-content: start;
   gap: 6px;
   overflow-y: auto;
@@ -2351,11 +2406,13 @@ button:focus-visible,
 .catalog-result-list > button {
   position: relative;
   min-width: 0;
-  min-height: 58px;
-  padding: 7px 8px;
+  min-height: 87px;
+  height: auto;
+  align-self: stretch;
+  padding: 8px;
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) auto;
-  align-items: center;
+  grid-template-columns: 78px minmax(0, 1fr);
+  align-items: start;
   gap: 8px;
   border: 1px solid var(--line);
   border-radius: 5px;
@@ -2363,6 +2420,10 @@ button:focus-visible,
   background: rgba(255, 255, 255, 0.018);
   text-align: left;
   cursor: pointer;
+}
+
+.catalog-result-list > button.has-dense-specs {
+  min-height: 101px;
 }
 
 .catalog-result-list > button:hover,
@@ -2382,24 +2443,46 @@ button:focus-visible,
   box-shadow: 0 0 7px rgba(74, 222, 157, 0.62);
 }
 
-.catalog-result-mark {
-  width: 32px;
-  height: 38px;
-  display: grid;
-  place-items: center;
+.catalog-result-preview,
+.catalog-result-thumbnail {
+  position: relative;
+  display: block;
+  width: 78px;
+  height: 70px;
+  overflow: hidden;
+}
+
+.catalog-result-preview {
   border: 1px solid rgba(78, 218, 234, 0.3);
   border-radius: 4px;
-  color: var(--cyan);
   background:
     linear-gradient(rgba(55, 153, 173, 0.16) 1px, transparent 1px),
     linear-gradient(90deg, rgba(55, 153, 173, 0.16) 1px, transparent 1px),
     #07141b;
-  background-size: 7px 7px;
-  font: 800 9px/1 var(--mono);
+  background-size: 10px 10px;
 }
 
-.catalog-result-list > button > span:nth-child(2) {
+.catalog-result-thumbnail > .model-thumbnail-image,
+.catalog-result-thumbnail > .model-thumbnail-empty {
+  position: absolute;
+  inset: 0;
+}
+
+.catalog-result-thumbnail .model-thumbnail-empty {
+  gap: 2px;
+  padding: 4px;
+}
+
+.catalog-result-thumbnail .model-thumbnail-empty strong { font-size: 6px; }
+.catalog-result-thumbnail .model-thumbnail-empty small { display: none; }
+
+.catalog-result-copy {
   min-width: 0;
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 3px 0;
 }
 
 .catalog-result-list strong,
@@ -2421,16 +2504,57 @@ button:focus-visible,
   font: 600 7px/1 var(--mono);
 }
 
-.catalog-result-metrics {
-  display: grid;
-  gap: 2px;
-  text-align: right;
+.catalog-result-tags {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.catalog-result-metrics small {
+.catalog-result-specs {
+  margin-top: 7px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.catalog-result-specs small {
   margin: 0;
-  color: #71848c;
+  padding: 3px 4px;
+  border: 1px solid rgba(111, 151, 160, 0.18);
+  border-radius: 3px;
+  color: #879ba2;
+  background: rgba(255, 255, 255, 0.025);
   font-size: 6px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.catalog-result-specs small.is-key-option {
+  border-color: rgba(78, 218, 234, 0.3);
+  color: #bcebf0;
+  background: rgba(55, 177, 194, 0.08);
+}
+
+.catalog-result-specs small.is-primary {
+  font-weight: 800;
+}
+
+.catalog-result-specs small.is-watt {
+  border-color: rgba(78, 218, 234, 0.42);
+  color: #9cecf4;
+  background: rgba(55, 177, 194, 0.12);
+}
+
+.catalog-result-specs small.is-health {
+  border-color: rgba(74, 222, 157, 0.38);
+  color: #a5efcb;
+  background: rgba(74, 222, 157, 0.09);
+}
+
+.catalog-result-specs small.is-damage {
+  border-color: rgba(245, 169, 73, 0.42);
+  color: #f5c688;
+  background: rgba(245, 169, 73, 0.1);
 }
 
 .catalog-empty-result,
@@ -2464,7 +2588,7 @@ button:focus-visible,
 
 .catalog-detail-preview {
   position: relative;
-  height: 128px;
+  height: 256px;
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -2475,25 +2599,16 @@ button:focus-visible,
     #061017;
 }
 
-.catalog-detail-model {
-  position: relative;
-  z-index: 2;
-  width: 86px;
-  height: 66px;
-  display: grid;
-  place-items: center;
-  color: rgba(126, 234, 244, 0.72);
-  background: linear-gradient(140deg, #405963, #17272e 58%, #0a1419);
-  box-shadow:
-    inset 2px 2px rgba(199, 239, 241, 0.09),
-    0 12px 22px rgba(0, 0, 0, 0.42);
-  font: 800 10px/1 var(--mono);
-  clip-path: polygon(12% 0, 88% 0, 100% 30%, 86% 100%, 14% 100%, 0 30%);
+.catalog-detail-preview .model-viewer-status {
+  top: auto;
+  right: 9px;
+  bottom: 9px;
+  left: 9px;
 }
 
-.catalog-detail-model-leg { width: 100px; height: 48px; }
-.catalog-detail-model-weapon { width: 140px; height: 48px; transform: rotate(-5deg); }
-.catalog-detail-model-accessory { width: 70px; height: 70px; border-radius: 50%; clip-path: none; }
+.catalog-detail-preview .model-unavailable-notice {
+  padding: 18px;
+}
 
 .catalog-mount-label {
   position: absolute;
@@ -2830,9 +2945,7 @@ a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .catalog-results-panel { min-height: 285px; padding: 11px 10px 12px 12px; border-right: 0; border-bottom: 1px solid var(--line); }
   .catalog-result-list { max-height: 250px; }
   .catalog-detail-panel { overflow: visible; padding: 14px; }
-  .catalog-detail-preview { height: 100px; }
-  .catalog-detail-model { transform: scale(0.8); }
-  .catalog-detail-model-weapon { transform: scale(0.8) rotate(-5deg); }
+  .catalog-detail-preview { height: 200px; }
   .subcore-slot-note { width: 100%; margin-left: 0; }
   .subcore-catalog-grid { padding: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .subcore-catalog-grid > button { min-height: 138px; }

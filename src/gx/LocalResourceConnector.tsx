@@ -1,10 +1,14 @@
-import { useEffect, useMemo, useState, type ChangeEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type ChangeEvent } from 'react'
 
 import {
   indexDirectoryInputFiles,
   type LocalResourceIndex,
 } from './local-files.ts'
 import { LAB_UI_FILE_NAME } from './lab-ui-atlas.ts'
+import {
+  labUiSpriteCacheRepository,
+  type LabUiSpriteCacheRepository,
+} from './lab-ui-sprite-cache.ts'
 import { useLabUiSpriteState } from './lab-ui-sprite-context.ts'
 import { gxResourceMap, resolvePartModel } from './resource-map.ts'
 import {
@@ -24,6 +28,8 @@ interface LocalResourceConnectorProps {
   onIndexChange(index: LocalResourceIndex): void
   cache?: Pick<ModelCacheRepository, 'stats' | 'clear'>
   modelCache?: ModelCacheRepository
+  spriteCache?: Pick<LabUiSpriteCacheRepository, 'stats' | 'clear'>
+  compact?: boolean
 }
 
 type ConnectionStatus = 'idle' | 'indexing' | 'ready' | 'error'
@@ -41,6 +47,8 @@ export function LocalResourceConnector({
   onIndexChange,
   cache,
   modelCache = modelCacheRepository,
+  spriteCache = labUiSpriteCacheRepository,
+  compact = false,
 }: LocalResourceConnectorProps) {
   const cacheControls = cache ?? modelCache
   const [status, setStatus] = useState<ConnectionStatus>(index ? 'ready' : 'idle')
@@ -54,9 +62,21 @@ export function LocalResourceConnector({
   const [precacheResult, setPrecacheResult] = useState<ModelPrecacheResult | null>(null)
   const [precacheRunning, setPrecacheRunning] = useState(false)
 
+  const refreshCacheStats = useCallback(async () => {
+    const [models, sprites] = await Promise.all([
+      cacheControls.stats(),
+      spriteCache.stats(),
+    ])
+    return {
+      ...models,
+      entryCount: models.entryCount + sprites.entryCount,
+      totalBytes: models.totalBytes + sprites.totalBytes,
+    }
+  }, [cacheControls, spriteCache])
+
   useEffect(() => {
     let cancelled = false
-    cacheControls.stats().then(
+    refreshCacheStats().then(
       (stats) => {
         if (!cancelled) {
           setCacheStats(stats)
@@ -70,7 +90,7 @@ export function LocalResourceConnector({
     return () => {
       cancelled = true
     }
-  }, [cacheControls])
+  }, [refreshCacheStats])
 
   useEffect(() => {
     if (!index) return
@@ -94,7 +114,7 @@ export function LocalResourceConnector({
         setPrecacheResult(result)
         setPrecacheProgress(result)
         setPrecacheRunning(false)
-        setCacheStats(await cacheControls.stats())
+        setCacheStats(await refreshCacheStats())
         setCacheStatus('ready')
       },
       () => {
@@ -109,7 +129,7 @@ export function LocalResourceConnector({
       controller.abort()
       worker.terminate()
     }
-  }, [cacheControls, index, modelCache])
+  }, [cacheControls, index, modelCache, refreshCacheStats])
 
   const coverage = useMemo(() => {
     if (!index) return null
@@ -149,13 +169,13 @@ export function LocalResourceConnector({
   }
 
   const clearCache = async () => {
-    if (!window.confirm('변환된 3D 모델 캐시를 모두 삭제할까요? 원본 게임 파일은 변경되지 않습니다.')) {
+    if (!window.confirm('변환된 3D 모델과 UI 스프라이트 캐시를 모두 삭제할까요? 원본 게임 파일은 변경되지 않습니다.')) {
       return
     }
     setCacheStatus('clearing')
     try {
-      await cacheControls.clear()
-      setCacheStats(await cacheControls.stats())
+      await Promise.all([cacheControls.clear(), spriteCache.clear()])
+      setCacheStats(await refreshCacheStats())
       setCacheStatus('ready')
     } catch {
       setCacheStatus('error')
@@ -164,10 +184,9 @@ export function LocalResourceConnector({
 
   return (
     <div
-      className={`gx-connector ${status === 'ready' && index ? 'is-ready' : ''}`}
+      className={`gx-connector ${(status === 'ready' && index) || compact ? 'is-ready' : ''}`}
       aria-live="polite"
     >
-      <span className="prototype-badge">LOCAL GX · READ ONLY</span>
       {status === 'ready' && index && coverage ? (
         <>
           <strong>{index.size.toLocaleString('ko-KR')}개 파일 연결됨</strong>
@@ -175,6 +194,11 @@ export function LocalResourceConnector({
             모델 {coverage.available}개 확인 · 누락 {coverage.missing}개 · 매핑 미해결{' '}
             {coverage.unresolved}개 · lab_ui {coverage.hasLabUi ? '확인' : '누락'}
           </p>
+        </>
+      ) : compact ? (
+        <>
+          <strong>저장된 3D 캐시 사용 중</strong>
+          <p>게임 폴더를 다시 연결하지 않아도 캐시된 모델을 표시할 수 있습니다.</p>
         </>
       ) : (
         <>
@@ -190,7 +214,7 @@ export function LocalResourceConnector({
 
       <div className="gx-connector-actions">
         <label className="gx-directory-fallback">
-          다른 방식으로 선택
+          common 폴더 선택
           <input
             type="file"
             multiple
@@ -203,7 +227,7 @@ export function LocalResourceConnector({
       </div>
       <div className="gx-cache-status">
         <span>
-          모델 캐시{' '}
+          리소스 캐시{' '}
           {cacheStatus === 'loading'
             ? '확인 중…'
             : cacheStatus === 'error'

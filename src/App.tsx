@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 
 import './App.css'
 import { partsCatalog, partsCatalogById } from './data/catalog/catalog.ts'
@@ -35,9 +42,17 @@ import {
   getSubcoreSpriteKey,
 } from './gx/lab-ui-atlas.ts'
 import type { LocalResourceIndex } from './gx/local-files.ts'
-import type { ViewerDisplayState } from './viewer/StandalonePartViewer.tsx'
+import {
+  StandalonePartViewer,
+  type ViewerDisplayState,
+} from './viewer/StandalonePartViewer.tsx'
 import { AssembledUnitViewer } from './viewer/AssembledUnitViewer.tsx'
+import {
+  createViewerCameraStore,
+  type ViewerCameraStore,
+} from './viewer/camera-state.ts'
 import { PartModelThumbnail } from './viewer/ModelThumbnail.tsx'
+import { getViewerResourceLabel } from './viewer/viewer-hud.ts'
 import {
   UNIT_ANIMATION_CLIPS,
   type UnitAnimationClip,
@@ -91,6 +106,30 @@ const animationClipLabels: Record<UnitAnimationClip, string> = {
   idle: 'Idle',
   move: 'Move',
   attack: 'Attack',
+}
+
+const VIEWER_HELP_DURATION_MS = 4_500
+
+function formatRotation(value: number, signed = false) {
+  return `${signed && value > 0 ? '+' : ''}${value}°`
+}
+
+function ViewerCameraReadout({ store }: { readonly store: ViewerCameraStore }) {
+  const camera = useSyncExternalStore(
+    store.subscribe,
+    store.getSnapshot,
+    store.getSnapshot,
+  )
+
+  return (
+    <div className="stage-readout stage-readout-left" aria-hidden="true">
+      <span>
+        ROTATE H {camera ? formatRotation(camera.azimuthDegrees, true) : '--'}
+        {' '}· V {camera ? formatRotation(camera.polarDegrees) : '--'}
+      </span>
+      <span>ZOOM {camera ? `${camera.zoom.toFixed(2)}×` : '--'}</span>
+    </div>
+  )
 }
 
 const slotMarks: Record<EditablePartSlot, string> = {
@@ -299,6 +338,10 @@ function getPartOptionLabels(part: Part) {
   return labels
 }
 
+function getCatalogSummarySpecs(part: Part) {
+  return getPartOptionLabels(part).slice(0, 3)
+}
+
 function getPartsForSlot(slot: EditablePartSlot): ReadonlyArray<Part> {
   if (slot === 'leg') return partsCatalog.parts.legs
   if (slot === 'body') return partsCatalog.parts.bodies
@@ -384,8 +427,8 @@ function countActiveSimulationConditions(simulation: SimulationInput) {
 }
 
 function App() {
-  const [partIds, setPartIds] = useState<AssemblyPartIds>(defaultPartIds)
-  const [reinforcement, setReinforcement] = useState(defaultReinforcement)
+  const [partIds, setPartIds] = useState<AssemblyPartIds>(emptyPartIds)
+  const [reinforcement, setReinforcement] = useState(emptyReinforcement)
   const [subcoreIds, setSubcoreIds] = useState(defaultSubcoreIds)
   const [accessoryRandomOptions, setAccessoryRandomOptions] = useState(
     defaultAccessoryRandomOptions,
@@ -403,6 +446,8 @@ function App() {
     status: 'offline',
     message: '게임 리소스 폴더를 연결하면 조립 유닛을 표시합니다.',
   })
+  const [viewerHelpVisible, setViewerHelpVisible] = useState(false)
+  const viewerCameraStore = useMemo(() => createViewerCameraStore(), [])
   const [unitAnimation, setUnitAnimation] = useState<UnitAnimationPlayback>({
     clip: 'idle',
     playing: false,
@@ -413,6 +458,24 @@ function App() {
   >([])
   const [simulation, setSimulation] =
     useState<SimulationInput>(emptySimulationInput)
+
+  const handleViewerStateChange = useCallback((state: ViewerDisplayState) => {
+    setViewerDisplay(state)
+    if (state.status !== 'ready') viewerCameraStore.reset()
+  }, [viewerCameraStore])
+
+  useEffect(() => {
+    if (viewerDisplay.status !== 'ready') {
+      setViewerHelpVisible(false)
+      return
+    }
+    setViewerHelpVisible(true)
+    const timeout = window.setTimeout(
+      () => setViewerHelpVisible(false),
+      VIEWER_HELP_DURATION_MS,
+    )
+    return () => window.clearTimeout(timeout)
+  }, [viewerDisplay.status])
 
   const validation = useMemo(
     () => validateAssembly(partIds, partsCatalogById),
@@ -869,7 +932,7 @@ function App() {
                 type="button"
                 onClick={() => setCenterMode('assembly')}
               >
-                조립 3D
+                유닛 프리뷰
               </button>
               <button
                 className={centerMode === 'simulation' ? 'is-active' : ''}
@@ -885,13 +948,9 @@ function App() {
             <>
               <div className="model-stage">
                 <div className="stage-grid" aria-hidden="true" />
-                <div className="stage-readout stage-readout-left" aria-hidden="true">
-                  <span>DRAG ROTATE</span>
-                  <span>WHEEL ZOOM</span>
-                </div>
+                <ViewerCameraReadout store={viewerCameraStore} />
                 <div className="stage-readout stage-readout-right" aria-hidden="true">
-                  <span>{gxFileIndex ? `${gxFileIndex.size} FILES` : 'GX OFFLINE'}</span>
-                  <span>LOCAL ONLY</span>
+                  <span>{getViewerResourceLabel(gxFileIndex?.size ?? null, viewerDisplay)}</span>
                 </div>
                 <AssembledUnitViewer
                   parts={{
@@ -912,12 +971,22 @@ function App() {
                   index={gxFileIndex}
                   resetToken={viewerResetToken}
                   animation={unitAnimation}
-                  onStateChange={setViewerDisplay}
+                  onStateChange={handleViewerStateChange}
                   onAnimationClipsChange={handleAnimationClipsChange}
+                  onCameraStateChange={viewerCameraStore.update}
+                  onInteractionStart={() => setViewerHelpVisible(false)}
                 />
+                {viewerHelpVisible && (
+                  <div className="viewer-interaction-help" role="status">
+                    <strong>프리뷰 조작</strong>
+                    <span>드래그하여 회전</span>
+                    <span>휠로 확대·축소</span>
+                  </div>
+                )}
                 <LocalResourceConnector
                   index={gxFileIndex}
                   onIndexChange={setGxFileIndex}
+                  compact={viewerDisplay.status === 'ready'}
                 />
               </div>
 
@@ -1300,6 +1369,7 @@ function App() {
           key={`part-${catalogPicker.slot}`}
           slot={catalogPicker.slot}
           value={partIds[catalogPicker.slot]}
+          resourceIndex={gxFileIndex}
           onClose={() => setCatalogPicker(null)}
           onSelect={(id) => {
             updatePart(catalogPicker.slot, id)
@@ -1646,11 +1716,13 @@ function useCatalogDialog(
 function PartCatalogDialog({
   slot,
   value,
+  resourceIndex,
   onClose,
   onSelect,
 }: {
   slot: EditablePartSlot
   value: number
+  resourceIndex: LocalResourceIndex | null
   onClose: () => void
   onSelect: (id: number) => void
 }) {
@@ -1722,7 +1794,7 @@ function PartCatalogDialog({
             <h2 id="part-catalog-title">{slotLabels[slot]} 선택</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="부품 선택 닫기">
-            ×
+            <span className="catalog-close-icon" aria-hidden="true" />
           </button>
         </header>
 
@@ -1771,32 +1843,51 @@ function PartCatalogDialog({
                   'mountType' in part && part.mountType !== 'none'
                     ? mountLabels[part.mountType]
                     : null
+                const summarySpecs = getCatalogSummarySpecs(part)
+                const primarySpecs = [
+                  { key: 'watt', label: '와트', value: part.stats.watt },
+                  { key: 'health', label: '체력', value: part.stats.health },
+                  { key: 'damage', label: '공격력', value: part.stats.damage },
+                ] as const
+                const hasDenseSpecs = primarySpecs.length + summarySpecs.length >= 6
 
                 return (
                   <button
-                    className={`${highlighted?.id === part.id ? 'is-active' : ''} ${value === part.id ? 'is-equipped' : ''}`}
+                    className={`${highlighted?.id === part.id ? 'is-active' : ''} ${value === part.id ? 'is-equipped' : ''} ${hasDenseSpecs ? 'has-dense-specs' : ''}`}
                     type="button"
                     key={part.id}
                     onClick={() => setHighlightedId(part.id)}
                     aria-label={`${displayName}${value === part.id ? ', 현재 선택' : ''}`}
                   >
-                    <span className={`catalog-result-mark catalog-result-mark-${slot}`}>
-                      {slotMarks[slot]}
+                    <span className="catalog-result-preview">
+                      <CatalogPartThumbnail
+                        kind={slot}
+                        partId={part.id}
+                        partName={displayName}
+                        index={resourceIndex}
+                      />
                     </span>
-                    <span>
+                    <span className="catalog-result-copy">
                       <strong>{displayName}</strong>
                       {(mountLabel || part.isNPart) && (
-                        <small>
+                        <small className="catalog-result-tags">
                           {[mountLabel, part.isNPart ? 'N 부품' : null]
                             .filter(Boolean)
                             .join(' · ')}
                         </small>
                       )}
-                    </span>
-                    <span className="catalog-result-metrics">
-                      <small>W {part.stats.watt}</small>
-                      <small>H {part.stats.health}</small>
-                      <small>D {part.stats.damage}</small>
+                      <span className="catalog-result-specs">
+                        {primarySpecs.map((spec) => (
+                          <small className={`is-primary is-${spec.key}`} key={spec.key}>
+                            {spec.label} {formatNumber(spec.value)}
+                          </small>
+                        ))}
+                        {summarySpecs.length > 0 ? summarySpecs.map((spec) => (
+                          <small className={spec.emphasized ? 'is-key-option' : ''} key={spec.text}>
+                            {spec.text}
+                          </small>
+                        )) : null}
+                      </span>
                     </span>
                   </button>
                 )
@@ -1815,9 +1906,13 @@ function PartCatalogDialog({
               <>
                 <div className="catalog-detail-preview">
                   <span className="part-grid" aria-hidden="true" />
-                  <span className={`catalog-detail-model catalog-detail-model-${slot}`}>
-                    {slotMarks[slot]}
-                  </span>
+                  <StandalonePartViewer
+                    kind={slot}
+                    partId={highlighted.id}
+                    partName={getPartDisplayName(highlighted)}
+                    index={resourceIndex}
+                    resetToken={0}
+                  />
                   {'mountType' in highlighted && highlighted.mountType !== 'none' && (
                     <span className="catalog-mount-label">
                       {mountLabels[highlighted.mountType]}
@@ -1881,6 +1976,58 @@ function PartCatalogDialog({
   )
 }
 
+function CatalogPartThumbnail({
+  kind,
+  partId,
+  partName,
+  index,
+}: {
+  kind: EditablePartSlot
+  partId: number
+  partName: string
+  index: LocalResourceIndex | null
+}) {
+  const rootRef = useRef<HTMLSpanElement>(null)
+  const [shouldRender, setShouldRender] = useState(false)
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+    if (typeof IntersectionObserver === 'undefined') {
+      setShouldRender(true)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return
+        setShouldRender(true)
+        observer.disconnect()
+      },
+      { rootMargin: '180px' },
+    )
+    observer.observe(root)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <span className="catalog-result-thumbnail" ref={rootRef}>
+      {shouldRender ? (
+        <PartModelThumbnail
+          kind={kind}
+          partId={partId}
+          partName={partName}
+          index={index}
+        />
+      ) : (
+        <span className="model-thumbnail-empty is-loading" aria-hidden="true">
+          <strong>3D</strong>
+        </span>
+      )}
+    </span>
+  )
+}
+
 function SubcoreCatalogDialog({
   slot,
   value,
@@ -1921,7 +2068,7 @@ function SubcoreCatalogDialog({
             <h2 id="subcore-catalog-title">{slotLabels[slot]} 서브코어 선택</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="서브코어 선택 닫기">
-            ×
+            <span className="catalog-close-icon" aria-hidden="true" />
           </button>
         </header>
 

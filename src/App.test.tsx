@@ -13,7 +13,9 @@ import {
   createUnitExport,
   serializeDeckExport,
 } from './deck/transfer.ts'
+import { useDeckStore } from './deck/store.ts'
 import { createDeck, type SavedUnit } from './domain/deck/schema.ts'
+import { getViewerResourceLabel } from './viewer/viewer-hud.ts'
 
 function createImportUnit(): SavedUnit {
   const body = partsCatalog.parts.bodies.find((part) => part.id !== 0)!
@@ -47,6 +49,20 @@ function createJsonFile(name: string, contents: string) {
 
 afterEach(cleanup)
 
+describe('3D 프리뷰 리소스 상태 표시', () => {
+  it('GX 연결, 캐시 로드, 오프라인 상태를 구분한다', () => {
+    expect(getViewerResourceLabel(128, { status: 'ready', message: '' }))
+      .toBe('128 FILES LOADED')
+    expect(getViewerResourceLabel(null, {
+      status: 'ready',
+      message: '프리뷰 준비 완료',
+      cacheStatus: 'hit',
+    })).toBe('CACHE LOADED')
+    expect(getViewerResourceLabel(null, { status: 'offline', message: '' }))
+      .toBe('GX OFFLINE')
+  })
+})
+
 describe('T09 부품 선택 및 강화 UI', () => {
   it('부품을 이름으로 검색하고 상세 확인 후 적용한다', async () => {
     const user = userEvent.setup()
@@ -57,8 +73,20 @@ describe('T09 부품 선택 및 강화 UI', () => {
     const search = within(dialog).getByRole('searchbox', { name: '다리 부품 검색' })
 
     await user.type(search, '로드런너')
-    await user.click(within(dialog).getByRole('button', { name: '로드런너' }))
+    const resultCard = within(dialog).getByRole('button', { name: '로드런너' })
+    expect(resultCard.querySelector('.catalog-result-thumbnail')).toBeInTheDocument()
+    expect(within(resultCard).getByText('와트 60')).toHaveClass('is-watt')
+    expect(within(resultCard).getByText('체력 0')).toHaveClass('is-health')
+    expect(within(resultCard).getByText('공격력 0')).toHaveClass('is-damage')
+    expect(resultCard).not.toHaveTextContent('W 60')
+    expect(resultCard.querySelector('.catalog-result-specs')).toHaveTextContent('하중 50')
+    expect(resultCard.querySelector('.catalog-result-specs')).toHaveTextContent('속도 +100')
+
+    await user.click(resultCard)
     expect(within(dialog).getByRole('heading', { name: '로드런너' })).toBeVisible()
+    const detailPreview = dialog.querySelector('.catalog-detail-preview')
+    expect(detailPreview?.querySelector('.standalone-viewer')).toBeInTheDocument()
+    expect(detailPreview?.querySelector('.catalog-detail-model')).not.toBeInTheDocument()
 
     await user.click(within(dialog).getByRole('button', { name: '로드런너 사용' }))
     expect(screen.queryByRole('dialog', { name: '다리 선택' })).not.toBeInTheDocument()
@@ -127,10 +155,10 @@ describe('T09 부품 선택 및 강화 UI', () => {
     expect(within(dialog).queryByText(/ID 0/)).not.toBeInTheDocument()
 
     await user.click(within(dialog).getByRole('button', { name: '팔형' }))
-    expect(within(dialog).getByRole('button', { name: '부품 없음' })).toBeVisible()
+    expect(within(dialog).getByRole('button', { name: /^부품 없음/ })).toBeVisible()
 
     await user.click(within(dialog).getByRole('button', { name: '어깨형' }))
-    expect(within(dialog).getByRole('button', { name: '부품 없음' })).toBeVisible()
+    expect(within(dialog).getByRole('button', { name: /^부품 없음/ })).toBeVisible()
   })
 
   it('서브코어 선택 화면은 이름으로만 검색하고 ID를 표시하지 않는다', async () => {
@@ -155,12 +183,12 @@ describe('T09 부품 선택 및 강화 UI', () => {
     expect(within(dialog).getByRole('button', { name: '패트롤' })).toBeVisible()
     expect(within(dialog).getByRole('button', { name: '스타쉽' })).toBeVisible()
     expect(within(dialog).queryByRole('button', { name: '로드런너' })).not.toBeInTheDocument()
-    expect(within(dialog).getByRole('button', { name: '부품 없음' })).toBeVisible()
+    expect(within(dialog).getByRole('button', { name: /^부품 없음/ })).toBeVisible()
 
     await user.click(within(dialog).getByRole('button', { name: '지상' }))
     expect(within(dialog).getByRole('button', { name: '로드런너' })).toBeVisible()
     expect(within(dialog).queryByRole('button', { name: '패트롤' })).not.toBeInTheDocument()
-    expect(within(dialog).getByRole('button', { name: '부품 없음' })).toBeVisible()
+    expect(within(dialog).getByRole('button', { name: /^부품 없음/ })).toBeVisible()
   })
 })
 
@@ -169,6 +197,8 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
     render(<App />)
 
     expect(screen.getByRole('heading', { name: '조립 유닛 프리뷰' })).toBeVisible()
+    expect(screen.getByRole('button', { name: '유닛 프리뷰' })).toBeVisible()
+    expect(screen.queryByRole('button', { name: '조립 3D' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: '부품 3D' })).not.toBeInTheDocument()
     for (const slot of ['다리', '몸통', '무기', '액세서리']) {
       const preview = screen.getByRole('button', { name: `${slot} 프리뷰 선택` })
@@ -176,8 +206,7 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
       expect(preview.querySelector('.part-model')).not.toBeInTheDocument()
     }
     const bodyPreview = screen.getByRole('button', { name: '몸통 프리뷰 선택' })
-    expect(bodyPreview.querySelector('.mount-sprite')).toHaveTextContent('탑')
-    expect(bodyPreview.querySelector('.mount-sprite')).not.toHaveClass('has-game-sprite')
+    expect(bodyPreview.querySelector('.mount-sprite')).toBeNull()
     expect(screen.getByRole('button', { name: '애니메이션 재생' })).toBeDisabled()
     expect(screen.getByRole('button', { name: '처음부터' })).toBeDisabled()
     for (const clip of ['Idle', 'Move', 'Attack']) {
@@ -188,6 +217,7 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
   it('기본과 최종 능력치를 구분하고 적용 조건을 초기화한다', async () => {
     const user = userEvent.setup()
     render(<App />)
+    await user.click(screen.getByRole('button', { name: '초기화' }))
 
     expect(screen.getByLabelText('기본 능력치')).toHaveTextContent('BASE')
 
@@ -215,6 +245,7 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
   it('조립 불가 원인과 문제가 있는 부품을 함께 표시한다', async () => {
     const user = userEvent.setup()
     render(<App />)
+    await user.click(screen.getByRole('button', { name: '초기화' }))
 
     await user.click(screen.getByRole('button', { name: /몸통 부품 변경/ }))
     const dialog = screen.getByRole('dialog', { name: '몸통 선택' })
@@ -258,11 +289,52 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
 })
 
 describe('T11-T12 덱 저장 및 편집 UI', () => {
+  it('페이지 진입 시 마지막 선택 대신 첫 번째 덱의 1번 유닛을 불러온다', async () => {
+    const previousDeckState = useDeckStore.getState()
+    const firstUnit = { ...createImportUnit(), name: 'FIRST UNIT' }
+    const firstDeck = createDeck('FIRST DECK', partsCatalog.catalogVersion, {
+      id: 'first-deck',
+      now: '2026-01-01T00:00:00.000Z',
+    })
+    firstDeck.slots[0] = firstUnit
+    const secondDeck = createDeck('SECOND DECK', partsCatalog.catalogVersion, {
+      id: 'second-deck',
+      now: '2026-01-02T00:00:00.000Z',
+    })
+    useDeckStore.setState({
+      decks: [firstDeck, secondDeck],
+      activeDeckId: secondDeck.id,
+      activeSlot: 4,
+      isHydrated: true,
+      isSaving: false,
+      error: null,
+    })
+
+    const { unmount } = render(<App />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: '덱 선택' })).toHaveValue(firstDeck.id)
+      expect(screen.getByRole('button', {
+        name: '1번 덱 슬롯, FIRST UNIT 저장됨',
+      })).toHaveClass('is-active')
+    })
+    const legName = partsCatalog.parts.legs.find(
+      (part) => part.id === firstUnit.partIds.leg,
+    )!.name
+    expect(screen.getByRole('button', {
+      name: `다리 부품 변경, 현재 ${legName}`,
+    })).toBeVisible()
+
+    unmount()
+    useDeckStore.setState(previousDeckState)
+  })
+
   it('저장 슬롯은 자동으로 불러오고 빈 슬롯은 계산기를 초기화한다', async () => {
     const user = userEvent.setup()
     render(<App />)
 
     await screen.findByRole('combobox', { name: '덱 선택' })
+    await user.click(screen.getByRole('button', { name: '초기화' }))
     await user.click(screen.getByRole('button', { name: '유닛 등록' }))
 
     await waitFor(() => {
