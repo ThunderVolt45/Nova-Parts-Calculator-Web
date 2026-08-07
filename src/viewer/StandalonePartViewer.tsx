@@ -206,15 +206,17 @@ export function StandalonePartViewer({
 
     const worker = workerFactory()
     updateDisplay({ status: 'loading', message: progressMessages['checking-permission'] })
-    loadModel({
+    const pending = loadModel({
       source: resolution.file,
       index,
       cache,
       worker,
+      includeSocketMetadata: true,
       onProgress(stage) {
         if (!cancelled) updateDisplay({ status: 'loading', message: progressMessages[stage] })
       },
-    }).then(
+    })
+    pending.then(
       (loaded) => {
         if (cancelled) return
         setModel(loaded)
@@ -236,9 +238,9 @@ export function StandalonePartViewer({
         })
       },
     )
+    void pending.finally(() => worker.terminate?.()).catch(() => undefined)
     return () => {
       cancelled = true
-      worker.terminate?.()
     }
   }, [cache, capability.reason, capability.supported, index, kind, loadModel, mapping, partId, resolution, workerFactory])
 

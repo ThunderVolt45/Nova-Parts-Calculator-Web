@@ -19,6 +19,7 @@ import {
 } from './socket-assembly.ts'
 
 const MODEL_CACHE_ARTIFACT_VERSION = `${GX_PARSER_VERSION}:glb-2`
+const inFlightLoads = new WeakMap<object, Map<string, Promise<LoadedModel>>>()
 
 export class ModelAccessError extends Error {
   readonly code: 'READ_PERMISSION_REQUIRED' | 'READ_PERMISSION_DENIED'
@@ -148,7 +149,37 @@ function cachedResult(
   }
 }
 
-export async function loadOrBuildModel(
+function inFlightKey(options: LoadModelOptions) {
+  return [
+    options.source.source,
+    normalizePath(options.source.relativePath),
+    options.source.size,
+    options.source.lastModified,
+    options.animationFps ?? 'default',
+    options.includeSocketMetadata ? 'sockets' : 'model',
+  ].join(':')
+}
+
+export function loadOrBuildModel(
+  options: LoadModelOptions,
+): Promise<LoadedModel> {
+  let loads = inFlightLoads.get(options.index)
+  if (!loads) {
+    loads = new Map()
+    inFlightLoads.set(options.index, loads)
+  }
+  const key = inFlightKey(options)
+  const current = loads.get(key)
+  if (current) return current
+
+  const pending = loadOrBuildModelUnshared(options).finally(() => {
+    if (loads.get(key) === pending) loads.delete(key)
+  })
+  loads.set(key, pending)
+  return pending
+}
+
+async function loadOrBuildModelUnshared(
   options: LoadModelOptions,
 ): Promise<LoadedModel> {
   options.onProgress?.('checking-permission')

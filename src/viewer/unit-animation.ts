@@ -57,8 +57,7 @@ export class UnitAnimationController {
       mixer: new AnimationMixer(part.root),
     }))
     this.availableClips = UNIT_ANIMATION_CLIPS.filter((requested) =>
-      this.entries.length > 0
-      && this.entries.every((entry) => Boolean(findClip(entry.clips, requested))),
+      this.entries.some((entry) => Boolean(findClip(entry.clips, requested))),
     )
   }
 

@@ -131,4 +131,36 @@ describe('Three.js 조립 유닛 객체', () => {
     expect(bodyRoot.getWorldPosition(new Vector3()).x).toBe(7)
     expect(weaponRoot.getWorldPosition(new Vector3()).x).toBe(17)
   })
+
+  it('몸통이 없으면 무기를 다리의 몸통 소켓 아래에 계층 조립한다', () => {
+    const legs = new Group()
+    const legsFrame = new Group()
+    legsFrame.name = 'legs_primary'
+    legsFrame.userData.gxFrameIndex = 1
+    legsFrame.position.x = 3
+    legs.add(legsFrame)
+    const weapon = new Group()
+    const sockets: PartialUnitSocketAssembly = {
+      bodyTransform: translation(5),
+      weaponTransform: translation(5),
+      bodySocket: translation(2),
+      weaponSocket: null,
+      legsPrimaryFrame: 'legs_primary',
+      legsPrimaryFrameIndex: 1,
+      bodyPrimaryFrame: null,
+      bodyPrimaryFrameIndex: null,
+      bodyAttached: true,
+      weaponAttached: true,
+      diagnostics: [],
+    }
+
+    const assembled = createSocketDrivenUnitObject({ legs, weapon }, sockets)
+    const weaponRoot = assembled.getObjectByName('weapon')!
+    assembled.updateMatrixWorld(true)
+    expect(weaponRoot.getWorldPosition(new Vector3()).x).toBe(5)
+
+    legsFrame.position.x = 7
+    assembled.updateMatrixWorld(true)
+    expect(weaponRoot.getWorldPosition(new Vector3()).x).toBe(9)
+  })
 })

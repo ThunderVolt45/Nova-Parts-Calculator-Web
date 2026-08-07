@@ -39,8 +39,8 @@ const rendererSlots: Array<ThumbnailRendererSlot | undefined> = []
 
 function createRendererSlot(): ThumbnailRendererSlot {
   const canvas = document.createElement('canvas')
-  canvas.width = 512
-  canvas.height = 384
+  canvas.width = 256
+  canvas.height = 192
   const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true })
   renderer.outputColorSpace = SRGBColorSpace
   renderer.setPixelRatio(1)

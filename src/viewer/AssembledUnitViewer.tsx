@@ -57,7 +57,6 @@ interface LoadedAssembly {
 
 interface AssembledUnitViewerProps {
   readonly parts: UnitPartSelection
-  readonly mountCompatible: boolean
   readonly index: LocalResourceIndex | null
   readonly resetToken: number
   readonly animation?: UnitAnimationPlayback
@@ -103,7 +102,6 @@ function Placeholder({ message }: { readonly message: string }) {
 
 export function AssembledUnitViewer({
   parts,
-  mountCompatible,
   index,
   resetToken,
   animation,
@@ -208,7 +206,9 @@ export function AssembledUnitViewer({
       if (!cached) throw new Error(`${partLabels[kind]} 모델 캐시를 찾지 못했습니다.`)
       return cached
     }
-    Promise.allSettled(availableKinds.map(async (kind) => [kind, await loadPart(kind)] as const)).then(
+    const pending = Promise.allSettled(
+      availableKinds.map(async (kind) => [kind, await loadPart(kind)] as const),
+    ).then(
       (results) => {
         if (cancelled) return
         const loadedParts = results.flatMap((result) =>
@@ -260,9 +260,9 @@ export function AssembledUnitViewer({
         })
       }
     })
+    void pending.finally(() => worker?.terminate?.()).catch(() => undefined)
     return () => {
       cancelled = true
-      worker?.terminate?.()
     }
   }, [
     cache,
@@ -287,12 +287,9 @@ export function AssembledUnitViewer({
       ? 'hit'
       : 'miss'
     : undefined
-  const warnings = [
-    !mountCompatible ? '몸통과 무기 타입 불일치' : null,
-    missingKinds.length > 0
-      ? `${missingKinds.map((kind) => partLabels[kind]).join(', ')} 누락`
-      : null,
-  ].filter((warning): warning is string => Boolean(warning))
+  const showCentralStatus = display.status === 'loading'
+    || display.status === 'scene-loading'
+    || display.status === 'error'
   const sceneProps: AssembledUnitCanvasProps | null = assembly
     ? {
         legsGlb: assembly.parts.leg?.glb,
@@ -311,11 +308,8 @@ export function AssembledUnitViewer({
           status: 'ready',
           message: missingKinds.length > 0
             ? '일부 부품만 진단용으로 표시 중'
-            : mountCompatible
-              ? '프리뷰 준비 완료'
-              : '진단용 3D 조립 표시 중',
+            : '프리뷰 준비 완료',
           cacheStatus,
-          warning: warnings.length > 0 ? `조립 불가 · ${warnings.join(' · ')}` : undefined,
         }),
         onError: (error) => updateDisplay({
           status: 'error',
@@ -331,7 +325,7 @@ export function AssembledUnitViewer({
         ? renderScene
           ? renderScene(sceneProps)
           : (
-              <Suspense fallback={<Placeholder message="3D 조립 장면 준비 중…" />}>
+              <Suspense fallback={null}>
                 <LazyAssembledUnitCanvas {...sceneProps} />
               </Suspense>
             )
@@ -339,24 +333,12 @@ export function AssembledUnitViewer({
             <Placeholder
               message={display.status === 'offline'
                 ? '모델링 정보 없음 - 프리뷰 기능을 이용하려면 GX 파일을 불러와야 합니다.'
-                : display.status === 'loading' || display.status === 'scene-loading'
+                : showCentralStatus
                   ? display.message
                   : '모델링 정보 없음'}
             />
           )}
-      {warnings.length > 0 && (
-        <div className="assembly-viewer-warning" role="alert">
-          <strong>조립 불가</strong>
-          <span>{warnings.join(' · ')} · 소켓 배치는 진단용입니다.</span>
-        </div>
-      )}
-      {display.status !== 'ready' && (
-        <div className="model-viewer-status" role="status" aria-live="polite">
-          <span className={`model-viewer-status-dot is-${display.status}`} aria-hidden="true" />
-          <strong>조립 유닛</strong>
-          <span>{display.message}</span>
-        </div>
-      )}
+      {sceneProps && showCentralStatus && <Placeholder message={display.message} />}
     </div>
   )
 }

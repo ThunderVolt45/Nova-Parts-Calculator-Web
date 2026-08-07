@@ -967,7 +967,6 @@ function App() {
                       name: selectedParts.weapon?.name ?? '무기 없음',
                     },
                   }}
-                  mountCompatible={!validation.issues.includes('mount-type-mismatch')}
                   index={gxFileIndex}
                   resetToken={viewerResetToken}
                   animation={unitAnimation}
@@ -2018,6 +2017,7 @@ function CatalogPartThumbnail({
           partId={partId}
           partName={partName}
           index={index}
+          deferModelLoad
         />
       ) : (
         <span className="model-thumbnail-empty is-loading" aria-hidden="true">

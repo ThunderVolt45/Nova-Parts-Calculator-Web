@@ -86,7 +86,6 @@ describe('3부품 조립 뷰어', () => {
     const result = render(
       <AssembledUnitViewer
         parts={parts}
-        mountCompatible
         index={resourceIndex()}
         resetToken={4}
         animation={{ clip: 'move', playing: false, restartToken: 2 }}
@@ -141,19 +140,17 @@ describe('3부품 조립 뷰어', () => {
       status: 'ready',
       message: '프리뷰 준비 완료',
       cacheStatus: 'hit',
-      warning: undefined,
     })
 
     result.unmount()
     expect(terminate).toHaveBeenCalledTimes(1)
   })
 
-  it('타입 불일치도 진단용으로 표시하면서 조립 불가를 함께 알린다', async () => {
+  it('타입 불일치 경고를 3D 프리뷰에 중복 표시하지 않는다', async () => {
     const user = userEvent.setup()
     render(
       <AssembledUnitViewer
         parts={parts}
-        mountCompatible={false}
         index={resourceIndex()}
         resetToken={0}
         capabilityOverride={supported}
@@ -165,8 +162,32 @@ describe('3부품 조립 뷰어', () => {
       />,
     )
 
-    expect(screen.getByRole('alert')).toHaveTextContent('조립 불가')
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     await user.click(await screen.findByRole('button', { name: '장면 준비' }))
+    expect(document.querySelector('.model-viewer-status')).not.toBeInTheDocument()
+  })
+
+  it('렌더러 오류를 프리뷰 중앙에 표시한다', async () => {
+    const user = userEvent.setup()
+    render(
+      <AssembledUnitViewer
+        parts={parts}
+        index={resourceIndex()}
+        resetToken={0}
+        capabilityOverride={supported}
+        workerFactory={() => ({ terminate: vi.fn() } as never)}
+        loadModel={async (options) => loaded(options.source.name)}
+        renderScene={({ onError }) => (
+          <button type="button" onClick={() => onError(new Error('GLB 렌더링 실패'))}>
+            오류 발생
+          </button>
+        )}
+      />,
+    )
+
+    await user.click(await screen.findByRole('button', { name: '오류 발생' }))
+    const centralMessage = await screen.findByText('GLB 렌더링 실패')
+    expect(centralMessage.closest('.model-unavailable-notice')).toBeInTheDocument()
     expect(document.querySelector('.model-viewer-status')).not.toBeInTheDocument()
   })
 
@@ -176,7 +197,6 @@ describe('3부품 조립 뷰어', () => {
     render(
       <AssembledUnitViewer
         parts={parts}
-        mountCompatible
         index={resourceIndex(['legs1_rdrn.gx', 'body4_kpr.gx'])}
         resetToken={0}
         capabilityOverride={supported}
@@ -191,8 +211,26 @@ describe('3부품 조립 뷰어', () => {
     expect(await screen.findByText('Three.js 부품 장면 준비 중…')).toBeVisible()
     expect(screen.queryByText(/CACHE HIT/)).not.toBeInTheDocument()
     await waitFor(() => expect(loadModel).toHaveBeenCalledTimes(2))
-    expect(await screen.findByRole('alert')).toHaveTextContent('무기 누락')
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: '부분 장면 준비' }))
+    expect(document.querySelector('.model-viewer-status')).not.toBeInTheDocument()
+  })
+
+  it('부품 선택과 누락 안내를 프리뷰 오버레이로 표시하지 않는다', () => {
+    render(
+      <AssembledUnitViewer
+        parts={{
+          leg: { id: 0, name: '다리 없음' },
+          body: { id: 0, name: '몸통 없음' },
+          weapon: { id: 0, name: '무기 없음' },
+        }}
+        index={resourceIndex()}
+        resetToken={0}
+        capabilityOverride={supported}
+      />,
+    )
+
+    expect(screen.queryByText('프리뷰할 부품을 하나 이상 선택하세요.')).not.toBeInTheDocument()
     expect(document.querySelector('.model-viewer-status')).not.toBeInTheDocument()
   })
 })

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { LocalResourceIndex, type LocalResourceFile } from '../gx/local-files.ts'
@@ -101,6 +101,34 @@ describe('부품·덱 3D 썸네일', () => {
       'data:image/png;base64,cGFydA==',
     )
     expect(renderThumbnail).toHaveBeenCalledTimes(1)
+  })
+
+  it('선택 창이 닫혀도 진행 중인 변환은 완료하고 썸네일 렌더링은 취소한다', async () => {
+    const terminate = vi.fn()
+    const renderThumbnail = vi.fn(async () => 'data:image/png;base64,cGFydA==')
+    let finishLoad: ((model: LoadedModel) => void) | undefined
+    const loadModel = vi.fn(() => new Promise<LoadedModel>((resolve) => {
+      finishLoad = resolve
+    }))
+    const result = render(
+      <PartModelThumbnail
+        kind="leg"
+        partId={1}
+        partName="로드런너"
+        index={resourceIndex(['legs1_rdrn.gx'])}
+        capabilityOverride={supported}
+        workerFactory={() => ({ terminate } as never)}
+        loadModel={loadModel}
+        renderThumbnail={renderThumbnail}
+      />,
+    )
+
+    await vi.waitFor(() => expect(loadModel).toHaveBeenCalledTimes(1))
+    result.unmount()
+    expect(terminate).not.toHaveBeenCalled()
+    await act(async () => finishLoad!(loaded('legs1_rdrn.gx')))
+    await vi.waitFor(() => expect(terminate).toHaveBeenCalledTimes(1))
+    expect(renderThumbnail).not.toHaveBeenCalled()
   })
 
   it('덱 유닛의 세 GLB와 소켓 변환으로 조립 썸네일을 만든다', async () => {

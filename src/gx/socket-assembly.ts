@@ -259,7 +259,11 @@ export function buildPartialUnitSocketAssembly(
       diagnostics.push(error instanceof Error ? error.message : '몸통 소켓을 확인하지 못했습니다.')
     }
   } else {
-    diagnostics.push('몸통이 없어 무기를 원점에 표시합니다.')
+    weaponTransform = bodyTransform
+    weaponAttached = bodyAttached
+    diagnostics.push(bodyAttached
+      ? '몸통이 없어 무기를 다리의 몸통 소켓에 표시합니다.'
+      : '몸통과 유효한 다리 소켓이 없어 무기를 원점에 표시합니다.')
   }
 
   return {

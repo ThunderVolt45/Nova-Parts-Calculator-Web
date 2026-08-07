@@ -141,7 +141,7 @@ describe('일반 유닛 소켓 조립', () => {
     expect(assembly.weaponAttached).toBe(true)
   })
 
-  it('몸통이 없어도 다리 변환을 계산하고 나머지는 원점에 둔다', () => {
+  it('몸통이 없으면 무기를 다리의 몸통 소켓 변환에 둔다', () => {
     const legs = describePartSockets(parsed([{
       index: 0,
       name: 'legs',
@@ -154,8 +154,9 @@ describe('일반 유닛 소켓 조립', () => {
     const assembly = buildPartialUnitSocketAssembly(legs, null)
 
     expect(transformGltfPoint(assembly.bodyTransform, [0, 0, 0])).toEqual([20, 0, 0])
-    expect(transformGltfPoint(assembly.weaponTransform, [0, 0, 0])).toEqual([0, 0, 0])
+    expect(transformGltfPoint(assembly.weaponTransform, [0, 0, 0])).toEqual([20, 0, 0])
     expect(assembly.bodyAttached).toBe(true)
-    expect(assembly.weaponAttached).toBe(false)
+    expect(assembly.weaponAttached).toBe(true)
+    expect(assembly.diagnostics).toContain('몸통이 없어 무기를 다리의 몸통 소켓에 표시합니다.')
   })
 })

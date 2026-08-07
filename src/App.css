@@ -1522,30 +1522,6 @@ button.part-card-stat:hover,
   font: 650 9px/1.4 var(--mono);
 }
 
-.assembly-viewer-warning {
-  position: absolute;
-  top: 70px;
-  left: 20px;
-  z-index: 4;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  max-width: calc(100% - 40px);
-  padding: 7px 9px;
-  border: 1px solid rgba(248, 101, 102, 0.46);
-  border-radius: 4px;
-  color: #ffd3d3;
-  background: rgba(63, 13, 18, 0.82);
-  box-shadow: 0 0 16px rgba(248, 76, 83, 0.12);
-  font: 650 8px/1.25 var(--mono);
-}
-
-.assembly-viewer-warning strong {
-  flex: 0 0 auto;
-  color: #ff8586;
-  font-size: 9px;
-}
-
 @keyframes viewer-status-pulse {
   to { opacity: 0.35; }
 }

@@ -99,6 +99,43 @@ function worker() {
 }
 
 describe('GX 모델 로드·캐시 파이프라인', () => {
+  it('동일한 모델의 동시 요청은 진행 중인 하나의 변환을 공유한다', async () => {
+    const source = entry(new File(['gx'], 'part.gx', { lastModified: 10 }))
+    const index = new LocalResourceIndex([source])
+    const cache = createModelCacheRepository(`pipeline-${crypto.randomUUID()}`)
+    const firstWorker = worker()
+    const secondWorker = worker()
+    let releaseParse: ((parsed: GxParseResult) => void) | undefined
+    firstWorker.parseGxFile.mockImplementation(() => new Promise((resolve) => {
+      releaseParse = resolve
+    }))
+
+    const first = loadOrBuildModel({
+      source,
+      index,
+      worker: firstWorker,
+      cache,
+      includeSocketMetadata: true,
+    })
+    const second = loadOrBuildModel({
+      source,
+      index,
+      worker: secondWorker,
+      cache,
+      includeSocketMetadata: true,
+    })
+
+    expect(second).toBe(first)
+    await vi.waitFor(() => expect(releaseParse).toBeTypeOf('function'))
+    releaseParse!(parsedFixture())
+    const [firstResult, secondResult] = await Promise.all([first, second])
+
+    expect(secondResult).toBe(firstResult)
+    expect(firstWorker.convertGlb).toHaveBeenCalledTimes(1)
+    expect(secondWorker.parseGxFile).not.toHaveBeenCalled()
+    expect(secondWorker.convertGlb).not.toHaveBeenCalled()
+  })
+
   it('첫 변환을 저장하고 다음 요청에서는 변환과 텍스처 읽기를 생략한다', async () => {
     const source = entry(new File(['gx'], 'part.gx', { lastModified: 10 }))
     const texture = entry(new File(['tga'], 'effect.tga', { lastModified: 20 }))

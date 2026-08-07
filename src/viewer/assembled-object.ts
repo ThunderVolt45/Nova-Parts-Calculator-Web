@@ -108,6 +108,8 @@ export function createSocketDrivenUnitObject(
   if (weaponRoot) {
     if (bodyFrame && sockets.weaponSocket) {
       bodyFrame.add(partRoot('weapon_socket', weaponRoot, sockets.weaponSocket))
+    } else if (!bodyRoot && legsFrame && sockets.bodySocket) {
+      legsFrame.add(partRoot('weapon_leg_socket', weaponRoot, sockets.bodySocket))
     } else {
       weaponRoot.matrix.copy(new Matrix4().fromArray(sockets.weaponTransform))
       weaponRoot.matrixAutoUpdate = false

@@ -13,6 +13,7 @@ import { GxParserWorkerClient } from '../gx/parser/worker-client.ts'
 import { getPartResourceMapping, resolvePartModel, type ModelPartKind } from '../gx/resource-map.ts'
 import { buildUnitSocketAssembly } from '../gx/socket-assembly.ts'
 import { useViewerCapability, type ViewerCapability } from './capability.ts'
+import { createConcurrentTaskScheduler } from './concurrent-task-queue.ts'
 import type { UnitThumbnailInput } from './thumbnail-renderer.ts'
 
 type WorkerWithLifecycle = ModelPipelineWorker & { terminate?(): void }
@@ -20,6 +21,7 @@ type ThumbnailStatus = 'offline' | 'loading' | 'ready' | 'unavailable' | 'pc-onl
 
 const noGxMessage = '모델링 정보 없음 - 프리뷰 기능을 이용하려면 GX 파일을 불러와야 합니다.'
 const createParserWorker = () => new GxParserWorkerClient()
+const scheduleCatalogModelLoad = createConcurrentTaskScheduler(1)
 const defaultPartRenderer = async (glb: ArrayBuffer) => {
   const module = await import('./thumbnail-renderer.ts')
   return module.renderPartThumbnail(glb)
@@ -69,6 +71,7 @@ export interface PartModelThumbnailProps {
   readonly workerFactory?: () => WorkerWithLifecycle
   readonly loadModel?: (options: LoadModelOptions) => Promise<LoadedModel>
   readonly renderThumbnail?: (glb: ArrayBuffer) => Promise<string>
+  readonly deferModelLoad?: boolean
 }
 
 export function PartModelThumbnail({
@@ -80,6 +83,7 @@ export function PartModelThumbnail({
   workerFactory = createParserWorker,
   loadModel = loadOrBuildModel,
   renderThumbnail = defaultPartRenderer,
+  deferModelLoad = false,
 }: PartModelThumbnailProps) {
   const detectedCapability = useViewerCapability()
   const capability = capabilityOverride ?? detectedCapability
@@ -105,18 +109,30 @@ export function PartModelThumbnail({
       setState({ status: 'unavailable', url: null })
       return
     }
+    const sourceGx = mapping.sourceGx
     let cancelled = false
-    const worker = index && resolution?.status === 'available' ? workerFactory() : null
     setState({ status: 'loading', url: null })
-    const pending = index && resolution?.status === 'available' && worker
-      ? loadModel({
-          source: resolution.file,
-          index,
-          cache: modelCacheRepository,
-          worker,
-        })
-      : loadCachedModel(mapping.sourceGx, modelCacheRepository)
+    const load = async () => {
+      if (cancelled) throw new Error('취소된 썸네일 작업입니다.')
+      if (!(index && resolution?.status === 'available')) {
+        return loadCachedModel(sourceGx, modelCacheRepository)
+      }
+      const worker = workerFactory()
+      const pending = loadModel({
+        source: resolution.file,
+        index,
+        cache: modelCacheRepository,
+        worker,
+        includeSocketMetadata: true,
+      })
+      void pending.finally(() => worker.terminate?.()).catch(() => undefined)
+      return pending
+    }
+    const pending = deferModelLoad
+      ? scheduleCatalogModelLoad(load)
+      : load()
     pending.then((model) => {
+      if (cancelled) throw new Error('취소된 썸네일 작업입니다.')
       if (!model) throw new Error('저장된 GLB 모델이 없습니다.')
       return renderThumbnail(model.glb)
     }).then(
@@ -129,9 +145,8 @@ export function PartModelThumbnail({
     )
     return () => {
       cancelled = true
-      worker?.terminate?.()
     }
-  }, [capability.supported, index, loadModel, mapping, partId, renderThumbnail, resolution, workerFactory])
+  }, [capability.supported, deferModelLoad, index, loadModel, mapping, partId, renderThumbnail, resolution, workerFactory])
 
   return <ThumbnailSurface status={state.status} url={state.url} label={partName} />
 }
@@ -218,8 +233,9 @@ export function UnitModelThumbnail({
       if (!cached) throw new Error('저장된 GLB 모델 누락')
       return cached
     }
-    Promise.all([load('leg'), load('body'), load('weapon')]).then(
+    const pending = Promise.all([load('leg'), load('body'), load('weapon')]).then(
       async ([legs, body, weapon]) => {
+        if (cancelled) throw new Error('취소된 썸네일 작업입니다.')
         if (!legs.socketMetadata || !body.socketMetadata) {
           throw new Error('소켓 메타데이터 누락')
         }
@@ -240,9 +256,9 @@ export function UnitModelThumbnail({
         if (!cancelled) setState({ status: index ? 'unavailable' : 'offline', url: null })
       },
     )
+    void pending.finally(() => worker?.terminate?.()).catch(() => undefined)
     return () => {
       cancelled = true
-      worker?.terminate?.()
     }
   }, [capability.supported, index, loadModel, mappings, renderThumbnail, resolutions, workerFactory])
 

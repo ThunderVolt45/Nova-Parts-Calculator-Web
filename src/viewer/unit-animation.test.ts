@@ -76,12 +76,22 @@ describe('조립 유닛 애니메이션 동기화', () => {
     controller.dispose()
   })
 
-  it('모든 로드 부품에 공통으로 존재하는 클립만 제공한다', () => {
-    const complete = animatedPart('legs')
-    const idleOnly = animatedPart('body')
-    idleOnly.clips.splice(1)
+  it('한 부품에만 존재하는 클립도 제공하고 누락 부품은 정지 상태로 둔다', () => {
+    const airborneLegs = animatedPart('legs')
+    airborneLegs.clips.splice(2)
+    const body = animatedPart('body')
+    const controller = new UnitAnimationController([airborneLegs, body])
 
-    expect(new UnitAnimationController([complete, idleOnly]).availableClips)
-      .toEqual(['idle'])
+    expect(controller.availableClips).toEqual(['idle', 'move', 'attack'])
+
+    controller.selectClip('idle')
+    controller.update(0.25)
+    controller.selectClip('attack')
+    const stoppedLegsPosition = airborneLegs.root.position.x
+    controller.update(0.25)
+
+    expect(airborneLegs.root.position.x).toBe(stoppedLegsPosition)
+    expect(body.root.position.x).toBe(1.5)
+    controller.dispose()
   })
 })
