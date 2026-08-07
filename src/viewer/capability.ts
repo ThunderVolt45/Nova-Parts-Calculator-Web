@@ -17,7 +17,7 @@ export interface ViewerCapability {
 export function detectViewerCapability(
   signals: ViewerCapabilitySignals,
 ): ViewerCapability {
-  const mobile = signals.width <= 700
+  const mobile = signals.width <= 1050
     || (signals.coarsePointer && !signals.finePointer)
   if (mobile) {
     return {
@@ -98,4 +98,3 @@ export function useViewerCapability() {
 
   return capability
 }
-

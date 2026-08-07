@@ -796,6 +796,10 @@ function App() {
             }
           />
 
+          <p className="mobile-3d-notice">
+            3D 미리보기는 PC에서 사용할 수 있습니다.
+          </p>
+
           <div className="assembly-status-row">
             <span className={`status-pill ${validation.isValid ? 'is-valid' : 'is-error'}`}>
               <i aria-hidden="true" />
@@ -1730,7 +1734,17 @@ function PartCatalogDialog({
   const [filter, setFilter] = useState<PartCatalogFilter>('all')
   const [highlightedId, setHighlightedId] = useState(value)
   const searchRef = useRef<HTMLInputElement>(null)
+  const detailRef = useRef<HTMLElement>(null)
   useCatalogDialog(onClose, searchRef)
+
+  const highlightPart = (partId: number) => {
+    setHighlightedId(partId)
+    if (window.matchMedia?.('(max-width: 1050px)').matches) {
+      requestAnimationFrame(() => {
+        detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    }
+  }
 
   const filterChoices = useMemo(() => {
     const choices: Array<{ key: PartCatalogFilter; label: string }> = [
@@ -1855,7 +1869,7 @@ function PartCatalogDialog({
                     className={`${highlighted?.id === part.id ? 'is-active' : ''} ${value === part.id ? 'is-equipped' : ''} ${hasDenseSpecs ? 'has-dense-specs' : ''}`}
                     type="button"
                     key={part.id}
-                    onClick={() => setHighlightedId(part.id)}
+                    onClick={() => highlightPart(part.id)}
                     aria-label={`${displayName}${value === part.id ? ', 현재 선택' : ''}`}
                   >
                     <span className="catalog-result-preview">
@@ -1900,7 +1914,7 @@ function PartCatalogDialog({
             </div>
           </div>
 
-          <aside className="catalog-detail-panel" aria-live="polite">
+          <aside ref={detailRef} className="catalog-detail-panel" aria-live="polite">
             {highlighted ? (
               <>
                 <div className="catalog-detail-preview">

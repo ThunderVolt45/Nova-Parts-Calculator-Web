@@ -20,9 +20,13 @@ describe('3D 뷰어 기능 감지', () => {
   })
 
   it('좁은 화면이나 터치 전용 입력을 모바일로 판정한다', () => {
-    expect(detectViewerCapability({ ...desktop, width: 700 })).toMatchObject({
+    expect(detectViewerCapability({ ...desktop, width: 1050 })).toMatchObject({
       supported: false,
       mobile: true,
+    })
+    expect(detectViewerCapability({ ...desktop, width: 1051 })).toMatchObject({
+      supported: true,
+      mobile: false,
     })
     expect(detectViewerCapability({
       ...desktop,
