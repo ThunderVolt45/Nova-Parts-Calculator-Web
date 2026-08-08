@@ -744,23 +744,6 @@ function App() {
             <small>1492 PARTS LAB</small>
           </span>
         </a>
-
-        <nav className="desktop-nav" aria-label="주요 메뉴">
-          <button className="is-active" type="button">
-            계산기
-          </button>
-          <button type="button" onClick={() => document.getElementById('deck-title')?.scrollIntoView({ behavior: 'smooth' })}>내 덱</button>
-          <button type="button">데이터</button>
-        </nav>
-
-        <div className="top-actions">
-          <span className="catalog-badge">
-            <i aria-hidden="true" /> 카탈로그 {partsCatalog.catalogVersion.split('-')[0]}
-          </span>
-          <button className="icon-button" type="button" aria-label="설정">
-            <span aria-hidden="true">⚙</span>
-          </button>
-        </div>
       </header>
 
       <main id="main" className="workspace">
