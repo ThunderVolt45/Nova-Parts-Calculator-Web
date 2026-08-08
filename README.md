@@ -47,12 +47,15 @@ npm run catalog:import
 npm run catalog:import -- C:\path\to\Nova-Parts-Calculator-Python
 ```
 
-브라우저 테스트 구현 후에는 Playwright 브라우저를 설치하고 아래 명령을
-사용합니다.
+브라우저 E2E 테스트를 처음 실행할 때는 Playwright 브라우저를 설치합니다.
 
 ```powershell
 npx playwright install chromium firefox
 npm run test:e2e
 ```
+
+E2E 테스트는 Chromium과 Firefox의 데스크톱 핵심 흐름, 모바일 Chromium의
+하단 탭 전환을 검증합니다. 덱 테스트는 격리된 브라우저 저장소를 사용하므로
+실제 사용자의 IndexedDB 덱에는 영향을 주지 않습니다.
 
 원본 GX, XFI, 텍스처와 로컬 변환 산출물은 저장소에 커밋하지 않습니다.

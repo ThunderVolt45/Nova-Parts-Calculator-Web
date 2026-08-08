@@ -8,16 +8,25 @@ export default defineConfig({
   reporter: 'html',
   use: {
     baseURL: 'http://127.0.0.1:5173',
+    locale: 'ko-KR',
+    screenshot: 'only-on-failure',
     trace: 'on-first-retry',
   },
   projects: [
     {
       name: 'chromium',
+      testMatch: /desktop\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
+      testMatch: /desktop\.spec\.ts/,
       use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'mobile-chromium',
+      testMatch: /mobile\.spec\.ts/,
+      use: { ...devices['Pixel 5'] },
     },
   ],
   webServer: {
