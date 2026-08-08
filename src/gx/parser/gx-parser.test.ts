@@ -253,6 +253,15 @@ describe('GX 바이너리 파서', () => {
     expect(() => parseGx(new ArrayBuffer(32))).toThrowError(GxParseError)
   })
 
+  it('8 MiB 손상 입력을 2초 안에 선형 스캔하고 중단한다', () => {
+    const input = new ArrayBuffer(8 * 1024 * 1024)
+    const startedAt = performance.now()
+
+    expect(() => parseGx(input)).toThrowError(GxParseError)
+
+    expect(performance.now() - startedAt).toBeLessThan(2_000)
+  })
+
   it('알파 텍스처 이름 규칙을 기준 도구와 동일하게 적용한다', () => {
     expect(textureReferenceImpliesAlpha('a_alp2_2.bmp')).toBe(true)
     expect(textureReferenceImpliesAlpha('foo_alp_glow.tga')).toBe(true)

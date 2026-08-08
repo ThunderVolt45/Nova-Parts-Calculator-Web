@@ -15,12 +15,12 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      testMatch: /(?:accessibility|desktop)\.spec\.ts/,
+      testMatch: /(?:accessibility|desktop|privacy)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'firefox',
-      testMatch: /(?:accessibility|desktop)\.spec\.ts/,
+      testMatch: /(?:accessibility|desktop|privacy)\.spec\.ts/,
       use: { ...devices['Desktop Firefox'] },
     },
     {

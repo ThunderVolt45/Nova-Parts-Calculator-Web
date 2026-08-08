@@ -99,6 +99,35 @@ function worker() {
 }
 
 describe('GX 모델 로드·캐시 파이프라인', () => {
+  it('로컬 파일을 읽고 변환할 때 네트워크 전송 API를 호출하지 않는다', async () => {
+    const networkApis = [
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+      vi.fn(),
+    ]
+    vi.stubGlobal('fetch', networkApis[0])
+    vi.stubGlobal('XMLHttpRequest', networkApis[1])
+    vi.stubGlobal('WebSocket', networkApis[2])
+    vi.stubGlobal('EventSource', networkApis[3])
+
+    try {
+      const source = entry(new File(['gx'], 'part.gx', { lastModified: 10 }))
+      const texture = entry(new File(['tga'], 'effect.tga', { lastModified: 20 }))
+
+      await loadOrBuildModel({
+        source,
+        index: new LocalResourceIndex([source, texture]),
+        worker: worker(),
+        cache: createModelCacheRepository(`pipeline-${crypto.randomUUID()}`),
+      })
+
+      for (const api of networkApis) expect(api).not.toHaveBeenCalled()
+    } finally {
+      vi.unstubAllGlobals()
+    }
+  })
+
   it('동일한 모델의 동시 요청은 진행 중인 하나의 변환을 공유한다', async () => {
     const source = entry(new File(['gx'], 'part.gx', { lastModified: 10 }))
     const index = new LocalResourceIndex([source])
