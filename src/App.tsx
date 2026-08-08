@@ -42,6 +42,7 @@ import {
   getSubcoreSpriteKey,
 } from './gx/lab-ui-atlas.ts'
 import type { LocalResourceIndex } from './gx/local-files.ts'
+import { useModalDialog } from './ui/useModalDialog.ts'
 import {
   StandalonePartViewer,
   type ViewerDisplayState,
@@ -917,6 +918,7 @@ function App() {
               <button
                 className={centerMode === 'assembly' ? 'is-active' : ''}
                 type="button"
+                aria-pressed={centerMode === 'assembly'}
                 onClick={() => setCenterMode('assembly')}
               >
                 유닛 프리뷰
@@ -924,6 +926,7 @@ function App() {
               <button
                 className={centerMode === 'simulation' ? 'is-active' : ''}
                 type="button"
+                aria-pressed={centerMode === 'simulation'}
                 onClick={() => setCenterMode('simulation')}
               >
                 시뮬레이션
@@ -1189,7 +1192,15 @@ function App() {
                 <small> / {formatNumber(stats.loadCapacity)}</small>
               </strong>
             </div>
-            <div className="meter" aria-label={`하중 사용률 ${Math.round(weightPercent)}%`}>
+            <div
+              className="meter"
+              role="progressbar"
+              aria-label="하중 사용률"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={Math.min(100, Math.round(weightPercent))}
+              aria-valuetext={`${Math.round(weightPercent)}%`}
+            >
               <i
                 className={validation.weightInvalid ? 'is-over' : ''}
                 style={{ width: `${weightPercent}%` }}
@@ -1467,6 +1478,7 @@ function PartSelector<T extends Part>({
         className={`part-preview part-preview-${slot}`}
         type="button"
         onClick={onFocus}
+        aria-pressed={active}
         aria-label={`${slotLabels[slot]} 프리뷰 선택`}
       >
         <span className="part-grid" aria-hidden="true" />
@@ -1610,7 +1622,7 @@ function PartSelector<T extends Part>({
       {isExpanded && reinforcement && selectedReinforcement && onReinforcementChange && (
         <div className="inline-reinforcement">
           <div className="inline-reinforcement-heading">
-            <span className="micro-label">INLINE ENHANCEMENT</span>
+            <span className="micro-label">ENHANCEMENT</span>
             <strong>
               {slotLabels[slot]} · {selectedReinforcement.label} 강화
             </strong>
@@ -1676,29 +1688,6 @@ function RandomOptionInput({
   )
 }
 
-function useCatalogDialog(
-  onClose: () => void,
-  initialFocusRef: React.RefObject<HTMLInputElement | null>,
-) {
-  useEffect(() => {
-    const previousFocus = document.activeElement as HTMLElement | null
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    initialFocusRef.current?.focus()
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = previousOverflow
-      previousFocus?.focus()
-    }
-  }, [initialFocusRef, onClose])
-}
-
 function PartCatalogDialog({
   slot,
   value,
@@ -1717,8 +1706,9 @@ function PartCatalogDialog({
   const [filter, setFilter] = useState<PartCatalogFilter>('all')
   const [highlightedId, setHighlightedId] = useState(value)
   const searchRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLElement>(null)
   const detailRef = useRef<HTMLElement>(null)
-  useCatalogDialog(onClose, searchRef)
+  useModalDialog({ dialogRef, initialFocusRef: searchRef, onClose })
 
   const highlightPart = (partId: number) => {
     setHighlightedId(partId)
@@ -1779,8 +1769,10 @@ function PartCatalogDialog({
       }}
     >
       <section
+        ref={dialogRef}
         className="catalog-dialog"
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby="part-catalog-title"
       >
@@ -1853,6 +1845,7 @@ function PartCatalogDialog({
                     type="button"
                     key={part.id}
                     onClick={() => highlightPart(part.id)}
+                    aria-pressed={highlighted?.id === part.id}
                     aria-label={`${displayName}${value === part.id ? ', 현재 선택' : ''}`}
                   >
                     <span className="catalog-result-preview">
@@ -2038,7 +2031,8 @@ function SubcoreCatalogDialog({
 }) {
   const [query, setQuery] = useState('')
   const searchRef = useRef<HTMLInputElement>(null)
-  useCatalogDialog(onClose, searchRef)
+  const dialogRef = useRef<HTMLElement>(null)
+  useModalDialog({ dialogRef, initialFocusRef: searchRef, onClose })
   const normalizedQuery = query.trim().toLocaleLowerCase('ko-KR')
   const filteredSubcores = partsCatalog.subcores.filter(
     (subcore) =>
@@ -2054,8 +2048,10 @@ function SubcoreCatalogDialog({
       }}
     >
       <section
+        ref={dialogRef}
         className="catalog-dialog subcore-dialog"
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby="subcore-catalog-title"
       >
@@ -2094,6 +2090,7 @@ function SubcoreCatalogDialog({
                 type="button"
                 key={subcore.id}
                 onClick={() => onSelect(subcore.id)}
+                aria-pressed={value === subcore.id}
                 aria-label={`${subcore.name}, ${optionLabels.join(', ') || '추가 능력치 없음'}${value === subcore.id ? ', 현재 선택' : ''}`}
               >
                 <LabUiSprite
@@ -2318,7 +2315,12 @@ function MobileNavButton({
   onClick: () => void
 }) {
   return (
-    <button className={active ? 'is-active' : ''} type="button" onClick={onClick}>
+    <button
+      className={active ? 'is-active' : ''}
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+    >
       <span aria-hidden="true">{mark}</span>
       {label}
     </button>

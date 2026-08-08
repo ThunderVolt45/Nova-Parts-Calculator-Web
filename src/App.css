@@ -1315,7 +1315,7 @@ button.part-card-stat:hover,
 
 .simulation-number-field button,
 .simulation-number-field input {
-  height: 24px;
+  height: 28px;
   border: 1px solid var(--line-strong);
   color: var(--text-strong);
   background: rgba(4, 10, 14, 0.55);
@@ -1323,7 +1323,7 @@ button.part-card-stat:hover,
 }
 
 .simulation-number-field button {
-  width: 22px;
+  width: 28px;
   color: var(--cyan);
   cursor: pointer;
 }
@@ -1822,7 +1822,7 @@ button.part-card-stat:hover,
 
 .animation-control span,
 .animation-control strong { display: block; }
-.animation-control div > span { color: var(--text-dim); font: 600 var(--font-min)/1 var(--mono); }
+.animation-control div > span { color: var(--text-muted); font: 600 var(--font-min)/1 var(--mono); }
 .animation-control strong { margin-top: 4px; color: var(--text-strong); font-size: var(--font-min); }
 
 .animation-toolbar,
@@ -2814,7 +2814,7 @@ a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
   }
   .part-selector { min-height: 0; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 10px; }
   .part-preview { display: none; }
-  .inline-reinforcement { grid-template-columns: 1fr; gap: 9px; }
+  .inline-reinforcement { margin-top: 9px; grid-template-columns: 1fr; gap: 9px; }
   .inline-reinforcement-control { grid-template-columns: auto minmax(0, 1fr) 48px; }
   .viewer-panel { display: none; }
   .stats-panel.is-mobile-active { display: block; }

@@ -1,0 +1,74 @@
+import { expect, test } from '@playwright/test'
+
+import { expectNoAutomatedViolations } from './accessibility.ts'
+
+test.describe('자동 접근성 검사', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByRole('heading', { name: '내 덱 · ALPHA' })).toBeVisible()
+  })
+
+  test('계산기 기본 화면이 WCAG A·AA 자동 검사 규칙을 통과한다', async ({ page }) => {
+    await expectNoAutomatedViolations(page)
+  })
+
+  test('부품 선택 대화상자가 WCAG A·AA 자동 검사 규칙을 통과한다', async ({ page }) => {
+    await page.getByRole('button', { name: /^몸통 부품 변경/ }).click()
+    await expect(page.getByRole('dialog', { name: '몸통 선택' })).toBeVisible()
+
+    await expectNoAutomatedViolations(page)
+  })
+
+  test('부품 선택 대화상자 안에 포커스를 가두고 닫은 뒤 원래 위치로 복원한다', async ({ page }) => {
+    const trigger = page.getByRole('button', { name: /^몸통 부품 변경/ })
+    await trigger.click()
+
+    const dialog = page.getByRole('dialog', { name: '몸통 선택' })
+    const search = dialog.getByRole('searchbox', { name: '몸통 부품 검색' })
+    const close = dialog.getByRole('button', { name: '부품 선택 닫기' })
+    const lastAction = dialog.locator('.catalog-apply-button')
+
+    await expect(search).toBeFocused()
+    await page.keyboard.press('Shift+Tab')
+    await expect(close).toBeFocused()
+    await page.keyboard.press('Shift+Tab')
+    await expect(lastAction).toBeFocused()
+    await page.keyboard.press('Tab')
+    await expect(close).toBeFocused()
+
+    await page.keyboard.press('Escape')
+    await expect(dialog).toHaveCount(0)
+    await expect(trigger).toBeFocused()
+  })
+
+  test('JSON 가져오기 대화상자도 포커스와 Escape 닫기를 관리한다', async ({ page }) => {
+    await page.getByRole('button', { name: '초기화', exact: true }).click()
+
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: '현재 유닛을 JSON으로 내보내기' }).click()
+    const download = await downloadPromise
+    const downloadPath = await download.path()
+    expect(downloadPath).not.toBeNull()
+
+    const importTrigger = page.getByRole('button', { name: '유닛/덱 JSON 가져오기' })
+    const chooserPromise = page.waitForEvent('filechooser')
+    await importTrigger.click()
+    const chooser = await chooserPromise
+    await chooser.setFiles(downloadPath!)
+
+    const dialog = page.getByRole('dialog', { name: '가져오기 방식 선택' })
+    const primaryAction = dialog.getByRole('button', {
+      name: '선택한 1번 슬롯에 유닛 붙여넣기',
+    })
+    const close = dialog.getByRole('button', { name: '가져오기 취소' })
+
+    await expect(primaryAction).toBeFocused()
+    await expectNoAutomatedViolations(page)
+    await page.keyboard.press('Shift+Tab')
+    await expect(close).toBeFocused()
+
+    await page.keyboard.press('Escape')
+    await expect(dialog).toHaveCount(0)
+    await expect(importTrigger).toBeFocused()
+  })
+})

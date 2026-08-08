@@ -18,6 +18,7 @@ import {
   type ImportResult,
 } from './transfer.ts'
 import type { LocalResourceIndex } from '../gx/local-files.ts'
+import { useModalDialog } from '../ui/useModalDialog.ts'
 import { UnitModelThumbnail } from '../viewer/ModelThumbnail.tsx'
 
 type UnitDraft = Omit<SavedUnit, 'name' | 'schemaVersion' | 'catalogVersion'>
@@ -69,7 +70,18 @@ export function DeckPanel({
   const [pendingImport, setPendingImport] = useState<PendingImport>(null)
   const [notice, setNotice] = useState<Notice>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const importButtonRef = useRef<HTMLButtonElement>(null)
+  const importDialogRef = useRef<HTMLElement>(null)
+  const importPrimaryActionRef = useRef<HTMLButtonElement>(null)
   const didApplyInitialUnitRef = useRef(false)
+
+  useModalDialog({
+    dialogRef: importDialogRef,
+    initialFocusRef: importPrimaryActionRef,
+    restoreFocusRef: importButtonRef,
+    open: pendingImport !== null,
+    onClose: () => setPendingImport(null),
+  })
 
   useEffect(() => {
     void initialize()
@@ -323,6 +335,7 @@ export function DeckPanel({
                 }
               }}
               aria-label={`${index + 1}번 덱 슬롯${unit ? `, ${unit.name} 저장됨` : ', 비어 있음'}`}
+              aria-pressed={activeSlot === index}
             >
               <span className="slot-index">{String(index + 1).padStart(2, '0')}</span>
               {unit ? (
@@ -380,7 +393,13 @@ export function DeckPanel({
           <button type="button" disabled={decks.length === 0} onClick={() => exportJson('backup')}>전체 덱을 JSON으로 내보내기</button>
         </div>
         <div className="deck-import-controls">
-          <button type="button" onClick={() => fileInputRef.current?.click()}>유닛/덱 JSON 가져오기</button>
+          <button
+            ref={importButtonRef}
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            유닛/덱 JSON 가져오기
+          </button>
           <input
             ref={fileInputRef}
             className="sr-only"
@@ -402,10 +421,13 @@ export function DeckPanel({
       {pendingImport && (
         <div className="deck-import-dialog-backdrop" onMouseDown={() => setPendingImport(null)}>
           <section
+            ref={importDialogRef}
             className="deck-import-dialog"
             role="dialog"
+            tabIndex={-1}
             aria-modal="true"
             aria-labelledby="deck-import-title"
+            aria-describedby="deck-import-summary"
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="deck-import-dialog-header">
@@ -415,7 +437,7 @@ export function DeckPanel({
               </div>
               <button type="button" aria-label="가져오기 취소" onClick={() => setPendingImport(null)}>×</button>
             </div>
-            <div className="deck-import-summary">
+            <div id="deck-import-summary" className="deck-import-summary">
               <strong>{pendingImport.fileName}</strong>
               {pendingImport.result.data.kind === 'unit' ? (
                 <p>
@@ -438,6 +460,7 @@ export function DeckPanel({
               {pendingImport.result.data.kind === 'unit' ? (
                 <>
                   <button
+                    ref={importPrimaryActionRef}
                     className="is-primary"
                     type="button"
                     disabled={!activeDeck || isSaving}
@@ -451,7 +474,13 @@ export function DeckPanel({
                 </>
               ) : (
                 <>
-                  <button className="is-primary" type="button" disabled={isSaving} onClick={() => void handleImportDecks('merge')}>
+                  <button
+                    ref={importPrimaryActionRef}
+                    className="is-primary"
+                    type="button"
+                    disabled={isSaving}
+                    onClick={() => void handleImportDecks('merge')}
+                  >
                     기존 덱과 병합하기
                   </button>
                   <button className="is-danger" type="button" disabled={isSaving} onClick={() => void handleImportDecks('replace')}>
