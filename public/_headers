@@ -1,0 +1,15 @@
+# Baseline headers for every static response.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), geolocation=(), microphone=(), payment=(), usb=()
+
+# Keep the Cloudflare-owned hostname and branch previews out of search results.
+# A future custom domain can be indexed independently after its launch review.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

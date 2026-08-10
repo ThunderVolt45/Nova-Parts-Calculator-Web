@@ -3,9 +3,18 @@
 노바 1492 부품 계산기와 사용자 승인 기반 로컬 GX 3D 미리보기를 제공하기
 위한 웹 프로젝트입니다.
 
-현재 저장소에는 React, TypeScript, Vite 기반 스캐폴딩과 기준 Python
-계산기에서 이식한 검증·버전 지정 부품 카탈로그가 구성되어 있습니다. 제품
+React, TypeScript, Vite 기반으로 계산 엔진, 10슬롯 로컬 덱, JSON 백업,
+사용자 승인 기반 GX/XFI 3D 미리보기를 구현합니다. 덱과 변환 모델은 브라우저
+IndexedDB에 저장되며 원본 게임 리소스는 서버로 전송하지 않습니다. 제품
 요구사항과 구현 원칙은 `AGENTS.md`를 따릅니다.
+
+## 문서
+
+- [사용자 가이드](./docs/user-guide.md)
+- [Cloudflare Pages 배포 및 운영 가이드](./docs/deployment-operations.md)
+- [계산 엔진](./docs/calculation-engine.md)
+- [카탈로그 스키마](./docs/catalog-schema.md)
+- [작업 로드맵](./TASKS.md)
 
 ## 개발 명령
 
