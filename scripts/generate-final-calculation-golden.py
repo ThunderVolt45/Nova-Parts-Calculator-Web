@@ -11,6 +11,7 @@ from pathlib import Path
 
 RANDOM_SEED = 1492_05
 RANDOM_CASES = 256
+MULTISHOTGUN_ID = 47
 
 
 def parse_args():
@@ -181,7 +182,7 @@ def build_curated_cases():
         make_case("weapon-damage-50-effect", (10, 10, 45, 0), enabled_weapon_effect),
         make_case("weapon-damage-30-effect", (10, 10, 46, 0), enabled_weapon_effect),
         make_case(
-            "weapon-divide-after-body-bonus",
+            "weapon-two-thirds-after-body-bonus",
             (10, 47, 47, 0),
             make_simulation(
                 statuses={"bodyLowHealthEffect": True, "weaponEffect": True}
@@ -382,6 +383,61 @@ def evaluate(calculator, window, case):
     }
 
 
+def correct_multishotgun_damage(calculator, window, case, expected):
+    """Correct the reference calculator's known 1/3-retained Multishotgun bug."""
+    base_input = case["baseInput"]
+    simulation = case["simulation"]
+    if (
+        base_input["partIds"]["weapon"] != MULTISHOTGUN_ID
+        or not simulation["statuses"]["weaponEffect"]
+    ):
+        return expected
+
+    neutral_case = {**case, "simulation": make_simulation()}
+    body_effect_case = {
+        **case,
+        "simulation": make_simulation(
+            statuses={
+                "bodyLowHealthEffect": simulation["statuses"]["bodyLowHealthEffect"]
+            }
+        ),
+    }
+    base_damage = evaluate(calculator, window, neutral_case)["damage"]
+    damage_before_weapon_effect = evaluate(calculator, window, body_effect_case)["damage"]
+    if base_damage is None or damage_before_weapon_effect is None:
+        raise RuntimeError("Multishotgun correction requires an attacking weapon")
+
+    half_damage = base_damage // 2
+    pre_towering_bonus = half_damage * sum(
+        (
+            simulation["skills"]["despera"],
+            simulation["skills"]["devilSpirit"],
+        )
+    )
+
+    accessory_id = base_input["partIds"]["accessory"]
+    accessory = next(item for item in calculator.accData if item["ID"] == accessory_id)
+
+    def apply_towering(damage):
+        if not simulation["statuses"]["towering"]:
+            return damage
+        if accessory["Towering"] == 2:
+            return (damage * 3) // 2
+        if accessory["Towering"] == 1:
+            return damage * 2
+        return damage
+
+    old_damage = damage_before_weapon_effect // 3
+    corrected_damage = (damage_before_weapon_effect * 2) // 3
+    correction = apply_towering(
+        corrected_damage + pre_towering_bonus
+    ) - apply_towering(old_damage + pre_towering_bonus)
+    if simulation["statuses"]["deathmatch"]:
+        correction *= 2
+
+    return {**expected, "damage": expected["damage"] + correction}
+
+
 def main():
     args = parse_args()
     reference_root = args.reference_root.resolve()
@@ -405,13 +461,16 @@ def main():
     calculator, application, window = load_calculator(reference_root)
     try:
         cases = build_curated_cases() + build_random_cases(calculator)
-        output_cases = [
-            {
-                **case,
-                "expected": evaluate(calculator, window, case),
-            }
-            for case in cases
-        ]
+        output_cases = []
+        for case in cases:
+            expected = evaluate(calculator, window, case)
+            expected = correct_multishotgun_damage(
+                calculator,
+                window,
+                case,
+                expected,
+            )
+            output_cases.append({**case, "expected": expected})
     finally:
         window.close()
         application.quit()

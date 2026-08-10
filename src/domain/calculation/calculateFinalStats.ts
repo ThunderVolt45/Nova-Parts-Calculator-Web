@@ -70,8 +70,8 @@ export function calculateFinalStats(
         damage += halfDamage
       } else if (weapon.weaponEffect === 'damage-plus-30-percent') {
         damage += damage30
-      } else if (weapon.weaponEffect === 'damage-divided-by-3') {
-        damage = Math.trunc(damage / 3)
+      } else if (weapon.weaponEffect === 'damage-times-two-thirds') {
+        damage = Math.trunc((damage * 2) / 3)
       }
     }
 

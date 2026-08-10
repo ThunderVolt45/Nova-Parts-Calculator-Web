@@ -42,4 +42,18 @@ describe('calculateFinalStats', () => {
     expect(result.final.damage).toBeNull()
     expect(result.final.healAmount).toBe(0)
   })
+
+  it('keeps two thirds of Multishotgun damage when its weapon effect is active', () => {
+    const input = makeInput(47)
+    const simulation = {
+      ...emptySimulationInput,
+      statuses: {
+        ...emptySimulationInput.statuses,
+        weaponEffect: true,
+      },
+    }
+    const result = calculateAssemblyStats(input, simulation, partsCatalogById)
+
+    expect(result.final.damage).toBe(Math.trunc((result.base.damage * 2) / 3))
+  })
 })

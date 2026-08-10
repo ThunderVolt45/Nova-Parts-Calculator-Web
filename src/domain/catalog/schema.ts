@@ -66,7 +66,7 @@ export const weaponEffectSchema = z.enum([
   'armor-plus-25',
   'damage-plus-50-percent',
   'damage-plus-30-percent',
-  'damage-divided-by-3',
+  'damage-times-two-thirds',
 ])
 
 export const weaponPartSchema = z.strictObject({

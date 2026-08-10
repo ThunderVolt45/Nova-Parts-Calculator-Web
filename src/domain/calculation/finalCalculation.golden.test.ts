@@ -31,7 +31,7 @@ const finalGoldenFixtureSchema = z.strictObject({
 
 const goldenFixture = finalGoldenFixtureSchema.parse(finalGoldenInput)
 
-describe('Python final calculation equivalence', () => {
+describe('Python final calculation equivalence with product corrections', () => {
   it('matches the imported catalog revision and expected coverage', () => {
     expect(goldenFixture.catalogVersion).toBe(partsCatalog.catalogVersion)
     expect(goldenFixture.sourceRevision).toBe(catalogSourceRevision)
@@ -40,7 +40,7 @@ describe('Python final calculation equivalence', () => {
     expect(goldenFixture.cases).toHaveLength(274)
   })
 
-  it('matches every PyQt representative, boundary, and random case', () => {
+  it('matches every PyQt case after applying known product corrections', () => {
     for (const testCase of goldenFixture.cases) {
       const result = calculateAssemblyStats(
         testCase.baseInput,

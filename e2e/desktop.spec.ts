@@ -69,6 +69,41 @@ test.describe('데스크톱 핵심 사용자 흐름', () => {
     await expect(page.getByRole('alert')).toHaveCount(0)
   })
 
+  test('밀집 N 부품 카드가 프레임 안에 표시되고 다음 행과 겹치지 않는다', async ({ page }) => {
+    await page.getByRole('button', { name: /^다리 부품 변경/ }).click()
+    const dialog = page.getByRole('dialog', { name: '다리 선택' })
+    const search = dialog.getByRole('searchbox', { name: '다리 부품 검색' })
+    await search.fill('토들러N')
+
+    const card = dialog.getByRole('button', { name: '토들러N', exact: true })
+    await expect(card).toHaveClass(/has-dense-specs/)
+    await expect(card.locator('.catalog-result-tags')).toHaveText('N 부품')
+
+    const cardBox = await card.boundingBox()
+    const specsBox = await card.locator('.catalog-result-specs').boundingBox()
+    expect(cardBox).not.toBeNull()
+    expect(specsBox).not.toBeNull()
+    expect(specsBox!.x).toBeGreaterThanOrEqual(cardBox!.x)
+    expect(specsBox!.x + specsBox!.width).toBeLessThanOrEqual(
+      cardBox!.x + cardBox!.width,
+    )
+    expect(specsBox!.y + specsBox!.height).toBeLessThanOrEqual(
+      cardBox!.y + cardBox!.height,
+    )
+
+    await search.clear()
+    const cardBoxes = await dialog.locator('.catalog-result-list > button').evaluateAll(
+      (elements) => elements.map((element) => {
+        const box = element.getBoundingClientRect()
+        return { top: box.top, bottom: box.bottom }
+      }),
+    )
+    expect(cardBoxes.length).toBeGreaterThan(2)
+    for (let index = 0; index + 2 < cardBoxes.length; index += 1) {
+      expect(cardBoxes[index + 2]!.top - cardBoxes[index]!.bottom).toBeGreaterThanOrEqual(5)
+    }
+  })
+
   test('현재 유닛 JSON을 내보내 다른 덱 슬롯으로 다시 가져온다', async ({ page }) => {
     await resetToValidAssembly(page)
 

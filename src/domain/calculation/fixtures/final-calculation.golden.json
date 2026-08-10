@@ -725,7 +725,7 @@
       }
     },
     {
-      "name": "weapon-divide-after-body-bonus",
+      "name": "weapon-two-thirds-after-body-bonus",
       "baseInput": {
         "partIds": {
           "leg": 10,
@@ -793,7 +793,7 @@
       },
       "expected": {
         "health": 525,
-        "damage": 34,
+        "damage": 68,
         "armor": 10,
         "speed": 95,
         "cooldown": 140,
@@ -10793,7 +10793,7 @@
       },
       "expected": {
         "health": 643,
-        "damage": 2019,
+        "damage": 2046,
         "armor": 124,
         "speed": 120,
         "cooldown": 50,
@@ -13673,7 +13673,7 @@
       },
       "expected": {
         "health": 931,
-        "damage": 2446,
+        "damage": 2514,
         "armor": 95,
         "speed": 120,
         "cooldown": 50,

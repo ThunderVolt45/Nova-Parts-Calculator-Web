@@ -43,3 +43,27 @@ test('펼친 강화 패널과 서브코어 선택 버튼 사이에 충분한 간
   const spacing = reinforcementBox!.y - (subcoreBox!.y + subcoreBox!.height)
   expect(spacing).toBeGreaterThanOrEqual(8)
 })
+
+test('밀집 N 부품 카드도 모바일 단일열 높이와 프레임을 유지한다', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: /^다리 부품 변경/ }).click()
+
+  const dialog = page.getByRole('dialog', { name: '다리 선택' })
+  await dialog.getByRole('searchbox', { name: '다리 부품 검색' }).fill('토들러N')
+  const card = dialog.getByRole('button', { name: '토들러N', exact: true })
+
+  await expect(card.locator('.catalog-result-preview')).toBeHidden()
+  const cardBox = await card.boundingBox()
+  const specsBox = await card.locator('.catalog-result-specs').boundingBox()
+  expect(cardBox).not.toBeNull()
+  expect(specsBox).not.toBeNull()
+  expect(cardBox!.height).toBeGreaterThanOrEqual(104)
+  expect(cardBox!.height).toBeLessThanOrEqual(112)
+  expect(specsBox!.x).toBeGreaterThanOrEqual(cardBox!.x)
+  expect(specsBox!.x + specsBox!.width).toBeLessThanOrEqual(
+    cardBox!.x + cardBox!.width,
+  )
+  expect(specsBox!.y + specsBox!.height).toBeLessThanOrEqual(
+    cardBox!.y + cardBox!.height,
+  )
+})
