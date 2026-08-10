@@ -18,6 +18,16 @@ Cloudflare Pages의 Git 연동도 `main` push를 감지해 `npm run build`를 �
 `dist`를 프로덕션에 자동 배포합니다. 로컬에서 커밋만 만든 상태로는 두
 서비스가 실행되지 않으며, 커밋을 GitHub에 push해야 합니다.
 
+비프로덕션 브랜치의 자동 프리뷰 배포는 `None`으로 설정합니다. GitHub
+Actions가 pull request의 전체 품질 검증을 담당하므로 모든 브랜치에 Pages
+빌드를 중복 실행하지 않습니다. UI 검토용 프리뷰가 필요해지면 Branch
+control을 `Custom branches`로 변경해 필요한 브랜치만 명시적으로 허용합니다.
+
+`*.nova-parts-calculator-web.pages.dev` 해시형 배포 주소는 Cloudflare Access로
+보호하며 Cloudflare 계정 소유자만 로그인해 접근할 수 있습니다. 루트
+프로덕션 주소 `nova-parts-calculator-web.pages.dev`는 이 Access 대상에
+포함하지 않아 일반 사용자가 계속 접근할 수 있습니다.
+
 GitHub Actions와 Cloudflare 빌드는 독립적으로 시작됩니다. pull request에는
 `품질 검증`을 필수 상태 검사로 지정하고 `main` 직접 push를 제한해야 검증에
 실패한 변경의 병합과 자동 배포를 예방할 수 있습니다.
@@ -62,6 +72,9 @@ SPA 폴백 정책을 다시 검토합니다.
 - `*.pages.dev` 프로덕션 주소와 브랜치 프리뷰 주소에는
   `X-Robots-Tag: noindex`를 적용합니다. 첫 배포 검증 중인 주소와 향후 커스텀
   도메인이 검색 결과에서 중복 노출되는 것을 방지하기 위한 결정입니다.
+- 해시형 배포 주소는 Cloudflare Access로도 제한합니다. `X-Robots-Tag`는
+  접근 제한이 해제되거나 검색 로봇이 주소를 발견하는 상황에 대비한 방어
+  계층으로 유지합니다.
 - 커스텀 도메인을 연결하면 해당 도메인은 현재 규칙상 `noindex` 대상이
   아닙니다. 공개 시점에 검색 노출 여부와 canonical 정책을 다시 결정합니다.
 - 엄격한 Content Security Policy는 Web Worker, Blob URL, WebGL과 향후 외부
@@ -113,6 +126,8 @@ Pages의 배포 상세 화면에서 빌드 커밋 SHA가 GitHub `main`의 대상
 5. 모바일에서 계산기와 덱이 동작하고 3D가 PC 전용으로 안내되는지 확인합니다.
 6. 개발자 도구 Network에서 로컬 게임 파일이나 변환 결과가 외부로 전송되지
    않고, 앱의 정적 GET 요청만 발생하는지 확인합니다.
+7. 인증 정보가 없는 요청에서 루트 프로덕션 주소는 `200`이고 해시형 배포
+   주소는 Cloudflare Access 로그인으로 `302` 리디렉션되는지 확인합니다.
 
 헤더는 다음처럼 빠르게 확인할 수 있습니다.
 
