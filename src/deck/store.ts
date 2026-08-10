@@ -9,6 +9,7 @@ import {
   type Deck,
   type SavedUnit,
 } from '../domain/deck/schema.ts'
+import { getSlotIndexAfterReorder, reorderSlots } from '../domain/deck/reorderSlots.ts'
 import { createDeckRepository } from './repository.ts'
 import {
   assertDecksContainOnlyValidUnits,
@@ -30,6 +31,7 @@ type DeckState = {
   deleteDeck: () => Promise<void>
   selectDeck: (id: string) => Promise<void>
   selectSlot: (slot: number) => Promise<void>
+  moveUnit: (sourceSlot: number, targetSlot: number) => Promise<void>
   saveUnit: (unit: SavedUnit) => Promise<void>
   removeUnit: () => Promise<void>
   importDecks: (decks: Deck[], mode: 'merge' | 'replace') => Promise<void>
@@ -212,6 +214,41 @@ export const useDeckStore = create<DeckState>((set, get) => {
       } catch (error) {
         set({ error: getErrorMessage(error) })
       }
+    },
+
+    async moveUnit(sourceSlot, targetSlot) {
+      const state = get()
+      const deck = getActiveDeck(state)
+      if (
+        !deck
+        || !Number.isInteger(sourceSlot)
+        || !Number.isInteger(targetSlot)
+        || sourceSlot < 0
+        || sourceSlot >= DECK_SLOT_COUNT
+        || targetSlot < 0
+        || targetSlot >= DECK_SLOT_COUNT
+        || !deck.slots[sourceSlot]
+        || sourceSlot === targetSlot
+      ) return
+
+      await runMutation(async () => {
+        const activeSlot = getSlotIndexAfterReorder(
+          state.activeSlot,
+          sourceSlot,
+          targetSlot,
+        )
+        const updatedDeck = deckSchema.parse({
+          ...deck,
+          slots: reorderSlots(deck.slots, sourceSlot, targetSlot),
+          updatedAt: new Date().toISOString(),
+        })
+        await repository.saveDeck(updatedDeck)
+        await persistSelection(deck.id, activeSlot)
+        set((current) => ({
+          decks: updateDeckInList(current.decks, updatedDeck),
+          activeSlot,
+        }))
+      })
     },
 
     async saveUnit(unit) {

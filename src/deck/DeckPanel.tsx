@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type DragEvent, type KeyboardEvent } from 'react'
 
 import { partsCatalog, partsCatalogById } from '../data/catalog/catalog.ts'
 import {
@@ -59,6 +59,7 @@ export function DeckPanel({
     deleteDeck,
     selectDeck,
     selectSlot,
+    moveUnit,
     saveUnit,
     removeUnit,
     importDecks,
@@ -69,6 +70,9 @@ export function DeckPanel({
   const [copiedUnit, setCopiedUnit] = useState<SavedUnit | null>(null)
   const [pendingImport, setPendingImport] = useState<PendingImport>(null)
   const [notice, setNotice] = useState<Notice>(null)
+  const [draggedSlot, setDraggedSlot] = useState<number | null>(null)
+  const [dragOverSlot, setDragOverSlot] = useState<number | null>(null)
+  const draggedSlotRef = useRef<number | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const importButtonRef = useRef<HTMLButtonElement>(null)
   const importDialogRef = useRef<HTMLElement>(null)
@@ -222,6 +226,64 @@ export function DeckPanel({
     else onClearUnit()
   }
 
+  const handleMoveUnit = async (sourceSlot: number, targetSlot: number) => {
+    const unit = activeDeck?.slots[sourceSlot]
+    if (!unit || sourceSlot === targetSlot) return
+
+    clearError()
+    await moveUnit(sourceSlot, targetSlot)
+    if (useDeckStore.getState().error) return
+    syncCalculatorWithActiveSlot()
+    setNotice({
+      tone: 'success',
+      text: `${unit.name}을(를) ${sourceSlot + 1}번에서 ${targetSlot + 1}번 슬롯으로 이동했습니다.`,
+    })
+  }
+
+  const handleDragStart = (event: DragEvent<HTMLButtonElement>, slot: number) => {
+    if (!activeDeck?.slots[slot] || isSaving) {
+      event.preventDefault()
+      return
+    }
+    draggedSlotRef.current = slot
+    setDraggedSlot(slot)
+    event.dataTransfer.effectAllowed = 'move'
+    event.dataTransfer.setData('text/plain', String(slot))
+  }
+
+  const handleDragOver = (event: DragEvent<HTMLButtonElement>, slot: number) => {
+    if (draggedSlotRef.current === null || draggedSlotRef.current === slot || isSaving) return
+    event.preventDefault()
+    event.dataTransfer.dropEffect = 'move'
+    setDragOverSlot(slot)
+  }
+
+  const clearDragState = () => {
+    draggedSlotRef.current = null
+    setDraggedSlot(null)
+    setDragOverSlot(null)
+  }
+
+  const handleDrop = (event: DragEvent<HTMLButtonElement>, targetSlot: number) => {
+    event.preventDefault()
+    const sourceSlot = draggedSlotRef.current
+    clearDragState()
+    if (sourceSlot === null) return
+    void handleMoveUnit(sourceSlot, targetSlot)
+  }
+
+  const handleSlotKeyDown = (event: KeyboardEvent<HTMLButtonElement>, slot: number) => {
+    if (!event.altKey || !activeDeck?.slots[slot] || isSaving) return
+    const targetSlot = event.key === 'ArrowLeft'
+      ? slot - 1
+      : event.key === 'ArrowRight'
+        ? slot + 1
+        : slot
+    if (targetSlot === slot || targetSlot < 0 || targetSlot >= DECK_SLOT_COUNT) return
+    event.preventDefault()
+    void handleMoveUnit(slot, targetSlot)
+  }
+
   const handleImportDecks = async (mode: 'merge' | 'replace') => {
     if (!pendingImport) return
     await importDecks(pendingImport.result.decks, mode)
@@ -314,7 +376,10 @@ export function DeckPanel({
         </div>
       </div>
 
-      <div className="deck-slots" aria-label="유닛 슬롯">
+      <p id="deck-slots-hint" className="sr-only">
+        저장된 유닛을 다른 슬롯으로 드래그하거나 Alt 키와 왼쪽 또는 오른쪽 화살표 키를 눌러 순서를 변경할 수 있습니다.
+      </p>
+      <div className="deck-slots" aria-label="유닛 슬롯" aria-describedby="deck-slots-hint">
         {Array.from({ length: DECK_SLOT_COUNT }, (_, index) => {
           const unit = activeDeck?.slots[index] ?? null
           const weaponName = unit
@@ -322,10 +387,22 @@ export function DeckPanel({
             : null
           return (
             <button
-              className={`${unit ? 'is-filled' : ''} ${activeSlot === index ? 'is-active' : ''}`}
+              className={`${unit ? 'is-filled' : ''} ${activeSlot === index ? 'is-active' : ''} ${draggedSlot === index ? 'is-dragging' : ''} ${dragOverSlot === index ? 'is-drag-over' : ''}`}
               type="button"
               key={index}
               disabled={!activeDeck}
+              draggable={Boolean(unit) && !isSaving}
+              onDragStart={(event) => handleDragStart(event, index)}
+              onDragEnter={(event) => handleDragOver(event, index)}
+              onDragOver={(event) => handleDragOver(event, index)}
+              onDragLeave={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setDragOverSlot((current) => current === index ? null : current)
+                }
+              }}
+              onDrop={(event) => handleDrop(event, index)}
+              onDragEnd={clearDragState}
+              onKeyDown={(event) => handleSlotKeyDown(event, index)}
               onClick={() => {
                 void selectSlot(index)
                 if (unit) {
@@ -335,6 +412,7 @@ export function DeckPanel({
                 }
               }}
               aria-label={`${index + 1}번 덱 슬롯${unit ? `, ${unit.name} 저장됨` : ', 비어 있음'}`}
+              aria-keyshortcuts={unit ? 'Alt+ArrowLeft Alt+ArrowRight' : undefined}
               aria-pressed={activeSlot === index}
             >
               <span className="slot-index">{String(index + 1).padStart(2, '0')}</span>

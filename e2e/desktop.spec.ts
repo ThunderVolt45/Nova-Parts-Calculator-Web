@@ -66,6 +66,32 @@ test.describe('데스크톱 핵심 사용자 흐름', () => {
     await expect(page.locator('.status-pill')).toHaveText('조립 완료')
   })
 
+  test('저장된 유닛을 드래그해 다른 덱 슬롯으로 이동한다', async ({ page }) => {
+    await resetToValidAssembly(page)
+    await page.getByRole('textbox', { name: '저장할 유닛 이름' }).fill('드래그 테스트 유닛')
+    await page.getByRole('button', { name: '유닛 등록', exact: true }).click()
+
+    const source = page.getByRole('button', {
+      name: '1번 덱 슬롯, 드래그 테스트 유닛 저장됨',
+    })
+    const target = page.getByRole('button', { name: '2번 덱 슬롯, 비어 있음' })
+    await source.dragTo(target)
+
+    await expect(page.getByRole('button', { name: '1번 덱 슬롯, 비어 있음' })).toBeVisible()
+    await expect(page.getByRole('button', {
+      name: '2번 덱 슬롯, 드래그 테스트 유닛 저장됨',
+    })).toBeVisible()
+    await expect(page.getByText(
+      '드래그 테스트 유닛을(를) 1번에서 2번 슬롯으로 이동했습니다.',
+      { exact: true },
+    )).toBeVisible()
+
+    await page.reload()
+    await expect(page.getByRole('button', {
+      name: '2번 덱 슬롯, 드래그 테스트 유닛 저장됨',
+    })).toBeVisible()
+  })
+
   test('필수 부품을 제거하면 조립 오류를 표시하고 등록을 막는다', async ({ page }) => {
     await resetToValidAssembly(page)
 

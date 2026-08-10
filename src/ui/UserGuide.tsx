@@ -207,7 +207,7 @@ export function UserGuide({ open, onClose }: UserGuideProps) {
                   <li>덱과 1~10번 슬롯을 선택합니다.</li>
                   <li>정상 유닛을 조립하고 이름을 입력합니다.</li>
                   <li><code>유닛 등록</code>으로 저장하거나 기존 유닛을 교체합니다.</li>
-                  <li>복사·붙여넣기로 다른 슬롯이나 덱에 유닛을 옮깁니다.</li>
+                  <li>덱 안에서는 유닛을 드래그해 순서를 바꾸고, 복사·붙여넣기로 다른 슬롯이나 덱에 옮깁니다.</li>
                 </ol>
               </div>
               <div>

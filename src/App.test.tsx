@@ -2,7 +2,7 @@
 
 import '@testing-library/jest-dom/vitest'
 
-import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -597,6 +597,59 @@ describe('T11-T12 덱 저장 및 편집 UI', () => {
       screen.getByRole('button', { name: '유닛/덱 JSON 가져오기' }),
     ).toBeVisible()
     expect(screen.queryByRole('combobox', { name: '가져오기 방식' })).not.toBeInTheDocument()
+  })
+
+  it('저장된 유닛을 드래그해 덱 슬롯 순서를 변경한다', async () => {
+    const previousDeckState = useDeckStore.getState()
+    const deck = createDeck('DRAG DECK', partsCatalog.catalogVersion, {
+      id: 'drag-deck',
+      now: '2026-01-01T00:00:00.000Z',
+    })
+    deck.slots[0] = { ...createImportUnit(), name: 'ALPHA UNIT' }
+    deck.slots[1] = { ...createImportUnit(), name: 'BRAVO UNIT' }
+    deck.slots[2] = { ...createImportUnit(), name: 'CHARLIE UNIT' }
+    useDeckStore.setState({
+      decks: [deck],
+      activeDeckId: deck.id,
+      activeSlot: 0,
+      isHydrated: true,
+      isSaving: false,
+      error: null,
+    })
+
+    const { unmount } = render(<App />)
+    const source = await screen.findByRole('button', {
+      name: '2번 덱 슬롯, BRAVO UNIT 저장됨',
+    })
+    const target = screen.getByRole('button', { name: '4번 덱 슬롯, 비어 있음' })
+    const dataTransfer = {
+      effectAllowed: 'none',
+      dropEffect: 'none',
+      setData: vi.fn(),
+    }
+
+    expect(source).toHaveAttribute('draggable', 'true')
+    fireEvent.dragStart(source, { dataTransfer })
+    fireEvent.dragOver(target, { dataTransfer })
+    expect(target).toHaveClass('is-drag-over')
+    fireEvent.drop(target, { dataTransfer })
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', {
+        name: '2번 덱 슬롯, CHARLIE UNIT 저장됨',
+      })).toBeVisible()
+      expect(screen.getByRole('button', { name: '3번 덱 슬롯, 비어 있음' })).toBeVisible()
+      expect(screen.getByRole('button', {
+        name: '4번 덱 슬롯, BRAVO UNIT 저장됨',
+      })).toBeVisible()
+    })
+    expect(await screen.findByText(
+      'BRAVO UNIT을(를) 2번에서 4번 슬롯으로 이동했습니다.',
+      { exact: true },
+    )).toBeVisible()
+
+    unmount()
+    useDeckStore.setState(previousDeckState)
   })
 
   it('새 덱을 만들고 이름을 변경한다', async () => {
