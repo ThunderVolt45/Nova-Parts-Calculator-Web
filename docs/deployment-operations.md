@@ -1,13 +1,32 @@
 # Cloudflare Pages 배포 및 운영 가이드
 
-이 문서는 GitHub 저장소와 연결된 Cloudflare Pages 정적 배포의 설정, 첫 배포
-전 점검, 롤백, 캐시와 장애 확인 절차를 기록합니다. 실제 첫 배포와 실서비스
-검증은 T23에서 수행합니다.
+이 문서는 GitHub Actions 품질 검증과 GitHub 저장소에 연결된 Cloudflare Pages
+자동 배포, 실서비스 점검, 롤백, 캐시와 장애 확인 절차를 기록합니다.
+
+## 자동 배포 흐름
+
+`.github/workflows/ci.yml`은 다음 이벤트에서 실행됩니다.
+
+- `main` 대상 pull request와 `main` push: 전체 품질 검증을 실행합니다.
+- 수동 실행: GitHub Actions에서 같은 검증을 다시 실행할 수 있습니다.
+
+전체 검증은 Node.js 22에서 의존성 고정 설치, 타입 검사, 린트, Vitest,
+Playwright E2E, 프로덕션 빌드 순으로 실행됩니다. 같은 브랜치의 이전 실행이
+진행 중일 때 새 커밋이 push되면 이전 검증은 취소됩니다.
+
+Cloudflare Pages의 Git 연동도 `main` push를 감지해 `npm run build`를 실행하고
+`dist`를 프로덕션에 자동 배포합니다. 로컬에서 커밋만 만든 상태로는 두
+서비스가 실행되지 않으며, 커밋을 GitHub에 push해야 합니다.
+
+GitHub Actions와 Cloudflare 빌드는 독립적으로 시작됩니다. pull request에는
+`품질 검증`을 필수 상태 검사로 지정하고 `main` 직접 push를 제한해야 검증에
+실패한 변경의 병합과 자동 배포를 예방할 수 있습니다.
 
 ## Pages 빌드 설정
 
 | 항목 | 값 |
 | --- | --- |
+| Pages project name | `nova-parts-calculator-web` |
 | Production branch | `main` |
 | Framework preset | `React (Vite)` |
 | Root directory | 저장소 루트(비워 둠) |
@@ -16,8 +35,12 @@
 | Node.js | 22 |
 
 저장소 루트의 `.node-version`이 Pages 빌드 런타임을 Node.js 22로 고정합니다.
-대시보드에 `NODE_VERSION` 환경 변수가 이미 있다면 값도 `22`로 맞춰 충돌을
-피합니다. 현재 빌드는 비밀값이나 별도 환경 변수를 요구하지 않습니다.
+대시보드에 `NODE_VERSION` 환경 변수가 있다면 값도 `22`로 맞춰 충돌을
+피합니다. 현재 앱 빌드와 자동 배포에는 별도 secret이 필요하지 않습니다.
+
+2026-08-10 기준 Pages 프로젝트, GitHub 저장소 연결, `main` 자동 배포가
+활성화되어 있으며 `816f61f` 커밋이
+`https://nova-parts-calculator-web.pages.dev`에 프로덕션 배포되었습니다.
 
 앱은 현재 루트 한 경로만 사용하는 정적 Vite 앱입니다. `public/_redirects`,
 Pages Functions와 `_worker.js`는 추가하지 않습니다. 클라이언트 라우트가 생기면
@@ -51,8 +74,8 @@ Functions나 SSR을 추가하면 함수 응답에도 같은 정책을 직접 적
 
 ## 배포 전 점검
 
-`main` 푸시는 첫 배포 이후 프로덕션 배포를 시작할 수 있으므로 푸시 전에
-저장소 루트에서 다음 검사를 모두 통과시킵니다.
+`main` 푸시는 프로덕션 배포를 시작하므로 가능하면 저장소 루트에서 다음
+검사를 먼저 통과시킵니다. 같은 검사는 GitHub Actions에서도 다시 실행됩니다.
 
 ```powershell
 npm ci
@@ -72,9 +95,9 @@ npm run build
 - 배포할 커밋의 한 줄 한글 Conventional Commit 메시지가
   `COMMIT_CONVENTION.md`를 따릅니다.
 
-첫 `Save and Deploy`를 누른 뒤 Pages의 배포 상세 화면에서 빌드 커밋 SHA가
-GitHub `main`의 대상 커밋과 같은지 확인합니다. 빌드가 실패하면 공개 배포를
-진행하지 말고 최초 오류부터 수정한 뒤 새 커밋으로 다시 배포합니다.
+Pages의 배포 상세 화면에서 빌드 커밋 SHA가 GitHub `main`의 대상 커밋과
+같은지 확인합니다. 빌드가 실패하면 최초 오류부터 수정한 뒤 새 커밋으로 다시
+배포합니다.
 
 ## 배포 후 스모크 테스트
 
@@ -147,7 +170,8 @@ Cloudflare CDN 캐시와 별개이므로 서비스 장애 대응 중 임의로 �
 
 | 증상 | 우선 확인 | 대응 |
 | --- | --- | --- |
-| 빌드 실패 | Pages 최초 오류, Node 버전, `npm ci` | 로컬 재현 후 수정 커밋 배포 |
+| 검증 실패 | Actions 최초 오류, Node 버전, `npm ci` | 로컬 재현 후 수정 커밋 배포 |
+| Pages 빌드 실패 | Pages 최초 오류, Git 연결, Node 버전 | 로컬 재현 후 수정 커밋 배포 |
 | 흰 화면/청크 404 | 배포 SHA, `index.html`의 청크 URL | 정상 배포로 롤백, 캐시 확인 |
 | 헤더 누락 | `dist/_headers`, 정적 응답 여부 | 빌드 산출물과 Pages 규칙 확인 |
 | 계산/덱 회귀 | 브라우저 콘솔, 재현 JSON, 해당 테스트 | 정상 배포로 롤백 후 회귀 테스트 추가 |

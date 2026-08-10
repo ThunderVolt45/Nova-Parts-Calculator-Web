@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: 품질 검증
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v6
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 타입 검사
+        run: npm run typecheck
+
+      - name: 린트
+        run: npm run lint
+
+      - name: 단위 테스트
+        run: npm run test:run
+
+      - name: Playwright 브라우저 설치
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: E2E 테스트
+        run: npm run test:e2e
+
+      - name: 프로덕션 빌드
+        run: npm run build
