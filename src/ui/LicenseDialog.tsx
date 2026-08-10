@@ -10,7 +10,18 @@ interface LicenseDialogProps {
   restoreFocusRef: RefObject<HTMLButtonElement | null>
 }
 
-const LICENSES_URL = '/THIRD_PARTY_LICENSES.txt'
+const licenseDocuments = {
+  project: {
+    label: '프로젝트 라이선스',
+    url: '/LICENSE.txt',
+  },
+  thirdParty: {
+    label: '기준 프로젝트·제3자 라이선스',
+    url: '/THIRD_PARTY_LICENSES.txt',
+  },
+} as const
+
+type LicenseDocumentKey = keyof typeof licenseDocuments
 
 export function LicenseDialog({
   open,
@@ -19,8 +30,16 @@ export function LicenseDialog({
 }: LicenseDialogProps) {
   const dialogRef = useRef<HTMLElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
-  const [licenseText, setLicenseText] = useState<string | null>(null)
-  const [loadError, setLoadError] = useState(false)
+  const [activeDocument, setActiveDocument] =
+    useState<LicenseDocumentKey>('project')
+  const [documentTexts, setDocumentTexts] = useState<
+    Partial<Record<LicenseDocumentKey, string>>
+  >({})
+  const [loadingDocument, setLoadingDocument] =
+    useState<LicenseDocumentKey | null>(null)
+  const [failedDocuments, setFailedDocuments] = useState<
+    Partial<Record<LicenseDocumentKey, boolean>>
+  >({})
 
   useModalDialog({
     dialogRef,
@@ -31,26 +50,33 @@ export function LicenseDialog({
   })
 
   useEffect(() => {
-    if (!open || licenseText !== null) return
+    if (!open || documentTexts[activeDocument] !== undefined) return
 
     const controller = new AbortController()
-    setLoadError(false)
+    const documentKey = activeDocument
+    const documentUrl = licenseDocuments[documentKey].url
+    setLoadingDocument(documentKey)
+    setFailedDocuments((current) => ({ ...current, [documentKey]: false }))
 
-    void fetch(LICENSES_URL, { signal: controller.signal })
+    void fetch(documentUrl, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`라이선스 문서를 불러오지 못했습니다 (${response.status})`)
         }
         return response.text()
       })
-      .then(setLicenseText)
+      .then((text) => {
+        setDocumentTexts((current) => ({ ...current, [documentKey]: text }))
+        setLoadingDocument((current) => current === documentKey ? null : current)
+      })
       .catch((error: unknown) => {
+        setLoadingDocument((current) => current === documentKey ? null : current)
         if (error instanceof DOMException && error.name === 'AbortError') return
-        setLoadError(true)
+        setFailedDocuments((current) => ({ ...current, [documentKey]: true }))
       })
 
     return () => controller.abort()
-  }, [licenseText, open])
+  }, [activeDocument, documentTexts, open])
 
   if (!open) return null
 
@@ -90,20 +116,42 @@ export function LicenseDialog({
           </button>
         </header>
 
-        <div className="license-dialog-content">
-          {licenseText !== null ? (
-            <pre tabIndex={0}>{licenseText}</pre>
-          ) : loadError ? (
+        <nav className="license-dialog-tabs" aria-label="라이선스 문서 선택">
+          {Object.entries(licenseDocuments).map(([key, document]) => (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={activeDocument === key}
+              onClick={() => setActiveDocument(key as LicenseDocumentKey)}
+            >
+              {document.label}
+            </button>
+          ))}
+        </nav>
+
+        <div
+          className="license-dialog-content"
+          aria-label={licenseDocuments[activeDocument].label}
+        >
+          {documentTexts[activeDocument] !== undefined ? (
+            <pre tabIndex={0}>{documentTexts[activeDocument]}</pre>
+          ) : failedDocuments[activeDocument] ? (
             <div className="license-dialog-state" role="alert">
               <strong>라이선스 문서를 불러오지 못했습니다.</strong>
               <p>잠시 후 다시 시도하거나 원문 텍스트 파일을 열어 주세요.</p>
-              <a href={LICENSES_URL} target="_blank" rel="noreferrer">
+              <a
+                href={licenseDocuments[activeDocument].url}
+                target="_blank"
+                rel="noreferrer"
+              >
                 라이선스 텍스트 파일 열기
               </a>
             </div>
           ) : (
             <div className="license-dialog-state" role="status">
-              라이선스 문서를 불러오는 중입니다.
+              {loadingDocument === activeDocument
+                ? '라이선스 문서를 불러오는 중입니다.'
+                : '라이선스 문서를 준비하고 있습니다.'}
             </div>
           )}
         </div>

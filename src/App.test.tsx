@@ -174,15 +174,19 @@ describe('공개 서비스 고지', () => {
     expect(screen.getByText(/앱 서버로 전송하지 않습니다/)).toBeVisible()
     expect(screen.getByText(/Cloudflare가 IP 주소/)).toBeVisible()
     expect(screen.getByText(/ThunderVolt45와 cam900의 저작권/)).toBeVisible()
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-      ok: true,
-      text: async () => [
-        'REFERENCE PROJECT NOTICES',
-        'Nova Parts Calculator (Python)',
-        'Contributors: ThunderVolt45, cam900',
-        'React@19.2.4 — MIT',
-      ].join('\n'),
-    }))
+    vi.stubGlobal('fetch', vi.fn().mockImplementation((input: string) =>
+      Promise.resolve({
+        ok: true,
+        text: async () => input === '/LICENSE.txt'
+          ? 'MIT License\n\nCopyright (c) 2026 ThunderVolt45'
+          : [
+              'REFERENCE PROJECT NOTICES',
+              'Nova Parts Calculator (Python)',
+              'Contributors: ThunderVolt45, cam900',
+              'React@19.2.4 — MIT',
+            ].join('\n'),
+      }),
+    ))
     const licensesTrigger = screen.getByRole('button', {
       name: '페이지에서 라이선스 전문 보기',
     })
@@ -191,6 +195,11 @@ describe('공개 서비스 고지', () => {
     const licensesDialog = await screen.findByRole('dialog', {
       name: '오픈소스 및 제3자 라이선스',
     })
+    expect(within(licensesDialog).getByText(/Copyright \(c\) 2026/)).toBeVisible()
+
+    await user.click(within(licensesDialog).getByRole('button', {
+      name: '기준 프로젝트·제3자 라이선스',
+    }))
     expect(within(licensesDialog).getByText(/Nova Parts Calculator/)).toBeVisible()
     expect(within(licensesDialog).getByText(/ThunderVolt45, cam900/)).toBeVisible()
 

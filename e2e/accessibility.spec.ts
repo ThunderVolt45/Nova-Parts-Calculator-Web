@@ -104,6 +104,13 @@ test.describe('자동 접근성 검사', () => {
     })
     await expect(licensesDialog).toBeVisible()
     await expect(licensesDialog.locator('pre')).toContainText(
+      'Copyright (c) 2026 ThunderVolt45',
+    )
+
+    await licensesDialog.getByRole('button', {
+      name: '기준 프로젝트·제3자 라이선스',
+    }).click()
+    await expect(licensesDialog.locator('pre')).toContainText(
       'Nova Parts Calculator (Python)',
     )
     await expect(licensesDialog.locator('pre')).toContainText(

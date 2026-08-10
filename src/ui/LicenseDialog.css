@@ -106,6 +106,38 @@
   color: var(--text-strong);
 }
 
+.license-dialog-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(8, 17, 23, 0.72);
+}
+
+.license-dialog-tabs button {
+  min-height: 34px;
+  padding: 7px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.license-dialog-tabs button[aria-pressed='true'] {
+  border-color: rgba(78, 218, 234, 0.52);
+  color: #d9fbff;
+  background: rgba(78, 218, 234, 0.13);
+}
+
+.license-dialog-tabs button:hover,
+.license-dialog-tabs button:focus-visible {
+  border-color: var(--cyan);
+  color: var(--text-strong);
+}
+
 .license-dialog-content {
   min-height: 0;
   flex: 1 1 auto;
@@ -179,6 +211,16 @@
 
   .license-dialog-content {
     padding: 15px 14px 20px;
+  }
+
+  .license-dialog-tabs {
+    padding: 10px 14px;
+  }
+
+  .license-dialog-tabs button {
+    flex: 1 1 0;
+    padding-inline: 8px;
+    line-height: 1.35;
   }
 
   .license-dialog-content pre {
