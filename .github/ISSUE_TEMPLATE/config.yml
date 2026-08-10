@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: 보안 취약점 비공개 신고
+    url: https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/security/advisories
+    about: 민감한 보안 취약점은 공개 이슈가 아닌 GitHub의 비공개 신고 화면으로 보내 주세요.

@@ -15,6 +15,7 @@ IndexedDB에 저장되며 원본 게임 리소스는 서버로 전송하지 않�
 - [카탈로그 스키마](./docs/catalog-schema.md)
 - [작업 로드맵](./TASKS.md)
 - [오픈소스 및 제3자 라이선스](./public/THIRD_PARTY_LICENSES.txt)
+- [보안 정책 및 비공개 취약점 신고](./SECURITY.md)
 
 ## 개발 명령
 
