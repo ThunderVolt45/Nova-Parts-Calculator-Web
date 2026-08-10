@@ -1,7 +1,24 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 import { expectNoAutomatedViolations } from './accessibility.ts'
 import { markUserGuideSeen, USER_GUIDE_STORAGE_KEY } from './user-guide.ts'
+
+async function selectPart(
+  page: Page,
+  slot: '다리' | '몸통' | '무기',
+  partName: string,
+) {
+  await page.getByRole('button', { name: new RegExp(`^${slot} 부품 변경`) }).click()
+  const dialog = page.getByRole('dialog', { name: `${slot} 선택` })
+  await dialog.getByRole('button', { name: partName, exact: true }).click()
+  await dialog.getByRole('button', { name: `${partName} 사용`, exact: true }).click()
+}
+
+async function selectValidAssembly(page: Page) {
+  await selectPart(page, '다리', '토들러')
+  await selectPart(page, '몸통', '코포럴')
+  await selectPart(page, '무기', '데미시즈')
+}
 
 test('첫 방문에는 퀵 가이드를 자동으로 열고 완료 상태를 기억한다', async ({ page }) => {
   await page.goto('/')
@@ -111,7 +128,7 @@ test.describe('자동 접근성 검사', () => {
   })
 
   test('JSON 가져오기 대화상자도 포커스와 Escape 닫기를 관리한다', async ({ page }) => {
-    await page.getByRole('button', { name: '초기화', exact: true }).click()
+    await selectValidAssembly(page)
 
     const downloadPromise = page.waitForEvent('download')
     await page.getByRole('button', { name: '현재 유닛을 JSON으로 내보내기' }).click()

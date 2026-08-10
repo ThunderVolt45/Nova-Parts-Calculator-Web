@@ -48,6 +48,23 @@ function createJsonFile(name: string, contents: string) {
   return file
 }
 
+async function selectPart(
+  user: ReturnType<typeof userEvent.setup>,
+  slot: '다리' | '몸통' | '무기',
+  partName: string,
+) {
+  await user.click(screen.getByRole('button', { name: new RegExp(`^${slot} 부품 변경`) }))
+  const dialog = screen.getByRole('dialog', { name: `${slot} 선택` })
+  await user.click(within(dialog).getByRole('button', { name: partName }))
+  await user.click(within(dialog).getByRole('button', { name: `${partName} 사용` }))
+}
+
+async function selectValidAssembly(user: ReturnType<typeof userEvent.setup>) {
+  await selectPart(user, '다리', '토들러')
+  await selectPart(user, '몸통', '코포럴')
+  await selectPart(user, '무기', '데미시즈')
+}
+
 beforeEach(() => {
   window.localStorage.setItem(USER_GUIDE_STORAGE_KEY, 'seen')
 })
@@ -322,10 +339,47 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
     }
   })
 
+  it('조립 초기화 시 모든 부품과 강화 수치를 비운다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await selectValidAssembly(user)
+
+    const legCard = document.querySelectorAll<HTMLElement>('.part-selector')[0]!
+    await user.click(legCard.querySelector<HTMLButtonElement>('.part-card-stat-watt')!)
+    const wattInput = screen.getByRole('spinbutton', { name: '와트 강화 수치' })
+    await user.clear(wattInput)
+    await user.type(wattInput, '57')
+
+    await user.click(screen.getByRole('button', { name: '초기화' }))
+
+    for (const slot of ['다리', '몸통', '무기', '액세서리']) {
+      expect(screen.getByRole('button', {
+        name: `${slot} 부품 변경, 현재 부품 없음`,
+      })).toBeVisible()
+    }
+
+    const reinforcementKeys = [
+      ['watt', '와트'],
+      ['health', '체력'],
+      ['damage', '공격'],
+    ] as const
+    const partCards = document.querySelectorAll<HTMLElement>('.part-selector')
+    for (const partCard of Array.from(partCards).slice(0, 3)) {
+      for (const [key, label] of reinforcementKeys) {
+        await user.click(
+          partCard.querySelector<HTMLButtonElement>(`.part-card-stat-${key}`)!,
+        )
+        expect(screen.getByRole('spinbutton', {
+          name: `${label} 강화 수치`,
+        })).toHaveValue(0)
+      }
+    }
+  })
+
   it('기본과 최종 능력치를 구분하고 적용 조건을 초기화한다', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: '초기화' }))
+    await selectValidAssembly(user)
 
     expect(screen.getByLabelText('기본 능력치')).toHaveTextContent('BASE')
 
@@ -353,7 +407,7 @@ describe('T10 계산 결과 및 시뮬레이션 UI', () => {
   it('조립 불가 원인과 문제가 있는 부품을 함께 표시한다', async () => {
     const user = userEvent.setup()
     render(<App />)
-    await user.click(screen.getByRole('button', { name: '초기화' }))
+    await selectValidAssembly(user)
 
     await user.click(screen.getByRole('button', { name: /몸통 부품 변경/ }))
     const dialog = screen.getByRole('dialog', { name: '몸통 선택' })
@@ -442,7 +496,7 @@ describe('T11-T12 덱 저장 및 편집 UI', () => {
     render(<App />)
 
     await screen.findByRole('combobox', { name: '덱 선택' })
-    await user.click(screen.getByRole('button', { name: '초기화' }))
+    await selectValidAssembly(user)
     await user.click(screen.getByRole('button', { name: '유닛 등록' }))
 
     await waitFor(() => {

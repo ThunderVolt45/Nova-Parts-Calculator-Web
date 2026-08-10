@@ -14,8 +14,22 @@ async function openCalculator(page: Page) {
     .toHaveAttribute('aria-pressed', 'true')
 }
 
+async function selectPart(
+  page: Page,
+  slot: '다리' | '몸통' | '무기',
+  partName: string,
+) {
+  await page.getByRole('button', { name: new RegExp(`^${slot} 부품 변경`) }).click()
+  const dialog = page.getByRole('dialog', { name: `${slot} 선택` })
+  await dialog.getByRole('button', { name: partName, exact: true }).click()
+  await dialog.getByRole('button', { name: `${partName} 사용`, exact: true }).click()
+}
+
 async function resetToValidAssembly(page: Page) {
   await page.getByRole('button', { name: '초기화', exact: true }).click()
+  await selectPart(page, '다리', '토들러')
+  await selectPart(page, '몸통', '코포럴')
+  await selectPart(page, '무기', '데미시즈')
   await expect(page.locator('.status-pill')).toHaveText('조립 완료')
   await expect(page.getByRole('button', { name: '유닛 등록', exact: true })).toBeEnabled()
 }

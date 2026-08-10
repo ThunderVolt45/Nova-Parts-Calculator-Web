@@ -220,31 +220,6 @@ const formationControls: Array<{
   { key: 'cooldownUnits', label: '연사 아이템' },
 ]
 
-const defaultPartIds = (() => {
-  const body = partsCatalog.parts.bodies.find((part) => part.id !== 0)
-  const weapon = partsCatalog.parts.weapons.find(
-    (part) => part.id !== 0 && part.mountType === body?.mountType,
-  )
-  const requiredLoad = (body?.weight ?? 0) + (weapon?.weight ?? 0)
-  const leg =
-    partsCatalog.parts.legs.find(
-      (part) => part.id !== 0 && part.loadCapacity >= requiredLoad,
-    ) ?? partsCatalog.parts.legs.find((part) => part.id !== 0)
-
-  return {
-    leg: leg?.id ?? 0,
-    body: body?.id ?? 0,
-    weapon: weapon?.id ?? 0,
-    accessory: partsCatalog.parts.accessories[0]?.id ?? 0,
-  } satisfies AssemblyPartIds
-})()
-
-const defaultReinforcement: Record<PartSlot, PartReinforcement> = {
-  leg: { watt: 30, health: 20, damage: 10 },
-  body: { watt: 25, health: 35, damage: 10 },
-  weapon: { watt: 20, health: 10, damage: 40 },
-}
-
 const defaultSubcoreId = partsCatalog.subcores[0]?.id ?? 0
 const defaultSubcoreIds: Record<PartSlot, number> = {
   leg: defaultSubcoreId,
@@ -699,8 +674,8 @@ function App() {
   }
 
   const resetAssembly = () => {
-    setPartIds(defaultPartIds)
-    setReinforcement(defaultReinforcement)
+    setPartIds(emptyPartIds)
+    setReinforcement(emptyReinforcement)
     setSubcoreIds(defaultSubcoreIds)
     setAccessoryRandomOptions(defaultAccessoryRandomOptions)
     setActivePart('weapon')
