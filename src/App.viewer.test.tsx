@@ -70,7 +70,7 @@ describe('3D 프리뷰 HUD', () => {
     render(<App />)
 
     expect(await screen.findByText('CACHE LOADED')).toBeVisible()
-    expect(screen.getByText(/ROTATE H -42° · V 73°/)).toBeVisible()
+    expect(await screen.findByText(/ROTATE H -42° · V 73°/)).toBeVisible()
     expect(screen.getByText('ZOOM 1.75×')).toBeVisible()
     expect(screen.getByText('프리뷰 조작')).toBeVisible()
 
