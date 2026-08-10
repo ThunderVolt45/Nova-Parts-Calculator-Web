@@ -3,7 +3,7 @@ const BUG_REPORT_URL =
 const CLOUDFLARE_PRIVACY_URL = 'https://www.cloudflare.com/privacypolicy/'
 const RIGHTS_REPORT_EMAIL = 'contactvolt45@gmail.com'
 const RIGHTS_REPORT_SUBJECT = '[Nova Assembly] 권리 침해 신고'
-const RIGHTS_REPORT_BODY = `아래 항목을 작성해 주세요. 불필요한 개인정보와 GX·XFI·텍스처 등 게임 원본 파일은 첨부하지 마세요.
+const RIGHTS_REPORT_BODY = `아래 항목을 작성해 주세요.
 
 1. 신고자 이름 또는 단체명:
 2. 회신받을 이메일 주소:
