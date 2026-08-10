@@ -42,6 +42,7 @@ import {
   getSubcoreSpriteKey,
 } from './gx/lab-ui-atlas.ts'
 import type { LocalResourceIndex } from './gx/local-files.ts'
+import { ServiceNotice } from './ui/ServiceNotice.tsx'
 import { useModalDialog } from './ui/useModalDialog.ts'
 import {
   StandalonePartViewer,
@@ -745,6 +746,7 @@ function App() {
             <small>1492 PARTS LAB</small>
           </span>
         </a>
+        <ServiceNotice />
       </header>
 
       <main id="main" className="workspace">

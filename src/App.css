@@ -20,6 +20,8 @@ button {
   height: 68px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding: 0 24px;
   border-bottom: 1px solid var(--line);
   background: rgba(8, 13, 18, 0.9);
@@ -65,6 +67,131 @@ button {
   color: var(--text-dim);
   font: 600 var(--font-min)/1 var(--mono);
   letter-spacing: 0.26em;
+}
+
+.service-notice {
+  min-width: 0;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.service-notice details {
+  position: relative;
+}
+
+.service-notice summary,
+.service-bug-report {
+  padding: 7px 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.025);
+  font-size: var(--font-min);
+  font-weight: 750;
+  list-style: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.service-bug-report {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.service-notice summary::-webkit-details-marker {
+  display: none;
+}
+
+.service-notice summary:hover,
+.service-notice summary:focus-visible,
+.service-notice details[open] summary,
+.service-bug-report:hover,
+.service-bug-report:focus-visible {
+  border-color: var(--cyan-dim);
+  color: var(--text-strong);
+}
+
+.service-notice-card {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100svh - 92px);
+  overflow-y: auto;
+  padding: 18px;
+  border: 1px solid rgba(78, 218, 234, 0.34);
+  border-radius: 7px;
+  color: var(--text-muted);
+  background: rgba(8, 17, 23, 0.98);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.46);
+}
+
+.service-notice-card header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.service-notice-card h2,
+.service-notice-card h3,
+.service-notice-card p {
+  margin: 0;
+}
+
+.service-notice-card h2 {
+  margin-top: 5px;
+  color: var(--text-strong);
+  font: 760 19px/1.2 var(--display);
+}
+
+.service-notice-card header small {
+  display: block;
+  margin-top: 7px;
+  color: var(--text-dim);
+  font: 600 var(--font-min)/1 var(--mono);
+}
+
+.service-notice-card section {
+  padding-top: 14px;
+}
+
+.service-notice-card h3 {
+  color: #bcebf0;
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.service-notice-card p {
+  margin-top: 7px;
+  font-size: var(--font-min);
+  line-height: 1.65;
+  word-break: keep-all;
+}
+
+.service-notice-card a {
+  color: var(--cyan);
+  text-underline-offset: 3px;
+}
+
+.service-notice-contact {
+  margin-top: 10px;
+  display: inline-flex;
+  padding: 8px 10px;
+  border: 1px solid rgba(78, 218, 234, 0.34);
+  border-radius: 5px;
+  background: rgba(55, 177, 194, 0.08);
+  font-size: var(--font-min);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.service-notice-email {
+  margin-top: 8px;
+  display: block;
+  color: var(--text-dim);
+  font: 600 var(--font-min)/1.35 var(--mono);
 }
 
 .status-pill i {
@@ -2799,6 +2926,11 @@ a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .brand-mark { width: 31px; }
   .brand strong { font-size: var(--font-min); }
   .brand small { font-size: var(--font-min); }
+  .service-notice { gap: 8px; }
+  .service-notice-card {
+    max-height: calc(100svh - 78px);
+    padding: 15px;
+  }
   .workspace { height: auto; min-height: calc(100svh - 126px); display: block; padding: 8px; overflow: visible; }
   .mobile-panel { display: none; }
   .mobile-panel.is-mobile-active { display: block; }
@@ -2941,6 +3073,10 @@ a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .mobile-nav button { min-width: 0; border: 0; border-radius: 6px; color: var(--text-dim); background: transparent; font-size: var(--font-min); font-weight: 700; }
   .mobile-nav button span { width: 24px; height: 24px; margin: 0 auto 3px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 5px; font: 800 var(--font-min)/1 var(--mono); }
   .mobile-nav button.is-active { color: var(--cyan); background: rgba(70, 202, 219, 0.07); }
+}
+
+@media (max-width: 430px) {
+  .brand > span:last-child { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

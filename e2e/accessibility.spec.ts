@@ -12,6 +12,29 @@ test.describe('자동 접근성 검사', () => {
     await expectNoAutomatedViolations(page)
   })
 
+  test('서비스 및 개인정보 안내가 공개되고 접근성 검사를 통과한다', async ({ page }) => {
+    await expect(page.getByText('비공식 팬 도구', { exact: true })).toHaveCount(0)
+    await expect(page.getByRole('link', { name: '버그 신고' })).toHaveAttribute(
+      'href',
+      'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/issues/new?template=bug_report.yml',
+    )
+    await page.getByText('서비스 안내', { exact: true }).click()
+    await expect(
+      page.getByRole('heading', { name: '서비스 및 개인정보 안내' }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: '비공식 팬 제작 도구' }),
+    ).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: '권리 침해 신고 이메일 작성' }),
+    ).toHaveAttribute(
+      'href',
+      /^mailto:contactvolt45@gmail\.com\?subject=/,
+    )
+
+    await expectNoAutomatedViolations(page)
+  })
+
   test('부품 선택 대화상자가 WCAG A·AA 자동 검사 규칙을 통과한다', async ({ page }) => {
     await page.getByRole('button', { name: /^몸통 부품 변경/ }).click()
     await expect(page.getByRole('dialog', { name: '몸통 선택' })).toBeVisible()

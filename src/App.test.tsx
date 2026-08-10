@@ -63,6 +63,40 @@ describe('3D 프리뷰 리소스 상태 표시', () => {
   })
 })
 
+describe('공개 서비스 고지', () => {
+  it('버그와 권리 침해 신고를 분리하고 서비스 정책을 안내한다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    expect(screen.queryByText('비공식 팬 도구')).not.toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '버그 신고' })).toHaveAttribute(
+      'href',
+      'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/issues/new?template=bug_report.yml',
+    )
+    await user.click(screen.getByText('서비스 안내'))
+
+    expect(
+      screen.getByRole('heading', { name: '서비스 및 개인정보 안내' }),
+    ).toBeVisible()
+    expect(screen.getByText(/게임 개발사·운영사와 제휴하거나/)).toBeVisible()
+    expect(screen.getByText(/앱 서버로 전송하지 않습니다/)).toBeVisible()
+    expect(screen.getByText(/Cloudflare가 IP 주소/)).toBeVisible()
+    const rightsReportUrl = new URL(
+      screen
+        .getByRole('link', { name: '권리 침해 신고 이메일 작성' })
+        .getAttribute('href')!,
+    )
+    expect(rightsReportUrl.protocol).toBe('mailto:')
+    expect(rightsReportUrl.pathname).toBe('contactvolt45@gmail.com')
+    expect(rightsReportUrl.searchParams.get('subject')).toBe(
+      '[Nova Assembly] 권리 침해 신고',
+    )
+    expect(rightsReportUrl.searchParams.get('body')).toContain(
+      '권리 침해가 의심되는 서비스 URL 또는 화면:',
+    )
+  })
+})
+
 describe('T09 부품 선택 및 강화 UI', () => {
   it('부품을 이름으로 검색하고 상세 확인 후 적용한다', async () => {
     const user = userEvent.setup()
