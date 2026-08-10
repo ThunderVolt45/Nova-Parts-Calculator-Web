@@ -212,10 +212,18 @@ button {
   padding: 8px 10px;
   border: 1px solid rgba(78, 218, 234, 0.34);
   border-radius: 5px;
+  color: var(--cyan);
   background: rgba(55, 177, 194, 0.08);
   font-size: var(--font-min);
   font-weight: 750;
   text-decoration: none;
+  cursor: pointer;
+}
+
+.service-notice-contact:hover,
+.service-notice-contact:focus-visible {
+  border-color: var(--cyan);
+  color: var(--text-strong);
 }
 
 .service-notice-email {

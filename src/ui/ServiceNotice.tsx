@@ -1,11 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import { LicenseDialog } from './LicenseDialog.tsx'
 import { UserGuide } from './UserGuide.tsx'
 
 const BUG_REPORT_URL =
   'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/issues/new?template=bug_report.yml'
 export const USER_GUIDE_STORAGE_KEY = 'nova-assembly:user-guide-seen:v1'
 const CLOUDFLARE_PRIVACY_URL = 'https://www.cloudflare.com/privacypolicy/'
+const ORIGINAL_CALCULATOR_URL =
+  'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Python'
+const GX_UNPACKER_URL =
+  'https://github.com/ThunderVolt45/Nova-1492-GX-Unpacker'
 const RIGHTS_REPORT_EMAIL = 'contactvolt45@gmail.com'
 const RIGHTS_REPORT_SUBJECT = '[Nova Assembly] 권리 침해 신고'
 const RIGHTS_REPORT_BODY = `아래 항목을 작성해 주세요.
@@ -26,6 +31,8 @@ const RIGHTS_REPORT_URL = `mailto:${RIGHTS_REPORT_EMAIL}?subject=${encodeURIComp
 
 export function ServiceNotice() {
   const [guideOpen, setGuideOpen] = useState(false)
+  const [licensesOpen, setLicensesOpen] = useState(false)
+  const licensesTriggerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     try {
@@ -57,6 +64,11 @@ export function ServiceNotice() {
         사용 가이드
       </button>
       <UserGuide open={guideOpen} onClose={closeGuide} />
+      <LicenseDialog
+        open={licensesOpen}
+        onClose={() => setLicensesOpen(false)}
+        restoreFocusRef={licensesTriggerRef}
+      />
       <a
         className="service-bug-report"
         href={BUG_REPORT_URL}
@@ -119,6 +131,37 @@ export function ServiceNotice() {
               </a>
               을 따릅니다.
             </p>
+          </section>
+
+          <section>
+            <h3>오픈소스 라이선스와 기여자</h3>
+            <p>
+              계산 공식과 기존 동작은 MIT 라이선스의{' '}
+              <a href={ORIGINAL_CALCULATOR_URL} target="_blank" rel="noreferrer">
+                Nova Parts Calculator
+              </a>
+              를 기준으로 이식했습니다. 원본 Git 기록의 기여자 ThunderVolt45와
+              cam900의 저작권 및 MIT 고지를 보존합니다. GX/XFI 파싱과 3D 변환은
+              MIT 라이선스의{' '}
+              <a href={GX_UNPACKER_URL} target="_blank" rel="noreferrer">
+                Nova 1492 GX Unpacker
+              </a>
+              를 기준으로 구현했습니다.
+            </p>
+            <p>
+              이 서비스는 React, Vite, TypeScript, Three.js와 그 밖의 오픈소스
+              소프트웨어를 사용합니다. 프로젝트 및 제3자 라이선스 원문은 아래
+              문서에서 확인할 수 있습니다.
+            </p>
+            <button
+              ref={licensesTriggerRef}
+              className="service-notice-contact"
+              type="button"
+              aria-haspopup="dialog"
+              onClick={() => setLicensesOpen(true)}
+            >
+              페이지에서 라이선스 전문 보기
+            </button>
           </section>
 
           <section>

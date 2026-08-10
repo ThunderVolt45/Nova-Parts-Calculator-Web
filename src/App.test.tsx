@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest'
 
 import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import App from './App.tsx'
 import { partsCatalog } from './data/catalog/catalog.ts'
@@ -72,6 +72,7 @@ beforeEach(() => {
 afterEach(() => {
   cleanup()
   window.localStorage.clear()
+  vi.unstubAllGlobals()
 })
 
 describe('3D 프리뷰 리소스 상태 표시', () => {
@@ -172,6 +173,30 @@ describe('공개 서비스 고지', () => {
     expect(screen.getByText(/게임 개발사·운영사와 제휴하거나/)).toBeVisible()
     expect(screen.getByText(/앱 서버로 전송하지 않습니다/)).toBeVisible()
     expect(screen.getByText(/Cloudflare가 IP 주소/)).toBeVisible()
+    expect(screen.getByText(/ThunderVolt45와 cam900의 저작권/)).toBeVisible()
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => [
+        'REFERENCE PROJECT NOTICES',
+        'Nova Parts Calculator (Python)',
+        'Contributors: ThunderVolt45, cam900',
+        'React@19.2.4 — MIT',
+      ].join('\n'),
+    }))
+    const licensesTrigger = screen.getByRole('button', {
+      name: '페이지에서 라이선스 전문 보기',
+    })
+    await user.click(licensesTrigger)
+
+    const licensesDialog = await screen.findByRole('dialog', {
+      name: '오픈소스 및 제3자 라이선스',
+    })
+    expect(within(licensesDialog).getByText(/Nova Parts Calculator/)).toBeVisible()
+    expect(within(licensesDialog).getByText(/ThunderVolt45, cam900/)).toBeVisible()
+
+    await user.keyboard('{Escape}')
+    expect(licensesDialog).not.toBeInTheDocument()
+    expect(licensesTrigger).toHaveFocus()
     const rightsReportUrl = new URL(
       screen
         .getByRole('link', { name: '권리 침해 신고 이메일 작성' })

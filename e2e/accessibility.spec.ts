@@ -95,6 +95,26 @@ test.describe('자동 접근성 검사', () => {
       /^mailto:contactvolt45@gmail\.com\?subject=/,
     )
 
+    const licensesTrigger = page.getByRole('button', {
+      name: '페이지에서 라이선스 전문 보기',
+    })
+    await licensesTrigger.click()
+    const licensesDialog = page.getByRole('dialog', {
+      name: '오픈소스 및 제3자 라이선스',
+    })
+    await expect(licensesDialog).toBeVisible()
+    await expect(licensesDialog.locator('pre')).toContainText(
+      'Nova Parts Calculator (Python)',
+    )
+    await expect(licensesDialog.locator('pre')).toContainText(
+      '@react-three/fiber@9.7.0',
+    )
+
+    await expectNoAutomatedViolations(page)
+    await page.keyboard.press('Escape')
+    await expect(licensesDialog).toHaveCount(0)
+    await expect(licensesTrigger).toBeFocused()
+
     await expectNoAutomatedViolations(page)
   })
 
