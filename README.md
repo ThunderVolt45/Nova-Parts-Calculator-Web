@@ -14,6 +14,7 @@ IndexedDB에 저장되며 원본 게임 리소스는 서버로 전송하지 않�
 - [계산 엔진](./docs/calculation-engine.md)
 - [카탈로그 스키마](./docs/catalog-schema.md)
 - [작업 로드맵](./TASKS.md)
+- [오픈소스 및 제3자 라이선스](./public/THIRD_PARTY_LICENSES.txt)
 
 ## 개발 명령
 
@@ -68,3 +69,25 @@ E2E 테스트는 Chromium과 Firefox의 데스크톱 핵심 흐름, 모바일 Ch
 덱에는 영향을 주지 않습니다.
 
 원본 GX, XFI, 텍스처와 로컬 변환 산출물은 저장소에 커밋하지 않습니다.
+
+## 라이선스와 기여자
+
+이 웹 프로젝트의 직접 작성 코드는 [MIT License](./LICENSE)로 배포합니다.
+계산 공식과 기존 동작은 MIT 라이선스의
+[Nova Parts Calculator](https://github.com/ThunderVolt45/Nova-Parts-Calculator-Python)를
+기준으로 이식했으며, 원본 Git 기록의 기여자 `ThunderVolt45`와 `cam900`의
+저작권 및 라이선스 고지를 보존합니다. GX/XFI 파싱과 3D 변환은 MIT 라이선스의
+[Nova 1492 GX Unpacker](https://github.com/ThunderVolt45/Nova-1492-GX-Unpacker)를
+기준으로 구현했습니다.
+
+MIT 라이선스는 직접 작성한 프로그램 코드와 해당 기준 프로젝트 코드에만
+적용됩니다. Nova 1492 명칭·상표·원본 게임 데이터와 게임 자산의 권리는 각
+권리자에게 있으며 이 저장소는 그 권리를 부여하지 않습니다.
+
+## CI/CD
+
+GitHub의 `main`에 커밋이 push되면 GitHub Actions가 타입 검사, 린트, 단위
+테스트, Chromium·Firefox E2E 테스트와 프로덕션 빌드를 실행합니다. 연결된
+Cloudflare Pages 프로젝트는 같은 `main` push를 감지해 프로덕션을 자동
+배포합니다. 자세한 구성과 운영 절차는
+[배포 및 운영 가이드](./docs/deployment-operations.md)를 따릅니다.
