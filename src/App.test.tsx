@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest'
 
 import { cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import App from './App.tsx'
 import { partsCatalog } from './data/catalog/catalog.ts'
@@ -16,6 +16,7 @@ import {
 import { useDeckStore } from './deck/store.ts'
 import { createDeck, type SavedUnit } from './domain/deck/schema.ts'
 import { getViewerResourceLabel } from './viewer/viewer-hud.ts'
+import { USER_GUIDE_STORAGE_KEY } from './ui/ServiceNotice.tsx'
 
 function createImportUnit(): SavedUnit {
   const body = partsCatalog.parts.bodies.find((part) => part.id !== 0)!
@@ -47,7 +48,14 @@ function createJsonFile(name: string, contents: string) {
   return file
 }
 
-afterEach(cleanup)
+beforeEach(() => {
+  window.localStorage.setItem(USER_GUIDE_STORAGE_KEY, 'seen')
+})
+
+afterEach(() => {
+  cleanup()
+  window.localStorage.clear()
+})
 
 describe('3D 프리뷰 리소스 상태 표시', () => {
   it('GX 연결, 캐시 로드, 오프라인 상태를 구분한다', () => {
@@ -64,6 +72,72 @@ describe('3D 프리뷰 리소스 상태 표시', () => {
 })
 
 describe('공개 서비스 고지', () => {
+  it('첫 방문에는 퀵 가이드를 자동으로 열고 닫은 뒤 다시 표시하지 않는다', async () => {
+    window.localStorage.removeItem(USER_GUIDE_STORAGE_KEY)
+    const user = userEvent.setup()
+    const firstVisit = render(<App />)
+
+    const dialog = await screen.findByRole('dialog', {
+      name: 'Nova Assembly 사용 가이드',
+    })
+    expect(dialog).toBeVisible()
+    expect(within(dialog).getByText(
+      '조립부터 덱 백업과 3D 프리뷰까지, 필요한 기능을 한 화면에서 확인하세요.',
+    )).toBeVisible()
+    expect(within(dialog).getByRole('button', {
+      name: '전체 기능 자세히 보기',
+    })).toBeVisible()
+
+    await user.click(within(dialog).getByRole('button', {
+      name: '가이드 닫고 조립 시작',
+    }))
+    expect(dialog).not.toBeInTheDocument()
+    expect(window.localStorage.getItem(USER_GUIDE_STORAGE_KEY)).toBe('seen')
+
+    firstVisit.unmount()
+    render(<App />)
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', {
+        name: 'Nova Assembly 사용 가이드',
+      })).not.toBeInTheDocument()
+    })
+  })
+
+  it('앱 안에서 이미지 사용자 가이드를 열고 닫는다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const trigger = screen.getByRole('button', { name: '사용 가이드' })
+    expect(screen.queryByRole('dialog', { name: 'Nova Assembly 사용 가이드' }))
+      .not.toBeInTheDocument()
+
+    await user.click(trigger)
+
+    const dialog = screen.getByRole('dialog', {
+      name: 'Nova Assembly 사용 가이드',
+    })
+    expect(dialog).toBeVisible()
+    expect(
+      within(dialog).getByRole('heading', {
+        name: '처음이라면 이 순서로 시작하세요',
+      }),
+    ).toBeVisible()
+    expect(within(dialog).getAllByRole('img')).toHaveLength(3)
+    expect(
+      within(dialog).getByRole('button', { name: '사용 가이드 닫기' })
+        .querySelector('.user-guide-close-icon'),
+    ).toBeInTheDocument()
+    expect(
+      within(dialog).getByRole('img', {
+        name: /Nova Assembly 데스크톱 화면/,
+      }),
+    ).toHaveAttribute('src', '/guide/overview-hd.jpg')
+
+    await user.keyboard('{Escape}')
+    expect(dialog).not.toBeInTheDocument()
+    expect(trigger).toHaveFocus()
+  })
+
   it('버그와 권리 침해 신고를 분리하고 서비스 정책을 안내한다', async () => {
     const user = userEvent.setup()
     render(<App />)

@@ -83,6 +83,7 @@ button {
 }
 
 .service-notice summary,
+.service-guide-link,
 .service-bug-report {
   padding: 7px 9px;
   border: 1px solid var(--line-strong);
@@ -96,9 +97,29 @@ button {
   cursor: pointer;
 }
 
+.service-guide-link,
 .service-bug-report {
   color: var(--text-muted);
   text-decoration: none;
+}
+
+.service-guide-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-color: rgba(78, 218, 234, 0.52);
+  color: #d9fbff;
+  background: linear-gradient(135deg, rgba(78, 218, 234, 0.18), rgba(40, 124, 138, 0.08));
+  box-shadow: 0 0 18px rgba(78, 218, 234, 0.12), inset 0 0 12px rgba(78, 218, 234, 0.04);
+}
+
+.service-guide-link::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 9px rgba(78, 218, 234, 0.9);
+  content: '';
 }
 
 .service-notice summary::-webkit-details-marker {
@@ -108,10 +129,20 @@ button {
 .service-notice summary:hover,
 .service-notice summary:focus-visible,
 .service-notice details[open] summary,
+.service-guide-link:hover,
+.service-guide-link:focus-visible,
 .service-bug-report:hover,
 .service-bug-report:focus-visible {
   border-color: var(--cyan-dim);
   color: var(--text-strong);
+}
+
+.service-guide-link:hover,
+.service-guide-link:focus-visible {
+  border-color: var(--cyan);
+  color: #fff;
+  background: linear-gradient(135deg, rgba(78, 218, 234, 0.25), rgba(40, 124, 138, 0.12));
+  box-shadow: 0 0 24px rgba(78, 218, 234, 0.2), inset 0 0 14px rgba(78, 218, 234, 0.06);
 }
 
 .service-notice-card {
@@ -2918,6 +2949,10 @@ a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
   .catalog-dialog-body { grid-template-columns: minmax(0, 1fr) 320px; }
   .catalog-result-list { grid-template-columns: 1fr; }
   .subcore-catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+  .brand > span:last-child { display: none; }
 }
 
 @media (max-width: 1050px) {

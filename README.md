@@ -10,7 +10,6 @@ IndexedDB에 저장되며 원본 게임 리소스는 서버로 전송하지 않�
 
 ## 문서
 
-- [사용자 가이드](./docs/user-guide.md)
 - [Cloudflare Pages 배포 및 운영 가이드](./docs/deployment-operations.md)
 - [계산 엔진](./docs/calculation-engine.md)
 - [카탈로그 스키마](./docs/catalog-schema.md)

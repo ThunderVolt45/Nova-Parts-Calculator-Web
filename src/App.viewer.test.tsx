@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest'
 
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { useEffect } from 'react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { ViewerCameraState } from './viewer/camera-state.ts'
 import type { ViewerDisplayState } from './viewer/StandalonePartViewer.tsx'
@@ -53,10 +53,16 @@ vi.mock('./viewer/AssembledUnitViewer.tsx', () => ({
 }))
 
 import App from './App.tsx'
+import { USER_GUIDE_STORAGE_KEY } from './ui/ServiceNotice.tsx'
+
+beforeEach(() => {
+  window.localStorage.setItem(USER_GUIDE_STORAGE_KEY, 'seen')
+})
 
 afterEach(() => {
   cleanup()
   vi.clearAllMocks()
+  window.localStorage.clear()
 })
 
 describe('3D 프리뷰 HUD', () => {

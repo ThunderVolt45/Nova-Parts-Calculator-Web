@@ -1,9 +1,39 @@
 import { expect, test } from '@playwright/test'
 
 import { expectNoAutomatedViolations } from './accessibility.ts'
+import { markUserGuideSeen, USER_GUIDE_STORAGE_KEY } from './user-guide.ts'
+
+test('첫 방문에는 퀵 가이드를 자동으로 열고 완료 상태를 기억한다', async ({ page }) => {
+  await page.goto('/')
+
+  const dialog = page.getByRole('dialog', { name: 'Nova Assembly 사용 가이드' })
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByText(
+    '조립부터 덱 백업과 3D 프리뷰까지, 필요한 기능을 한 화면에서 확인하세요.',
+  )).toBeVisible()
+  await expect(dialog.getByRole('button', { name: '가이드 닫고 조립 시작' }))
+    .toBeVisible()
+  await expectNoAutomatedViolations(page)
+
+  await dialog.getByRole('button', { name: '가이드 닫고 조립 시작' }).click()
+  await expect(dialog).toHaveCount(0)
+  await expect.poll(() => page.evaluate(
+    (storageKey) => {
+      const browserGlobal = globalThis as unknown as {
+        localStorage: { getItem(key: string): string | null }
+      }
+      return browserGlobal.localStorage.getItem(storageKey)
+    },
+    USER_GUIDE_STORAGE_KEY,
+  )).toBe('seen')
+
+  await page.reload()
+  await expect(dialog).toHaveCount(0)
+})
 
 test.describe('자동 접근성 검사', () => {
   test.beforeEach(async ({ page }) => {
+    await markUserGuideSeen(page)
     await page.goto('/')
     await expect(page.getByRole('heading', { name: '내 덱 · ALPHA' })).toBeVisible()
   })
@@ -12,8 +42,24 @@ test.describe('자동 접근성 검사', () => {
     await expectNoAutomatedViolations(page)
   })
 
-  test('서비스 및 개인정보 안내가 공개되고 접근성 검사를 통과한다', async ({ page }) => {
+  test('사용 가이드와 서비스 안내가 공개되고 접근성 검사를 통과한다', async ({ page }) => {
     await expect(page.getByText('비공식 팬 도구', { exact: true })).toHaveCount(0)
+    const guideTrigger = page.getByRole('button', { name: '사용 가이드' })
+    await guideTrigger.click()
+    const guideDialog = page.getByRole('dialog', {
+      name: 'Nova Assembly 사용 가이드',
+    })
+    await expect(guideDialog).toBeVisible()
+    await expect(
+      guideDialog.getByRole('img', { name: /Nova Assembly 데스크톱 화면/ }),
+    ).toHaveAttribute('src', '/guide/overview-hd.jpg')
+    await expect(guideDialog.getByRole('img')).toHaveCount(3)
+    await expectNoAutomatedViolations(page)
+
+    await page.keyboard.press('Escape')
+    await expect(guideDialog).toHaveCount(0)
+    await expect(guideTrigger).toBeFocused()
+
     await expect(page.getByRole('link', { name: '버그 신고' })).toHaveAttribute(
       'href',
       'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/issues/new?template=bug_report.yml',

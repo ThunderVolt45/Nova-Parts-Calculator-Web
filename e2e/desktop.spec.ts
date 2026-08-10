@@ -2,7 +2,10 @@ import { readFile } from 'node:fs/promises'
 
 import { expect, test, type Page } from '@playwright/test'
 
+import { markUserGuideSeen } from './user-guide.ts'
+
 async function openCalculator(page: Page) {
+  await markUserGuideSeen(page)
   await page.goto('/')
   await expect(page.getByRole('heading', { name: '내 덱 · ALPHA' })).toBeVisible()
   await expect(page.getByRole('button', { name: '유닛 프리뷰' }))

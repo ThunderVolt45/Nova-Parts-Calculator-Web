@@ -1,8 +1,10 @@
 import { expect, test } from '@playwright/test'
 
 import { expectNoAutomatedViolations } from './accessibility.ts'
+import { markUserGuideSeen } from './user-guide.ts'
 
 test('모바일의 조립·시뮬레이션·능력치·덱 화면이 WCAG A·AA 자동 검사를 통과한다', async ({ page }) => {
+  await markUserGuideSeen(page)
   await page.goto('/')
 
   const navigation = page.getByRole('navigation', { name: '모바일 화면 전환' })

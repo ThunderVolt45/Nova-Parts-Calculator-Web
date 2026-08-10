@@ -1,0 +1,462 @@
+.user-guide-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(2, 7, 10, 0.86);
+  backdrop-filter: blur(10px);
+}
+
+.user-guide-dialog {
+  width: min(1060px, 100%);
+  max-height: calc(100svh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(78, 218, 234, 0.38);
+  border-radius: 10px;
+  color: var(--text-muted);
+  background:
+    linear-gradient(135deg, rgba(47, 177, 195, 0.06), transparent 32rem),
+    #091117;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.62);
+}
+
+.user-guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 20px 17px;
+  border-bottom: 1px solid var(--line-strong);
+  background: rgba(8, 17, 23, 0.94);
+}
+
+.user-guide-header > div {
+  min-width: 0;
+}
+
+.user-guide-header h2,
+.user-guide-header p,
+.user-guide-section h3,
+.user-guide-section h4,
+.user-guide-section p,
+.user-guide-figure,
+.user-guide-faq,
+.user-guide-faq dd {
+  margin: 0;
+}
+
+.user-guide-header h2 {
+  margin-top: 5px;
+  color: var(--text-strong);
+  font: 800 clamp(22px, 3vw, 30px)/1.1 var(--display);
+  letter-spacing: -0.025em;
+}
+
+.user-guide-header p {
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.user-guide-close {
+  position: relative;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.025);
+  cursor: pointer;
+}
+
+.user-guide-close-icon {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 12px;
+}
+
+.user-guide-close-icon::before,
+.user-guide-close-icon::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 13px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  content: '';
+}
+
+.user-guide-close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.user-guide-close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.user-guide-close:hover,
+.user-guide-close:focus-visible {
+  border-color: var(--cyan-dim);
+  color: var(--text-strong);
+}
+
+.user-guide-content {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 26px 28px;
+  scroll-behavior: smooth;
+}
+
+.user-guide-section {
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.user-guide-section:last-child {
+  padding-bottom: 4px;
+  border-bottom: 0;
+}
+
+.user-guide-section-heading > span {
+  color: var(--cyan);
+  font: 750 10px/1 var(--mono);
+  letter-spacing: 0.17em;
+}
+
+.user-guide-section h3 {
+  margin-top: 7px;
+  color: var(--text-strong);
+  font: 780 20px/1.25 var(--display);
+}
+
+.user-guide-section h4 {
+  color: #bcebf0;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.user-guide-intro {
+  padding: 20px 0 28px;
+}
+
+.user-guide-onboarding-layout {
+  display: grid;
+  grid-template-columns: minmax(330px, 0.82fr) minmax(0, 1.18fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.user-guide-section-heading > p {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.user-guide-quick-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+  margin-top: 15px;
+}
+
+.user-guide-quick-grid article {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 28px 74px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.user-guide-quick-grid article > span {
+  display: block;
+  color: var(--cyan);
+  font: 750 10px/1 var(--mono);
+}
+
+.user-guide-quick-grid strong {
+  display: block;
+  color: var(--text-strong);
+  font-size: 13px;
+}
+
+.user-guide-quick-grid p {
+  font-size: 12px;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.user-guide-start-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.user-guide-start-actions button {
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.user-guide-start-button {
+  border-color: rgba(78, 218, 234, 0.5) !important;
+  color: #d9fbff;
+  background: linear-gradient(135deg, rgba(78, 218, 234, 0.2), rgba(40, 124, 138, 0.09));
+}
+
+.user-guide-details-button {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.user-guide-start-actions button:hover,
+.user-guide-start-actions button:focus-visible {
+  border-color: var(--cyan);
+  color: #fff;
+}
+
+.user-guide-onboarding-visual .user-guide-figure {
+  margin-top: 0;
+}
+
+.user-guide-onboarding-visual .user-guide-mobile-note {
+  margin-top: 12px !important;
+}
+
+.user-guide-figure {
+  margin-top: 20px;
+}
+
+.user-guide-figure a {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(78, 218, 234, 0.24);
+  border-radius: 7px;
+  background: #060b0f;
+}
+
+.user-guide-figure a:hover,
+.user-guide-figure a:focus-visible {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(78, 218, 234, 0.12);
+}
+
+.user-guide-figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.user-guide-figure figcaption {
+  margin-top: 8px;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.user-guide-mobile-note,
+.user-guide-footnote {
+  margin-top: 16px !important;
+  padding: 12px 14px;
+  border-left: 2px solid var(--cyan-dim);
+  color: var(--text-muted);
+  background: rgba(44, 146, 161, 0.06);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.user-guide-mobile-note strong,
+.user-guide-footnote strong {
+  color: var(--text-strong);
+}
+
+.user-guide-steps,
+.user-guide-two-column ul,
+.user-guide-two-column ol {
+  margin: 16px 0 0;
+  padding-left: 22px;
+}
+
+.user-guide-steps li,
+.user-guide-two-column li {
+  padding-left: 3px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.user-guide-steps li + li,
+.user-guide-two-column li + li {
+  margin-top: 5px;
+}
+
+.user-guide-section strong {
+  color: var(--text-strong);
+}
+
+.user-guide-section code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #bcebf0;
+  background: rgba(78, 218, 234, 0.08);
+  font: 650 0.92em/1.4 var(--mono);
+  overflow-wrap: anywhere;
+}
+
+.user-guide-two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.user-guide-two-column > div {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.user-guide-two-column p {
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.user-guide-callout {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid rgba(245, 169, 73, 0.24);
+  border-radius: 6px;
+  background: rgba(245, 169, 73, 0.05);
+}
+
+.user-guide-callout.is-safe {
+  border-color: rgba(74, 222, 157, 0.24);
+  background: rgba(74, 222, 157, 0.05);
+}
+
+.user-guide-callout > strong {
+  display: block;
+  color: var(--orange);
+  font-size: 13px;
+}
+
+.user-guide-callout.is-safe > strong {
+  color: var(--green);
+}
+
+.user-guide-callout p {
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.user-guide-faq {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.user-guide-faq > div {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.user-guide-faq dt {
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.user-guide-faq dd {
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+@media (max-width: 760px) {
+  .user-guide-backdrop {
+    padding: 0;
+  }
+
+  .user-guide-dialog {
+    width: 100%;
+    max-height: 100svh;
+    border-width: 0;
+    border-radius: 0;
+  }
+
+  .user-guide-header {
+    padding: 15px 14px 14px;
+  }
+
+  .user-guide-header h2 {
+    font-size: 21px;
+  }
+
+  .user-guide-header p {
+    max-width: 29rem;
+    font-size: 12px;
+  }
+
+  .user-guide-content {
+    padding: 0 17px 24px;
+  }
+
+  .user-guide-section {
+    padding: 24px 0;
+  }
+
+  .user-guide-onboarding-layout,
+  .user-guide-two-column,
+  .user-guide-faq {
+    grid-template-columns: 1fr;
+  }
+
+  .user-guide-onboarding-layout {
+    gap: 18px;
+  }
+
+  .user-guide-quick-grid article {
+    display: grid;
+    grid-template-columns: 28px 80px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 11px 12px;
+  }
+
+  .user-guide-quick-grid strong,
+  .user-guide-quick-grid p {
+    margin-top: 0;
+  }
+
+  .user-guide-start-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .user-guide-figure {
+    margin-top: 16px;
+  }
+}

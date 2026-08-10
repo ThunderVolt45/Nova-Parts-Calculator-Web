@@ -1,5 +1,11 @@
 import { expect, test } from '@playwright/test'
 
+import { markUserGuideSeen } from './user-guide.ts'
+
+test.beforeEach(async ({ page }) => {
+  await markUserGuideSeen(page)
+})
+
 test('모바일 하단 탭에서 조립·시뮬레이션·능력치·덱 화면을 전환한다', async ({ page }) => {
   await page.goto('/')
 

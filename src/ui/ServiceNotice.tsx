@@ -1,5 +1,10 @@
+import { useEffect, useState } from 'react'
+
+import { UserGuide } from './UserGuide.tsx'
+
 const BUG_REPORT_URL =
   'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/issues/new?template=bug_report.yml'
+export const USER_GUIDE_STORAGE_KEY = 'nova-assembly:user-guide-seen:v1'
 const CLOUDFLARE_PRIVACY_URL = 'https://www.cloudflare.com/privacypolicy/'
 const RIGHTS_REPORT_EMAIL = 'contactvolt45@gmail.com'
 const RIGHTS_REPORT_SUBJECT = '[Nova Assembly] 권리 침해 신고'
@@ -20,8 +25,38 @@ const RIGHTS_REPORT_BODY = `아래 항목을 작성해 주세요.
 const RIGHTS_REPORT_URL = `mailto:${RIGHTS_REPORT_EMAIL}?subject=${encodeURIComponent(RIGHTS_REPORT_SUBJECT)}&body=${encodeURIComponent(RIGHTS_REPORT_BODY)}`
 
 export function ServiceNotice() {
+  const [guideOpen, setGuideOpen] = useState(false)
+
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem(USER_GUIDE_STORAGE_KEY) !== 'seen') {
+        setGuideOpen(true)
+      }
+    } catch {
+      setGuideOpen(true)
+    }
+  }, [])
+
+  const closeGuide = () => {
+    setGuideOpen(false)
+    try {
+      window.localStorage.setItem(USER_GUIDE_STORAGE_KEY, 'seen')
+    } catch {
+      // 저장소를 사용할 수 없어도 현재 가이드는 정상적으로 닫습니다.
+    }
+  }
+
   return (
     <div className="service-notice">
+      <button
+        className="service-guide-link"
+        type="button"
+        aria-haspopup="dialog"
+        onClick={() => setGuideOpen(true)}
+      >
+        사용 가이드
+      </button>
+      <UserGuide open={guideOpen} onClose={closeGuide} />
       <a
         className="service-bug-report"
         href={BUG_REPORT_URL}

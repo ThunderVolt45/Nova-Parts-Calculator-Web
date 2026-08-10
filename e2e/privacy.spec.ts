@@ -1,6 +1,9 @@
 import { expect, test } from '@playwright/test'
 
+import { markUserGuideSeen } from './user-guide.ts'
+
 test('핵심 사용 흐름에서 외부 요청이나 파일 업로드를 만들지 않는다', async ({ page }) => {
+  await markUserGuideSeen(page)
   const httpRequests: Array<{ method: string; url: string }> = []
   const webSockets: string[] = []
   page.on('request', (request) => {
