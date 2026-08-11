@@ -1,5 +1,7 @@
 # Nova Parts Calculator Web
 
+![Nova Assembly의 덱 관리, 부품 조립, 3D 유닛 프리뷰와 능력치 계산 화면](./docs/images/nova-assembly-overview.png)
+
 노바 1492 부품 계산기와 사용자 승인 기반 로컬 GX 3D 미리보기를 제공하기
 위한 웹 프로젝트입니다.
 

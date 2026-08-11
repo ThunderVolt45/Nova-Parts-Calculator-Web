@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { LicenseDialog } from './LicenseDialog.tsx'
+import { USER_GUIDE_STORAGE_KEY } from '../data/browser-storage.ts'
+import { AppSettings } from './AppSettings.tsx'
 import { UserGuide } from './UserGuide.tsx'
+
+export { USER_GUIDE_STORAGE_KEY } from '../data/browser-storage.ts'
 
 const BUG_REPORT_URL =
   'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web/issues/new?template=bug_report.yml'
-export const USER_GUIDE_STORAGE_KEY = 'nova-assembly:user-guide-seen:v1'
 const CLOUDFLARE_PRIVACY_URL = 'https://www.cloudflare.com/privacypolicy/'
 const ORIGINAL_CALCULATOR_URL =
   'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Python'
@@ -31,8 +33,7 @@ const RIGHTS_REPORT_URL = `mailto:${RIGHTS_REPORT_EMAIL}?subject=${encodeURIComp
 
 export function ServiceNotice() {
   const [guideOpen, setGuideOpen] = useState(false)
-  const [licensesOpen, setLicensesOpen] = useState(false)
-  const licensesTriggerRef = useRef<HTMLButtonElement>(null)
+  const [openMenu, setOpenMenu] = useState<'settings' | 'notice' | null>(null)
 
   useEffect(() => {
     try {
@@ -64,10 +65,11 @@ export function ServiceNotice() {
         사용 가이드
       </button>
       <UserGuide open={guideOpen} onClose={closeGuide} />
-      <LicenseDialog
-        open={licensesOpen}
-        onClose={() => setLicensesOpen(false)}
-        restoreFocusRef={licensesTriggerRef}
+      <AppSettings
+        open={openMenu === 'settings'}
+        onOpenChange={(open) => setOpenMenu((current) =>
+          open ? 'settings' : current === 'settings' ? null : current
+        )}
       />
       <a
         className="service-bug-report"
@@ -78,7 +80,15 @@ export function ServiceNotice() {
         버그 신고
       </a>
 
-      <details>
+      <details
+        open={openMenu === 'notice'}
+        onToggle={(event) => {
+          const open = event.currentTarget.open
+          setOpenMenu((current) =>
+            open ? 'notice' : current === 'notice' ? null : current
+          )
+        }}
+      >
         <summary>서비스 안내</summary>
         <article
           className="service-notice-card"
@@ -87,7 +97,7 @@ export function ServiceNotice() {
           <header>
             <span className="micro-label">PUBLIC SERVICE NOTICE</span>
             <h2 id="service-notice-title">서비스 및 개인정보 안내</h2>
-            <small>안내 기준 · 2026-08-10</small>
+            <small>안내 기준 · 2026-08-11</small>
           </header>
 
           <section>
@@ -111,10 +121,8 @@ export function ServiceNotice() {
               파일은 캐시에 복제하지 않습니다.
             </p>
             <p>
-              모델 캐시는 앱의 전체 삭제 기능으로 지울 수 있고, 모든 로컬
-              데이터는 브라우저의 사이트 데이터 삭제 기능으로 제거할 수
-              있습니다. 서비스 자체는 로그인, 추적 쿠키, 광고 또는 분석
-              스크립트를 사용하지 않습니다.
+              서비스 자체는 로그인, 추적 쿠키, 광고 또는 분석 스크립트를
+              사용하지 않습니다.
             </p>
           </section>
 
@@ -150,18 +158,9 @@ export function ServiceNotice() {
             </p>
             <p>
               이 서비스는 React, Vite, TypeScript, Three.js와 그 밖의 오픈소스
-              소프트웨어를 사용합니다. 프로젝트 및 제3자 라이선스 원문은 아래
-              문서에서 확인할 수 있습니다.
+              소프트웨어를 사용합니다. 프로젝트 및 제3자 라이선스 원문을{' '}
+              <strong>설정 &gt; 라이선스 전문 보기</strong>에서 확인할 수 있습니다.
             </p>
-            <button
-              ref={licensesTriggerRef}
-              className="service-notice-contact"
-              type="button"
-              aria-haspopup="dialog"
-              onClick={() => setLicensesOpen(true)}
-            >
-              페이지에서 라이선스 전문 보기
-            </button>
           </section>
 
           <section>

@@ -31,4 +31,17 @@ describe('IndexedDB 덱 저장소', () => {
 
     expect(await repository.listDecks()).toEqual([replacement])
   })
+
+  it('덱과 마지막 선택 위치를 모두 삭제한다', async () => {
+    const databaseName = `deck-test-${crypto.randomUUID()}`
+    const repository = createDeckRepository(databaseName)
+    const deck = createDeck('DELETE', 'catalog-1', { id: 'delete' })
+    await repository.saveDeck(deck)
+    await repository.savePreferences({ activeDeckId: deck.id, activeSlot: 3 })
+
+    await repository.clear()
+
+    expect(await repository.listDecks()).toEqual([])
+    expect(await repository.loadPreferences()).toBeNull()
+  })
 })

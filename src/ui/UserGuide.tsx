@@ -248,6 +248,8 @@ export function UserGuide({ open, onClose }: UserGuideProps) {
                 선택한 파일은 브라우저 안에서만 읽습니다. 변환된 GLB와 UI 스프라이트만
                 캐시할 수 있으며 원본 GX·XFI·텍스처와 설치된 게임 파일은 변경하지 않습니다.
                 <code>리소스 캐시 &gt; 전체 삭제</code>는 덱과 원본 파일을 건드리지 않습니다.
+                덱을 포함해 이 앱이 저장한 정보를 모두 지우려면
+                <code>설정 &gt; 브라우저 저장 정보 모두 삭제</code>를 사용하세요.
               </p>
             </div>
           </section>

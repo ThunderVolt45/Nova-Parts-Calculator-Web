@@ -10,7 +10,7 @@ import {
   type SavedUnit,
 } from '../domain/deck/schema.ts'
 import { getSlotIndexAfterReorder, reorderSlots } from '../domain/deck/reorderSlots.ts'
-import { createDeckRepository } from './repository.ts'
+import { deckRepository } from './repository.ts'
 import {
   assertDecksContainOnlyValidUnits,
   assertSavedUnitIsValid,
@@ -38,7 +38,7 @@ type DeckState = {
   clearError: () => void
 }
 
-const repository = createDeckRepository()
+const repository = deckRepository
 let initializationTask: Promise<void> | null = null
 
 function getActiveDeck(state: Pick<DeckState, 'decks' | 'activeDeckId'>) {

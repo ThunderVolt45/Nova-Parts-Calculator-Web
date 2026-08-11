@@ -10,6 +10,9 @@ interface LicenseDialogProps {
   restoreFocusRef: RefObject<HTMLButtonElement | null>
 }
 
+const PROJECT_REPOSITORY_URL =
+  'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web'
+
 const licenseDocuments = {
   project: {
     label: '프로젝트 라이선스',
@@ -104,6 +107,14 @@ export function LicenseDialog({
             <p id="license-dialog-summary">
               프로젝트, 기준 구현과 사용한 프레임워크·패키지의 라이선스 전문입니다.
             </p>
+            <a
+              className="license-dialog-repository"
+              href={PROJECT_REPOSITORY_URL}
+              target="_blank"
+              rel="noreferrer"
+            >
+              웹 앱 GitHub 저장소
+            </a>
           </div>
           <button
             ref={closeRef}

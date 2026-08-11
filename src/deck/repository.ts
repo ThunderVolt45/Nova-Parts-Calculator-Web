@@ -29,6 +29,7 @@ export interface DeckRepository {
   replaceDecks(decks: Deck[]): Promise<void>
   loadPreferences(): Promise<DeckPreferences | null>
   savePreferences(preferences: DeckPreferences): Promise<void>
+  clear(): Promise<void>
 }
 
 export function createDeckRepository(
@@ -91,5 +92,20 @@ export function createDeckRepository(
         ...deckPreferencesSchema.parse(preferences),
       })
     },
+
+    async clear() {
+      const database = await getDatabase()
+      const transaction = database.transaction(
+        ['decks', 'preferences'],
+        'readwrite',
+      )
+      await Promise.all([
+        transaction.objectStore('decks').clear(),
+        transaction.objectStore('preferences').clear(),
+      ])
+      await transaction.done
+    },
   }
 }
+
+export const deckRepository = createDeckRepository()

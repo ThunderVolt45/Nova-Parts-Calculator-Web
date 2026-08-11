@@ -156,7 +156,7 @@ describe('공개 서비스 고지', () => {
     expect(trigger).toHaveFocus()
   })
 
-  it('버그와 권리 침해 신고를 분리하고 서비스 정책을 안내한다', async () => {
+  it('서비스 정책과 설정의 라이선스·저장 정보 기능을 분리한다', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -174,6 +174,40 @@ describe('공개 서비스 고지', () => {
     expect(screen.getByText(/앱 서버로 전송하지 않습니다/)).toBeVisible()
     expect(screen.getByText(/Cloudflare가 IP 주소/)).toBeVisible()
     expect(screen.getByText(/ThunderVolt45와 cam900의 저작권/)).toBeVisible()
+    const licenseNoticeSection = screen.getByRole('heading', {
+      name: '오픈소스 라이선스와 기여자',
+    }).closest('section')!
+    expect(licenseNoticeSection).toHaveTextContent(
+      '라이선스 원문을 설정 > 라이선스 전문 보기에서 확인할 수 있습니다',
+    )
+    const serviceNotice = screen.getByRole('heading', {
+      name: '서비스 및 개인정보 안내',
+    }).closest('article')!
+    expect(within(serviceNotice).queryByRole('button', {
+      name: '브라우저 저장 정보 모두 삭제',
+    })).not.toBeInTheDocument()
+
+    const rightsReportUrl = new URL(
+      screen
+        .getByRole('link', { name: '권리 침해 신고 이메일 작성' })
+        .getAttribute('href')!,
+    )
+    expect(rightsReportUrl.protocol).toBe('mailto:')
+    expect(rightsReportUrl.pathname).toBe('contactvolt45@gmail.com')
+    expect(rightsReportUrl.searchParams.get('subject')).toBe(
+      '[Nova Assembly] 권리 침해 신고',
+    )
+    expect(rightsReportUrl.searchParams.get('body')).toContain(
+      '권리 침해가 의심되는 서비스 URL 또는 화면:',
+    )
+
+    await user.click(screen.getByText('설정', { selector: 'summary' }))
+    expect(screen.getByRole('heading', { name: '설정' })).toBeVisible()
+    expect(screen.getByRole('button', {
+      name: '브라우저 저장 정보 모두 삭제',
+    })).toBeVisible()
+    expect(serviceNotice).not.toBeVisible()
+
     vi.stubGlobal('fetch', vi.fn().mockImplementation((input: string) =>
       Promise.resolve({
         ok: true,
@@ -188,7 +222,7 @@ describe('공개 서비스 고지', () => {
       }),
     ))
     const licensesTrigger = screen.getByRole('button', {
-      name: '페이지에서 라이선스 전문 보기',
+      name: '라이선스 전문 보기',
     })
     await user.click(licensesTrigger)
 
@@ -196,6 +230,12 @@ describe('공개 서비스 고지', () => {
       name: '오픈소스 및 제3자 라이선스',
     })
     expect(within(licensesDialog).getByText(/Copyright \(c\) 2026/)).toBeVisible()
+    expect(within(licensesDialog).getByRole('link', {
+      name: '웹 앱 GitHub 저장소',
+    })).toHaveAttribute(
+      'href',
+      'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web',
+    )
 
     await user.click(within(licensesDialog).getByRole('button', {
       name: '기준 프로젝트·제3자 라이선스',
@@ -206,19 +246,6 @@ describe('공개 서비스 고지', () => {
     await user.keyboard('{Escape}')
     expect(licensesDialog).not.toBeInTheDocument()
     expect(licensesTrigger).toHaveFocus()
-    const rightsReportUrl = new URL(
-      screen
-        .getByRole('link', { name: '권리 침해 신고 이메일 작성' })
-        .getAttribute('href')!,
-    )
-    expect(rightsReportUrl.protocol).toBe('mailto:')
-    expect(rightsReportUrl.pathname).toBe('contactvolt45@gmail.com')
-    expect(rightsReportUrl.searchParams.get('subject')).toBe(
-      '[Nova Assembly] 권리 침해 신고',
-    )
-    expect(rightsReportUrl.searchParams.get('body')).toContain(
-      '권리 침해가 의심되는 서비스 URL 또는 화면:',
-    )
   })
 })
 

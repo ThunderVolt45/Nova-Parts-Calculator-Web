@@ -59,7 +59,7 @@ test.describe('자동 접근성 검사', () => {
     await expectNoAutomatedViolations(page)
   })
 
-  test('사용 가이드와 서비스 안내가 공개되고 접근성 검사를 통과한다', async ({ page }) => {
+  test('사용 가이드, 설정과 서비스 안내가 공개되고 접근성 검사를 통과한다', async ({ page }) => {
     await expect(page.getByText('비공식 팬 도구', { exact: true })).toHaveCount(0)
     const guideTrigger = page.getByRole('button', { name: '사용 가이드' })
     await guideTrigger.click()
@@ -88,6 +88,7 @@ test.describe('자동 접근성 검사', () => {
     await expect(
       page.getByRole('heading', { name: '비공식 팬 제작 도구' }),
     ).toBeVisible()
+    await expect(page.getByText(/설정 > 라이선스 전문 보기/)).toBeVisible()
     await expect(
       page.getByRole('link', { name: '권리 침해 신고 이메일 작성' }),
     ).toHaveAttribute(
@@ -95,8 +96,17 @@ test.describe('자동 접근성 검사', () => {
       /^mailto:contactvolt45@gmail\.com\?subject=/,
     )
 
+    await page.locator('summary').filter({ hasText: /^설정$/ }).click()
+    await expect(
+      page.getByRole('heading', { name: '서비스 및 개인정보 안내' }),
+    ).not.toBeVisible()
+    await expect(page.getByRole('heading', { name: '설정' })).toBeVisible()
+    await expect(
+      page.getByRole('button', { name: '브라우저 저장 정보 모두 삭제' }),
+    ).toBeVisible()
+
     const licensesTrigger = page.getByRole('button', {
-      name: '페이지에서 라이선스 전문 보기',
+      name: '라이선스 전문 보기',
     })
     await licensesTrigger.click()
     const licensesDialog = page.getByRole('dialog', {
@@ -105,6 +115,12 @@ test.describe('자동 접근성 검사', () => {
     await expect(licensesDialog).toBeVisible()
     await expect(licensesDialog.locator('pre')).toContainText(
       'Copyright (c) 2026 ThunderVolt45',
+    )
+    await expect(
+      licensesDialog.getByRole('link', { name: '웹 앱 GitHub 저장소' }),
+    ).toHaveAttribute(
+      'href',
+      'https://github.com/ThunderVolt45/Nova-Parts-Calculator-Web',
     )
 
     await licensesDialog.getByRole('button', {
