@@ -55,8 +55,12 @@ async function selectPart(
 ) {
   await user.click(screen.getByRole('button', { name: new RegExp(`^${slot} 부품 변경`) }))
   const dialog = screen.getByRole('dialog', { name: `${slot} 선택` })
-  await user.click(within(dialog).getByRole('button', { name: partName }))
-  await user.click(within(dialog).getByRole('button', { name: `${partName} 사용` }))
+  await user.click(within(dialog).getByRole('button', {
+    name: new RegExp(`^${partName}(?:, 현재 선택)?$`),
+  }))
+  await user.click(within(dialog).getByRole('button', {
+    name: new RegExp(`^(?:${partName} 사용|현재 부품 유지)$`),
+  }))
 }
 
 async function selectValidAssembly(user: ReturnType<typeof userEvent.setup>) {
@@ -615,6 +619,9 @@ describe('T11-T12 덱 저장 및 편집 UI', () => {
       screen.getByRole('button', { name: '현재 유닛을 JSON으로 내보내기' }),
     ).toBeVisible()
     expect(
+      screen.getByRole('button', { name: '현재 유닛을 PNG로 내보내기' }),
+    ).toBeDisabled()
+    expect(
       screen.getByRole('button', { name: '현재 덱을 JSON으로 내보내기' }),
     ).toBeVisible()
     expect(
@@ -624,6 +631,43 @@ describe('T11-T12 덱 저장 및 편집 UI', () => {
       screen.getByRole('button', { name: '유닛/덱 JSON 가져오기' }),
     ).toBeVisible()
     expect(screen.queryByRole('combobox', { name: '가져오기 방식' })).not.toBeInTheDocument()
+  })
+
+  it('현재 유닛의 PNG 내보내기 내용을 실제 조립 데이터로 확인한다', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+    await selectValidAssembly(user)
+
+    const previewButton = screen.getByRole('button', {
+      name: '현재 유닛을 PNG로 내보내기',
+    })
+    expect(previewButton).toBeEnabled()
+    await user.click(previewButton)
+
+    const dialog = screen.getByRole('dialog', { name: '현재 유닛을 PNG로 내보내기' })
+    expect(within(dialog).getByRole('button', { name: 'PNG 파일로 저장' })).toBeDisabled()
+    expect(within(dialog).getByText(/PNG 내보내기의 3D 렌더는 PC/)).toBeVisible()
+    expect(within(dialog).getByLabelText('최종 조립 유닛 렌더 이미지')).toBeVisible()
+    expect(within(dialog).getByLabelText('다리 개별 렌더 이미지')).toBeVisible()
+    expect(within(dialog).getByLabelText('몸통 개별 렌더 이미지')).toBeVisible()
+    expect(within(dialog).getByLabelText('무기 개별 렌더 이미지')).toBeVisible()
+    expect(within(dialog).getByLabelText('액세서리 개별 렌더 이미지')).toBeVisible()
+    const finalStats = within(dialog).getByLabelText('최종 조립 스펙')
+    const abilities = within(dialog).getByLabelText('부품 특수 능력 정보')
+    expect(finalStats).toHaveTextContent('전투 시뮬레이션 효과 미적용')
+    expect(finalStats).toHaveTextContent('잔여')
+    expect(finalStats).toContainElement(abilities)
+    expect(within(dialog).getByLabelText('부품 스펙 및 강화 정보')).toHaveTextContent('토들러')
+    expect(within(dialog).getByLabelText('부품 스펙 및 강화 정보')).toHaveTextContent('코포럴')
+    expect(within(dialog).getByLabelText('부품 스펙 및 강화 정보')).toHaveTextContent('데미시즈')
+    expect(within(dialog).getByLabelText('부품 스펙 및 강화 정보')).toHaveTextContent('강화 0')
+    expect(abilities).toHaveTextContent(
+      '장착된 부품에 특수 능력이 없습니다.',
+    )
+
+    await user.keyboard('{Escape}')
+    expect(dialog).not.toBeInTheDocument()
+    expect(previewButton).toHaveFocus()
   })
 
   it('저장된 유닛을 드래그해 덱 슬롯 순서를 변경한다', async () => {

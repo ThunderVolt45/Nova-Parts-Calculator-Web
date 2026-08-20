@@ -83,6 +83,7 @@ describe('부품·덱 3D 썸네일', () => {
 
   it('부품 GLB를 렌더링한 썸네일 이미지로 교체한다', async () => {
     const renderThumbnail = vi.fn(async () => 'data:image/png;base64,cGFydA==')
+    const onStateChange = vi.fn()
     render(
       <PartModelThumbnail
         kind="leg"
@@ -93,6 +94,7 @@ describe('부품·덱 3D 썸네일', () => {
         workerFactory={() => ({ terminate: vi.fn() } as never)}
         loadModel={async (options) => loaded(options.source.name)}
         renderThumbnail={renderThumbnail}
+        onStateChange={onStateChange}
       />,
     )
 
@@ -101,6 +103,10 @@ describe('부품·덱 3D 썸네일', () => {
       'data:image/png;base64,cGFydA==',
     )
     expect(renderThumbnail).toHaveBeenCalledTimes(1)
+    expect(onStateChange).toHaveBeenLastCalledWith({
+      status: 'ready',
+      url: 'data:image/png;base64,cGFydA==',
+    })
   })
 
   it('선택 창이 닫혀도 진행 중인 변환은 완료하고 썸네일 렌더링은 취소한다', async () => {
@@ -134,6 +140,7 @@ describe('부품·덱 3D 썸네일', () => {
   it('덱 유닛의 세 GLB와 소켓 변환으로 조립 썸네일을 만든다', async () => {
     const loadModel = vi.fn(async (options) => loaded(options.source.name))
     const renderThumbnail = vi.fn(async () => 'data:image/png;base64,dW5pdA==')
+    const onStateChange = vi.fn()
     render(
       <UnitModelThumbnail
         parts={{ leg: 1, body: 1, weapon: 1 }}
@@ -143,6 +150,7 @@ describe('부품·덱 3D 썸네일', () => {
         workerFactory={() => ({ terminate: vi.fn() } as never)}
         loadModel={loadModel}
         renderThumbnail={renderThumbnail}
+        onStateChange={onStateChange}
       />,
     )
 
@@ -153,5 +161,9 @@ describe('부품·덱 3D 썸네일', () => {
       bodyGlb: expect.any(ArrayBuffer),
       weaponGlb: expect.any(ArrayBuffer),
     }))
+    expect(onStateChange).toHaveBeenLastCalledWith({
+      status: 'ready',
+      url: 'data:image/png;base64,dW5pdA==',
+    })
   })
 })

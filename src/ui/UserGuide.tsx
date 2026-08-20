@@ -198,7 +198,7 @@ export function UserGuide({ open, onClose }: UserGuideProps) {
           <section className="user-guide-section" aria-labelledby="guide-deck-title">
             <div className="user-guide-section-heading">
               <span>03 · LOCAL DECK</span>
-              <h3 id="guide-deck-title">덱에 저장하고 JSON으로 백업하기</h3>
+              <h3 id="guide-deck-title">덱에 저장하고 내보내기</h3>
             </div>
             <div className="user-guide-two-column">
               <div>
@@ -215,6 +215,11 @@ export function UserGuide({ open, onClose }: UserGuideProps) {
                 <p>
                   현재 유닛, 현재 덱 또는 전체 덱을 JSON으로 내보낼 수 있습니다. 중요한
                   덱은 정기적으로 <strong>전체 덱</strong> 백업을 저장하세요.
+                </p>
+                <p>
+                  현재 유닛은 부품·강화·최종 능력치와 로컬 3D 렌더를 포함한
+                  <strong> 1600×1000 PNG</strong>로도 저장할 수 있습니다. PNG 저장 전에는
+                  게임 리소스 폴더를 연결해 모든 렌더를 준비하세요.
                 </p>
                 <p>
                   가져오기에서는 기존 덱과 병합하거나 전체 교체할 수 있습니다. 전체 교체

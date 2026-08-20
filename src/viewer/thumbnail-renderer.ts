@@ -27,6 +27,12 @@ export interface UnitThumbnailInput {
   readonly weaponTransform: GltfMatrix
 }
 
+export interface ThumbnailRenderOptions {
+  readonly width?: number
+  readonly height?: number
+  readonly zoom?: number
+}
+
 const THUMBNAIL_RENDER_CONCURRENCY = 2
 const scheduleThumbnail = createConcurrentTaskScheduler(THUMBNAIL_RENDER_CONCURRENCY)
 
@@ -36,11 +42,31 @@ interface ThumbnailRendererSlot {
 }
 
 const rendererSlots: Array<ThumbnailRendererSlot | undefined> = []
+const DEFAULT_THUMBNAIL_SIZE = { width: 256, height: 192 } as const
 
-function createRendererSlot(): ThumbnailRendererSlot {
+function getThumbnailSize(options: ThumbnailRenderOptions = {}) {
+  return {
+    width: options.width ?? DEFAULT_THUMBNAIL_SIZE.width,
+    height: options.height ?? DEFAULT_THUMBNAIL_SIZE.height,
+    zoom: options.zoom && Number.isFinite(options.zoom) && options.zoom > 0
+      ? options.zoom
+      : 1,
+  }
+}
+
+export function calculateThumbnailCameraDistance(
+  maximum: number,
+  fieldOfView: number,
+  zoom = 1,
+) {
+  const safeZoom = Number.isFinite(zoom) && zoom > 0 ? zoom : 1
+  return maximum / (2 * Math.tan(MathUtils.degToRad(fieldOfView / 2))) * 0.72 / safeZoom
+}
+
+function createRendererSlot(width: number, height: number): ThumbnailRendererSlot {
   const canvas = document.createElement('canvas')
-  canvas.width = 256
-  canvas.height = 192
+  canvas.width = width
+  canvas.height = height
   const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true })
   renderer.outputColorSpace = SRGBColorSpace
   renderer.setPixelRatio(1)
@@ -49,23 +75,28 @@ function createRendererSlot(): ThumbnailRendererSlot {
   return { canvas, renderer }
 }
 
-function getRendererSlot(workerIndex: number) {
+function getRendererSlot(workerIndex: number, width: number, height: number) {
   const current = rendererSlots[workerIndex]
-  if (current && !current.renderer.getContext().isContextLost()) return current
+  if (
+    current
+    && current.canvas.width === width
+    && current.canvas.height === height
+    && !current.renderer.getContext().isContextLost()
+  ) return current
   current?.renderer.dispose()
-  const replacement = createRendererSlot()
+  const replacement = createRendererSlot(width, height)
   rendererSlots[workerIndex] = replacement
   return replacement
 }
 
-function fitCamera(camera: PerspectiveCamera, object: Object3D) {
+function fitCamera(camera: PerspectiveCamera, object: Object3D, zoom: number) {
   object.updateMatrixWorld(true)
   const bounds = new Box3().setFromObject(object)
   if (bounds.isEmpty()) throw new Error('표시할 3D 지오메트리가 없습니다.')
   const center = bounds.getCenter(new Vector3())
   const size = bounds.getSize(new Vector3())
   const maximum = Math.max(size.x, size.y, size.z, 0.01)
-  const distance = maximum / (2 * Math.tan(MathUtils.degToRad(camera.fov / 2))) * 0.72
+  const distance = calculateThumbnailCameraDistance(maximum, camera.fov, zoom)
   camera.position.set(
     center.x + distance * 0.72,
     center.y + distance * 0.38,
@@ -77,7 +108,11 @@ function fitCamera(camera: PerspectiveCamera, object: Object3D) {
   camera.updateProjectionMatrix()
 }
 
-async function renderObjectThumbnail(object: Object3D, slot: ThumbnailRendererSlot) {
+async function renderObjectThumbnail(
+  object: Object3D,
+  slot: ThumbnailRendererSlot,
+  zoom: number,
+) {
   const { canvas, renderer } = slot
   const scene = new Scene()
   const camera = new PerspectiveCamera(38, canvas.width / canvas.height, 0.01, 1000)
@@ -94,7 +129,7 @@ async function renderObjectThumbnail(object: Object3D, slot: ThumbnailRendererSl
   scene.add(object)
 
   try {
-    fitCamera(camera, object)
+    fitCamera(camera, object, zoom)
     renderer.setRenderTarget(null)
     renderer.clear()
     renderer.render(scene, camera)
@@ -107,14 +142,26 @@ async function renderObjectThumbnail(object: Object3D, slot: ThumbnailRendererSl
   }
 }
 
-export function renderPartThumbnail(glb: ArrayBuffer) {
+export function renderPartThumbnail(
+  glb: ArrayBuffer,
+  options: ThumbnailRenderOptions = {},
+) {
+  const size = getThumbnailSize(options)
   return scheduleThumbnail(async (workerIndex) => {
     const result = await new GLTFLoader().parseAsync(glb, '')
-    return renderObjectThumbnail(result.scene, getRendererSlot(workerIndex))
+    return renderObjectThumbnail(
+      result.scene,
+      getRendererSlot(workerIndex, size.width, size.height),
+      size.zoom,
+    )
   })
 }
 
-export function renderUnitThumbnail(input: UnitThumbnailInput) {
+export function renderUnitThumbnail(
+  input: UnitThumbnailInput,
+  options: ThumbnailRenderOptions = {},
+) {
+  const size = getThumbnailSize(options)
   return scheduleThumbnail(async (workerIndex) => {
     const loader = new GLTFLoader()
     const scenes: Object3D[] = []
@@ -130,7 +177,11 @@ export function renderUnitThumbnail(input: UnitThumbnailInput) {
         input.weaponTransform,
       )
       scenes.length = 0
-      return await renderObjectThumbnail(assembled, getRendererSlot(workerIndex))
+      return await renderObjectThumbnail(
+        assembled,
+        getRendererSlot(workerIndex, size.width, size.height),
+        size.zoom,
+      )
     } finally {
       for (const scene of scenes) disposeModelObject(scene)
     }

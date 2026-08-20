@@ -20,6 +20,7 @@ import {
 import type { LocalResourceIndex } from '../gx/local-files.ts'
 import { useModalDialog } from '../ui/useModalDialog.ts'
 import { UnitModelThumbnail } from '../viewer/ModelThumbnail.tsx'
+import { UnitPngExportPreview } from './UnitPngExportPreview.tsx'
 
 type UnitDraft = Omit<SavedUnit, 'name' | 'schemaVersion' | 'catalogVersion'>
 
@@ -69,6 +70,7 @@ export function DeckPanel({
   const [deckName, setDeckName] = useState('')
   const [copiedUnit, setCopiedUnit] = useState<SavedUnit | null>(null)
   const [pendingImport, setPendingImport] = useState<PendingImport>(null)
+  const [pngPreviewUnit, setPngPreviewUnit] = useState<SavedUnit | null>(null)
   const [notice, setNotice] = useState<Notice>(null)
   const [draggedSlot, setDraggedSlot] = useState<number | null>(null)
   const [dragOverSlot, setDragOverSlot] = useState<number | null>(null)
@@ -77,6 +79,9 @@ export function DeckPanel({
   const importButtonRef = useRef<HTMLButtonElement>(null)
   const importDialogRef = useRef<HTMLElement>(null)
   const importPrimaryActionRef = useRef<HTMLButtonElement>(null)
+  const pngPreviewButtonRef = useRef<HTMLButtonElement>(null)
+  const pngPreviewDialogRef = useRef<HTMLElement>(null)
+  const pngPreviewCloseButtonRef = useRef<HTMLButtonElement>(null)
   const didApplyInitialUnitRef = useRef(false)
 
   useModalDialog({
@@ -85,6 +90,14 @@ export function DeckPanel({
     restoreFocusRef: importButtonRef,
     open: pendingImport !== null,
     onClose: () => setPendingImport(null),
+  })
+
+  useModalDialog({
+    dialogRef: pngPreviewDialogRef,
+    initialFocusRef: pngPreviewCloseButtonRef,
+    restoreFocusRef: pngPreviewButtonRef,
+    open: pngPreviewUnit !== null,
+    onClose: () => setPngPreviewUnit(null),
   })
 
   useEffect(() => {
@@ -464,9 +477,17 @@ export function DeckPanel({
         </div>
       </div>
 
-      <div className="deck-transfer" aria-label="JSON 가져오기 및 내보내기">
+      <div className="deck-transfer" aria-label="유닛 및 덱 가져오기와 내보내기">
         <div className="deck-transfer-actions">
           <button type="button" onClick={() => exportJson('unit')}>현재 유닛을 JSON으로 내보내기</button>
+          <button
+            ref={pngPreviewButtonRef}
+            type="button"
+            disabled={!canRegisterUnit}
+            onClick={() => setPngPreviewUnit(currentSavedUnit())}
+          >
+            현재 유닛을 PNG로 내보내기
+          </button>
           <button type="button" disabled={!activeDeck} onClick={() => exportJson('deck')}>현재 덱을 JSON으로 내보내기</button>
           <button type="button" disabled={decks.length === 0} onClick={() => exportJson('backup')}>전체 덱을 JSON으로 내보내기</button>
         </div>
@@ -494,6 +515,16 @@ export function DeckPanel({
           <span>{notice.text}</span>
           <button type="button" aria-label="덱 알림 닫기" onClick={() => setNotice(null)}>×</button>
         </div>
+      )}
+
+      {pngPreviewUnit && (
+        <UnitPngExportPreview
+          unit={pngPreviewUnit}
+          resourceIndex={resourceIndex}
+          dialogRef={pngPreviewDialogRef}
+          closeButtonRef={pngPreviewCloseButtonRef}
+          onClose={() => setPngPreviewUnit(null)}
+        />
       )}
 
       {pendingImport && (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import type { LocalResourceIndex } from '../gx/local-files.ts'
 import {
@@ -17,7 +17,8 @@ import { createConcurrentTaskScheduler } from './concurrent-task-queue.ts'
 import type { UnitThumbnailInput } from './thumbnail-renderer.ts'
 
 type WorkerWithLifecycle = ModelPipelineWorker & { terminate?(): void }
-type ThumbnailStatus = 'offline' | 'loading' | 'ready' | 'unavailable' | 'pc-only'
+export type ThumbnailStatus = 'offline' | 'loading' | 'ready' | 'unavailable' | 'pc-only'
+export type ModelThumbnailState = { status: ThumbnailStatus; url: string | null }
 
 const noGxMessage = '모델링 정보 없음 - 프리뷰 기능을 이용하려면 GX 파일을 불러와야 합니다.'
 const createParserWorker = () => new GxParserWorkerClient()
@@ -72,6 +73,7 @@ export interface PartModelThumbnailProps {
   readonly loadModel?: (options: LoadModelOptions) => Promise<LoadedModel>
   readonly renderThumbnail?: (glb: ArrayBuffer) => Promise<string>
   readonly deferModelLoad?: boolean
+  onStateChange?(state: ModelThumbnailState): void
 }
 
 export function PartModelThumbnail({
@@ -84,13 +86,20 @@ export function PartModelThumbnail({
   loadModel = loadOrBuildModel,
   renderThumbnail = defaultPartRenderer,
   deferModelLoad = false,
+  onStateChange,
 }: PartModelThumbnailProps) {
   const detectedCapability = useViewerCapability()
   const capability = capabilityOverride ?? detectedCapability
-  const [state, setState] = useState<{ status: ThumbnailStatus; url: string | null }>({
+  const [state, setState] = useState<ModelThumbnailState>({
     status: 'offline',
     url: null,
   })
+  const onStateChangeRef = useRef(onStateChange)
+  onStateChangeRef.current = onStateChange
+
+  useEffect(() => {
+    onStateChangeRef.current?.(state)
+  }, [state])
   const resolution = useMemo(
     () => index && partId > 0 ? resolvePartModel(kind, partId, index) : null,
     [index, kind, partId],
@@ -165,6 +174,7 @@ export interface UnitModelThumbnailProps {
   readonly workerFactory?: () => WorkerWithLifecycle
   readonly loadModel?: (options: LoadModelOptions) => Promise<LoadedModel>
   readonly renderThumbnail?: (input: UnitThumbnailInput) => Promise<string>
+  onStateChange?(state: ModelThumbnailState): void
 }
 
 export function UnitModelThumbnail({
@@ -175,13 +185,20 @@ export function UnitModelThumbnail({
   workerFactory = createParserWorker,
   loadModel = loadOrBuildModel,
   renderThumbnail = defaultUnitRenderer,
+  onStateChange,
 }: UnitModelThumbnailProps) {
   const detectedCapability = useViewerCapability()
   const capability = capabilityOverride ?? detectedCapability
-  const [state, setState] = useState<{ status: ThumbnailStatus; url: string | null }>({
+  const [state, setState] = useState<ModelThumbnailState>({
     status: 'offline',
     url: null,
   })
+  const onStateChangeRef = useRef(onStateChange)
+  onStateChangeRef.current = onStateChange
+
+  useEffect(() => {
+    onStateChangeRef.current?.(state)
+  }, [state])
   const legId = parts.leg
   const bodyId = parts.body
   const weaponId = parts.weapon
