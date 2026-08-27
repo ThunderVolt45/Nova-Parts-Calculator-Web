@@ -38,6 +38,17 @@ describe('partsCatalog', () => {
     expect(partsCatalog.parts.legs.some((part) => part.stats.armor < 0)).toBe(true)
   })
 
+  it('loads corrected accessory modifiers', () => {
+    expect(partsCatalogById.accessories.get(45)).toMatchObject({
+      name: 'D-올인원',
+      stats: { watt: -20 },
+    })
+    expect(partsCatalogById.accessories.get(51)).toMatchObject({
+      name: '쿼드디케',
+      stats: { range: 1 },
+    })
+  })
+
   it('applies the Sagittarius weapon-slot override', () => {
     const sagittarius = partsCatalogById.subcores.get(9)
 

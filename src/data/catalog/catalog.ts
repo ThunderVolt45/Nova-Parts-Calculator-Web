@@ -1,15 +1,35 @@
 import snapshotInput from './catalog.snapshot.json'
+import type { AccessoryPart } from '../../domain/catalog/schema.ts'
 import {
   legacyCatalogSnapshotSchema,
   normalizeLegacyCatalog,
 } from './legacyCatalog.ts'
 
-const snapshot = legacyCatalogSnapshotSchema.parse(snapshotInput)
+function applyVerifiedAccessoryCorrections(part: AccessoryPart): AccessoryPart {
+  if (part.id === 45) {
+    return { ...part, stats: { ...part.stats, watt: -20 } }
+  }
+  if (part.id === 51) {
+    return { ...part, stats: { ...part.stats, range: 1 } }
+  }
+  return part
+}
 
-export const partsCatalog = normalizeLegacyCatalog(
+const snapshot = legacyCatalogSnapshotSchema.parse(snapshotInput)
+const referenceCatalog = normalizeLegacyCatalog(
   snapshot.source,
   snapshot.catalogVersion,
 )
+
+export const partsCatalog = {
+  ...referenceCatalog,
+  parts: {
+    ...referenceCatalog.parts,
+    accessories: referenceCatalog.parts.accessories.map(
+      applyVerifiedAccessoryCorrections,
+    ),
+  },
+}
 
 export const catalogSourceRevision = snapshot.sourceRevision
 

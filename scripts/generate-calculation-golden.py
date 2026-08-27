@@ -44,6 +44,12 @@ def load_reference_modules(reference_root):
     return importlib.import_module("assemble")
 
 
+def apply_product_catalog_corrections(assemble):
+    accessories_by_id = {item["ID"]: item for item in assemble.accData}
+    accessories_by_id[45]["Watt"] = -20
+    accessories_by_id[51]["Range"] = 1
+
+
 def part_reinforcement(watt=0, health=0, damage=0):
     return {"watt": watt, "health": health, "damage": damage}
 
@@ -318,6 +324,7 @@ def main():
         )
 
     assemble = load_reference_modules(reference_root)
+    apply_product_catalog_corrections(assemble)
     input_cases = build_curated_inputs(assemble) + build_random_inputs(assemble)
     cases = [
         {

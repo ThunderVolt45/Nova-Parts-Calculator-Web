@@ -21834,7 +21834,7 @@
       "expected": {
         "health": 964,
         "damage": 2154,
-        "armor": 106,
+        "armor": 105,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
