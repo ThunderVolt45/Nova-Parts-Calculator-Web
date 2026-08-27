@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "1-c90d7b925163",
-  "sourceRevision": "c90d7b92516379105d51a71900257454535b50ff",
+  "catalogVersion": "1-fb3d43fdc4dd",
+  "sourceRevision": "fb3d43fdc4dde5a692cd107919fbdbb45c699d18",
   "source": {
     "legs": [
       {
@@ -5791,7 +5791,7 @@
         "Name": "D-올인원",
         "N": false,
         "Weight": 35,
-        "Watt": 20,
+        "Watt": -20,
         "Health": 100,
         "HealthBonus": 0,
         "Damage": 15,
@@ -5966,7 +5966,7 @@
         "Armor": 0,
         "Cooldown": 0,
         "Sight": 0,
-        "Range": 0,
+        "Range": 1,
         "RangeMinimum": 0,
         "Regenerate": 0,
         "Splash": 0,

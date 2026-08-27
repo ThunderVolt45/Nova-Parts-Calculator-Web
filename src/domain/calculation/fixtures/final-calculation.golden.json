@@ -1,6 +1,6 @@
 {
-  "catalogVersion": "1-c90d7b925163",
-  "sourceRevision": "c90d7b92516379105d51a71900257454535b50ff",
+  "catalogVersion": "1-fb3d43fdc4dd",
+  "sourceRevision": "fb3d43fdc4dde5a692cd107919fbdbb45c699d18",
   "randomSeed": 149205,
   "randomCases": 256,
   "cases": [
@@ -21834,7 +21834,7 @@
       "expected": {
         "health": 964,
         "damage": 2154,
-        "armor": 106,
+        "armor": 105,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
