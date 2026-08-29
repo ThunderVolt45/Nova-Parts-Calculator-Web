@@ -45,7 +45,9 @@ def load_reference_modules(reference_root):
 
 
 def apply_product_catalog_corrections(assemble):
+    weapons_by_id = {item["ID"]: item for item in assemble.weaponData}
     accessories_by_id = {item["ID"]: item for item in assemble.accData}
+    weapons_by_id[29]["HealthBonus"] = 10
     accessories_by_id[45]["Watt"] = -20
     accessories_by_id[51]["Range"] = 1
 

@@ -3534,7 +3534,7 @@
         "Weight": 40,
         "Watt": 300,
         "Health": 0,
-        "HealthBonus": 0,
+        "HealthBonus": 10,
         "Damage": 130,
         "DamageBonus": 0,
         "DamagePerHealth": 0,

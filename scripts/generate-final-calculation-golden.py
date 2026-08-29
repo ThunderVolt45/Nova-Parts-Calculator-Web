@@ -46,7 +46,9 @@ def load_calculator(reference_root):
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     sys.path.insert(0, str(reference_root))
     calculator = importlib.import_module("calculator")
+    weapons_by_id = {item["ID"]: item for item in calculator.weaponData}
     accessories_by_id = {item["ID"]: item for item in calculator.accData}
+    weapons_by_id[29]["HealthBonus"] = 10
     accessories_by_id[45]["Watt"] = -20
     accessories_by_id[51]["Range"] = 1
     qt_widgets = importlib.import_module("PyQt6.QtWidgets")

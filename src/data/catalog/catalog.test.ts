@@ -38,7 +38,7 @@ describe('partsCatalog', () => {
     expect(partsCatalog.parts.legs.some((part) => part.stats.armor < 0)).toBe(true)
   })
 
-  it('loads corrected accessory modifiers', () => {
+  it('loads accessory modifiers from the catalog', () => {
     expect(partsCatalogById.accessories.get(45)).toMatchObject({
       name: 'D-올인원',
       stats: { watt: -20 },
@@ -46,6 +46,13 @@ describe('partsCatalog', () => {
     expect(partsCatalogById.accessories.get(51)).toMatchObject({
       name: '쿼드디케',
       stats: { range: 1 },
+    })
+  })
+
+  it('loads the Basilisk health modifier from the catalog', () => {
+    expect(partsCatalogById.weapons.get(29)).toMatchObject({
+      name: '바실리스크',
+      stats: { healthPercent: 10 },
     })
   })
 
