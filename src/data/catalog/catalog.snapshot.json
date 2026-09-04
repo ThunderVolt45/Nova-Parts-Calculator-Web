@@ -1892,7 +1892,7 @@
         "Sight": 21,
         "Range": 0,
         "RangeMinimum": 0,
-        "Regenerate": 0,
+        "Regenerate": 3,
         "Splash": 0,
         "SplashReduce": 0,
         "Special": "",

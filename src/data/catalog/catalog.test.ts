@@ -56,6 +56,13 @@ describe('partsCatalog', () => {
     })
   })
 
+  it('loads the Gravis N regeneration modifier from the catalog', () => {
+    expect(partsCatalogById.bodies.get(30)).toMatchObject({
+      name: '그라비스N',
+      stats: { regenerationPercent: 3 },
+    })
+  })
+
   it('applies the Sagittarius weapon-slot override', () => {
     const sagittarius = partsCatalogById.subcores.get(9)
 

@@ -6081,7 +6081,7 @@
         "range": 40,
         "minimumRange": 30,
         "healAmount": 0,
-        "regenerationAmount": 15
+        "regenerationAmount": 37
       }
     },
     {
@@ -10961,7 +10961,7 @@
         "range": 11,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 30
       }
     },
     {
@@ -13441,7 +13441,7 @@
         "range": 35,
         "minimumRange": 15,
         "healAmount": 0,
-        "regenerationAmount": 51
+        "regenerationAmount": 82
       }
     },
     {
@@ -14481,7 +14481,7 @@
         "range": 23,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 44
+        "regenerationAmount": 71
       }
     },
     {
@@ -19281,7 +19281,7 @@
         "range": 24,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 24
       }
     },
     {
