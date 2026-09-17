@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from product_catalog import apply_product_catalog_corrections
+
 
 RANDOM_SEED = 1492
 RANDOM_CASES_PER_MODE = 256
@@ -42,16 +44,6 @@ def run_git(reference_root, *args):
 def load_reference_modules(reference_root):
     sys.path.insert(0, str(reference_root))
     return importlib.import_module("assemble")
-
-
-def apply_product_catalog_corrections(assemble):
-    bodies_by_id = {item["ID"]: item for item in assemble.bodyData}
-    weapons_by_id = {item["ID"]: item for item in assemble.weaponData}
-    accessories_by_id = {item["ID"]: item for item in assemble.accData}
-    bodies_by_id[30]["Regenerate"] = 3
-    weapons_by_id[29]["HealthBonus"] = 10
-    accessories_by_id[45]["Watt"] = -20
-    accessories_by_id[51]["Range"] = 1
 
 
 def part_reinforcement(watt=0, health=0, damage=0):

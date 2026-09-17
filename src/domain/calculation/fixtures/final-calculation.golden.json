@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "1-fb3d43fdc4dd",
+  "catalogVersion": "1-99da5b29662e",
   "sourceRevision": "fb3d43fdc4dde5a692cd107919fbdbb45c699d18",
   "randomSeed": 149205,
   "randomCases": 256,
@@ -312,7 +312,7 @@
         }
       },
       "expected": {
-        "health": 750,
+        "health": 720,
         "damage": 18,
         "armor": 80,
         "speed": 95,
@@ -553,12 +553,12 @@
       },
       "expected": {
         "health": 195,
-        "damage": 80,
+        "damage": 75,
         "armor": 25,
         "speed": 110,
         "cooldown": 50,
         "sight": 23,
-        "range": 10,
+        "range": 11,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -792,11 +792,11 @@
         }
       },
       "expected": {
-        "health": 525,
+        "health": 550,
         "damage": 68,
         "armor": 10,
         "speed": 95,
-        "cooldown": 140,
+        "cooldown": 220,
         "sight": 26,
         "range": 22,
         "minimumRange": 0,
@@ -1753,12 +1753,12 @@
       },
       "expected": {
         "health": 635,
-        "damage": 3092,
+        "damage": 3110,
         "armor": 110,
         "speed": 120,
         "cooldown": 50,
         "sight": 27,
-        "range": 20,
+        "range": 23,
         "minimumRange": 6,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -1912,7 +1912,7 @@
         }
       },
       "expected": {
-        "health": 1832,
+        "health": 1831,
         "damage": 2326,
         "armor": 99,
         "speed": 120,
@@ -1994,7 +1994,7 @@
       "expected": {
         "health": 845,
         "damage": 1361,
-        "armor": 204,
+        "armor": 209,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
@@ -2232,13 +2232,13 @@
         }
       },
       "expected": {
-        "health": 293,
-        "damage": 3856,
+        "health": 301,
+        "damage": 3854,
         "armor": 53,
         "speed": 120,
         "cooldown": 50,
         "sight": 14,
-        "range": 19,
+        "range": 18,
         "minimumRange": 4,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -2312,7 +2312,7 @@
         }
       },
       "expected": {
-        "health": 293,
+        "health": 292,
         "damage": 4048,
         "armor": 118,
         "speed": 120,
@@ -2872,7 +2872,7 @@
         }
       },
       "expected": {
-        "health": 812,
+        "health": 828,
         "damage": 1394,
         "armor": 142,
         "speed": 120,
@@ -3192,7 +3192,7 @@
         }
       },
       "expected": {
-        "health": 1097,
+        "health": 1077,
         "damage": 1064,
         "armor": 118,
         "speed": 120,
@@ -3272,7 +3272,7 @@
         }
       },
       "expected": {
-        "health": 1000,
+        "health": 988,
         "damage": 1235,
         "armor": 85,
         "speed": 120,
@@ -3281,7 +3281,7 @@
         "range": 25,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 70
+        "regenerationAmount": 69
       }
     },
     {
@@ -3912,7 +3912,7 @@
         }
       },
       "expected": {
-        "health": 1088,
+        "health": 1120,
         "damage": 1559,
         "armor": 133,
         "speed": 120,
@@ -3921,7 +3921,7 @@
         "range": 35,
         "minimumRange": 15,
         "healAmount": 0,
-        "regenerationAmount": 76
+        "regenerationAmount": 78
       }
     },
     {
@@ -4072,7 +4072,7 @@
         }
       },
       "expected": {
-        "health": 934,
+        "health": 874,
         "damage": 1376,
         "armor": 80,
         "speed": 120,
@@ -4081,7 +4081,7 @@
         "range": 24,
         "minimumRange": 4,
         "healAmount": 0,
-        "regenerationAmount": 46
+        "regenerationAmount": 43
       }
     },
     {
@@ -4152,7 +4152,7 @@
         }
       },
       "expected": {
-        "health": 1064,
+        "health": 1044,
         "damage": 1213,
         "armor": 87,
         "speed": 120,
@@ -4161,7 +4161,7 @@
         "range": 11,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 21
+        "regenerationAmount": 20
       }
     },
     {
@@ -4232,7 +4232,7 @@
         }
       },
       "expected": {
-        "health": 1307,
+        "health": 1306,
         "damage": 2628,
         "armor": 103,
         "speed": 120,
@@ -4633,7 +4633,7 @@
       },
       "expected": {
         "health": 1296,
-        "damage": 609,
+        "damage": 611,
         "armor": 128,
         "speed": 120,
         "cooldown": 50,
@@ -4872,7 +4872,7 @@
         }
       },
       "expected": {
-        "health": 531,
+        "health": 530,
         "damage": 2368,
         "armor": 96,
         "speed": 120,
@@ -5672,7 +5672,7 @@
         }
       },
       "expected": {
-        "health": 2092,
+        "health": 2018,
         "damage": 2004,
         "armor": 176,
         "speed": 120,
@@ -5681,7 +5681,7 @@
         "range": 30,
         "minimumRange": 4,
         "healAmount": 0,
-        "regenerationAmount": 104
+        "regenerationAmount": 100
       }
     },
     {
@@ -5752,7 +5752,7 @@
         }
       },
       "expected": {
-        "health": 658,
+        "health": 598,
         "damage": 4040,
         "armor": 134,
         "speed": 120,
@@ -5761,7 +5761,7 @@
         "range": 18,
         "minimumRange": 4,
         "healAmount": 0,
-        "regenerationAmount": 13
+        "regenerationAmount": 11
       }
     },
     {
@@ -5832,8 +5832,8 @@
         }
       },
       "expected": {
-        "health": 959,
-        "damage": 3350,
+        "health": 954,
+        "damage": 3346,
         "armor": 96,
         "speed": 120,
         "cooldown": 50,
@@ -6153,7 +6153,7 @@
       },
       "expected": {
         "health": 381,
-        "damage": 1748,
+        "damage": 1750,
         "armor": 18,
         "speed": 120,
         "cooldown": 50,
@@ -6232,12 +6232,12 @@
         }
       },
       "expected": {
-        "health": 2085,
+        "health": 2083,
         "damage": 400,
         "armor": 137,
         "speed": 120,
         "cooldown": 50,
-        "sight": 19,
+        "sight": 20,
         "range": 36,
         "minimumRange": 15,
         "healAmount": 0,
@@ -6312,7 +6312,7 @@
         }
       },
       "expected": {
-        "health": 493,
+        "health": 473,
         "damage": 2541,
         "armor": 51,
         "speed": 120,
@@ -6638,7 +6638,7 @@
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
-        "range": 25,
+        "range": 24,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -6712,16 +6712,16 @@
         }
       },
       "expected": {
-        "health": 653,
+        "health": 648,
         "damage": 4940,
         "armor": 124,
         "speed": 120,
-        "cooldown": 75,
-        "sight": 22,
+        "cooldown": 65,
+        "sight": 23,
         "range": 28,
-        "minimumRange": 13,
+        "minimumRange": 11,
         "healAmount": 0,
-        "regenerationAmount": 13
+        "regenerationAmount": 12
       }
     },
     {
@@ -7032,13 +7032,13 @@
         }
       },
       "expected": {
-        "health": 1533,
+        "health": 1532,
         "damage": 288,
         "armor": 156,
         "speed": 120,
         "cooldown": 50,
         "sight": 17,
-        "range": 26,
+        "range": 25,
         "minimumRange": 10,
         "healAmount": 0,
         "regenerationAmount": 61
@@ -7193,7 +7193,7 @@
       },
       "expected": {
         "health": 2017,
-        "damage": 1474,
+        "damage": 1466,
         "armor": 91,
         "speed": 120,
         "cooldown": 50,
@@ -7512,7 +7512,7 @@
         }
       },
       "expected": {
-        "health": 690,
+        "health": 689,
         "damage": 1449,
         "armor": 145,
         "speed": 120,
@@ -7752,9 +7752,9 @@
         }
       },
       "expected": {
-        "health": 375,
-        "damage": 636,
-        "armor": 109,
+        "health": 355,
+        "damage": 642,
+        "armor": 115,
         "speed": 120,
         "cooldown": 50,
         "sight": 21,
@@ -8153,12 +8153,12 @@
       },
       "expected": {
         "health": 490,
-        "damage": 4610,
+        "damage": 4622,
         "armor": 86,
         "speed": 120,
         "cooldown": 50,
         "sight": 26,
-        "range": 20,
+        "range": 23,
         "minimumRange": 6,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -8552,9 +8552,9 @@
         }
       },
       "expected": {
-        "health": 690,
+        "health": 688,
         "damage": null,
-        "armor": 82,
+        "armor": 70,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
@@ -8632,12 +8632,12 @@
         }
       },
       "expected": {
-        "health": 352,
-        "damage": 2450,
+        "health": 350,
+        "damage": 2449,
         "armor": 104,
         "speed": 120,
         "cooldown": 50,
-        "sight": 25,
+        "sight": 26,
         "range": 16,
         "minimumRange": 0,
         "healAmount": 0,
@@ -8792,8 +8792,8 @@
         }
       },
       "expected": {
-        "health": 820,
-        "damage": 4904,
+        "health": 817,
+        "damage": 4898,
         "armor": 100,
         "speed": 120,
         "cooldown": 50,
@@ -9433,7 +9433,7 @@
       },
       "expected": {
         "health": 566,
-        "damage": 1262,
+        "damage": 1252,
         "armor": 124,
         "speed": 120,
         "cooldown": 50,
@@ -9512,7 +9512,7 @@
         }
       },
       "expected": {
-        "health": 1754,
+        "health": 1753,
         "damage": 2818,
         "armor": 101,
         "speed": 120,
@@ -9912,7 +9912,7 @@
         }
       },
       "expected": {
-        "health": 1089,
+        "health": 1069,
         "damage": 1508,
         "armor": 174,
         "speed": 120,
@@ -9992,7 +9992,7 @@
         }
       },
       "expected": {
-        "health": 531,
+        "health": 511,
         "damage": 1661,
         "armor": 154,
         "speed": 120,
@@ -10073,12 +10073,12 @@
       },
       "expected": {
         "health": 1202,
-        "damage": 1887,
+        "damage": 1871,
         "armor": 149,
         "speed": 120,
         "cooldown": 50,
         "sight": 28,
-        "range": 15,
+        "range": 16,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 60
@@ -10233,7 +10233,7 @@
       },
       "expected": {
         "health": 663,
-        "damage": 1207,
+        "damage": 1213,
         "armor": 90,
         "speed": 120,
         "cooldown": 50,
@@ -10792,16 +10792,16 @@
         }
       },
       "expected": {
-        "health": 643,
+        "health": 674,
         "damage": 2046,
-        "armor": 124,
+        "armor": 129,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
         "range": 28,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 32
+        "regenerationAmount": 33
       }
     },
     {
@@ -11112,7 +11112,7 @@
         }
       },
       "expected": {
-        "health": 669,
+        "health": 668,
         "damage": 3101,
         "armor": 69,
         "speed": 120,
@@ -11272,7 +11272,7 @@
         }
       },
       "expected": {
-        "health": 981,
+        "health": 993,
         "damage": 5082,
         "armor": 104,
         "speed": 120,
@@ -11432,9 +11432,9 @@
         }
       },
       "expected": {
-        "health": 898,
-        "damage": 4644,
-        "armor": 170,
+        "health": 895,
+        "damage": 4624,
+        "armor": 160,
         "speed": 120,
         "cooldown": 50,
         "sight": 25,
@@ -11841,7 +11841,7 @@
         "range": 39,
         "minimumRange": 15,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 22
       }
     },
     {
@@ -12072,7 +12072,7 @@
         }
       },
       "expected": {
-        "health": 1147,
+        "health": 1069,
         "damage": 1653,
         "armor": 88,
         "speed": 120,
@@ -12081,7 +12081,7 @@
         "range": 14,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 22
+        "regenerationAmount": 21
       }
     },
     {
@@ -12152,13 +12152,13 @@
         }
       },
       "expected": {
-        "health": 609,
+        "health": 607,
         "damage": 821,
         "armor": 193,
         "speed": 120,
         "cooldown": 50,
         "sight": 21,
-        "range": 19,
+        "range": 18,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -12632,16 +12632,16 @@
         }
       },
       "expected": {
-        "health": 642,
+        "health": 654,
         "damage": 652,
-        "armor": 121,
+        "armor": 116,
         "speed": 120,
         "cooldown": 50,
         "sight": 20,
         "range": 28,
-        "minimumRange": 13,
+        "minimumRange": 11,
         "healAmount": 0,
-        "regenerationAmount": 12
+        "regenerationAmount": 13
       }
     },
     {
@@ -12792,8 +12792,8 @@
         }
       },
       "expected": {
-        "health": 1964,
-        "damage": 1846,
+        "health": 2058,
+        "damage": 1848,
         "armor": 151,
         "speed": 120,
         "cooldown": 50,
@@ -12801,7 +12801,7 @@
         "range": 22,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 58
+        "regenerationAmount": 61
       }
     },
     {
@@ -12872,7 +12872,7 @@
         }
       },
       "expected": {
-        "health": 645,
+        "health": 644,
         "damage": 347,
         "armor": 90,
         "speed": 120,
@@ -12956,7 +12956,7 @@
         "damage": 2048,
         "armor": 116,
         "speed": 120,
-        "cooldown": 150,
+        "cooldown": 120,
         "sight": 30,
         "range": 32,
         "minimumRange": 15,
@@ -13032,7 +13032,7 @@
         }
       },
       "expected": {
-        "health": 1445,
+        "health": 1428,
         "damage": 4634,
         "armor": 184,
         "speed": 120,
@@ -13041,7 +13041,7 @@
         "range": 38,
         "minimumRange": 15,
         "healAmount": 0,
-        "regenerationAmount": 72
+        "regenerationAmount": 71
       }
     },
     {
@@ -13112,7 +13112,7 @@
         }
       },
       "expected": {
-        "health": 1213,
+        "health": 1248,
         "damage": 3924,
         "armor": 161,
         "speed": 120,
@@ -13121,7 +13121,7 @@
         "range": 24,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 84
+        "regenerationAmount": 87
       }
     },
     {
@@ -13272,7 +13272,7 @@
         }
       },
       "expected": {
-        "health": 1000,
+        "health": 1036,
         "damage": 3478,
         "armor": 154,
         "speed": 120,
@@ -13281,7 +13281,7 @@
         "range": 29,
         "minimumRange": 10,
         "healAmount": 0,
-        "regenerationAmount": 50
+        "regenerationAmount": 51
       }
     },
     {
@@ -13594,7 +13594,7 @@
       "expected": {
         "health": 498,
         "damage": 538,
-        "armor": 126,
+        "armor": 121,
         "speed": 120,
         "cooldown": 50,
         "sight": 28,
@@ -13672,8 +13672,8 @@
         }
       },
       "expected": {
-        "health": 931,
-        "damage": 2514,
+        "health": 980,
+        "damage": 2518,
         "armor": 95,
         "speed": 120,
         "cooldown": 50,
@@ -13832,13 +13832,13 @@
         }
       },
       "expected": {
-        "health": 889,
-        "damage": 1951,
+        "health": 888,
+        "damage": 1962,
         "armor": 92,
         "speed": 120,
         "cooldown": 50,
         "sight": 24,
-        "range": 20,
+        "range": 23,
         "minimumRange": 6,
         "healAmount": 0,
         "regenerationAmount": 26
@@ -14232,13 +14232,13 @@
         }
       },
       "expected": {
-        "health": 797,
-        "damage": 3594,
+        "health": 795,
+        "damage": 3590,
         "armor": 95,
         "speed": 120,
         "cooldown": 50,
         "sight": 23,
-        "range": 28,
+        "range": 27,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -14552,16 +14552,16 @@
         }
       },
       "expected": {
-        "health": 1339,
+        "health": 1294,
         "damage": 1854,
-        "armor": 211,
+        "armor": 206,
         "speed": 120,
         "cooldown": 140,
         "sight": 27,
         "range": 22,
         "minimumRange": 9,
         "healAmount": 0,
-        "regenerationAmount": 53
+        "regenerationAmount": 51
       }
     },
     {
@@ -15272,16 +15272,16 @@
         }
       },
       "expected": {
-        "health": 643,
-        "damage": 958,
+        "health": 674,
+        "damage": 959,
         "armor": 137,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,
-        "range": 23,
+        "range": 22,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 12
+        "regenerationAmount": 13
       }
     },
     {
@@ -15592,7 +15592,7 @@
         }
       },
       "expected": {
-        "health": 580,
+        "health": 597,
         "damage": 804,
         "armor": 94,
         "speed": 120,
@@ -16072,8 +16072,8 @@
         }
       },
       "expected": {
-        "health": 1332,
-        "damage": 2641,
+        "health": 1327,
+        "damage": 2640,
         "armor": 105,
         "speed": 120,
         "cooldown": 50,
@@ -16632,7 +16632,7 @@
         }
       },
       "expected": {
-        "health": 1102,
+        "health": 1032,
         "damage": 1494,
         "armor": 183,
         "speed": 120,
@@ -16641,7 +16641,7 @@
         "range": 9,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 22
+        "regenerationAmount": 20
       }
     },
     {
@@ -16881,7 +16881,7 @@
         "range": 34,
         "minimumRange": 15,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 11
       }
     },
     {
@@ -17114,7 +17114,7 @@
       "expected": {
         "health": 567,
         "damage": 538,
-        "armor": 141,
+        "armor": 146,
         "speed": 120,
         "cooldown": 50,
         "sight": 27,
@@ -17352,7 +17352,7 @@
         }
       },
       "expected": {
-        "health": 441,
+        "health": 423,
         "damage": 5232,
         "armor": 101,
         "speed": 120,
@@ -17432,13 +17432,13 @@
         }
       },
       "expected": {
-        "health": 621,
+        "health": 620,
         "damage": 5194,
         "armor": 131,
         "speed": 120,
         "cooldown": 50,
         "sight": 29,
-        "range": 27,
+        "range": 26,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -18153,12 +18153,12 @@
       },
       "expected": {
         "health": 634,
-        "damage": 2300,
+        "damage": 2306,
         "armor": 137,
         "speed": 120,
         "cooldown": 50,
         "sight": 17,
-        "range": 18,
+        "range": 21,
         "minimumRange": 6,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -18232,7 +18232,7 @@
         }
       },
       "expected": {
-        "health": 1416,
+        "health": 1414,
         "damage": null,
         "armor": 95,
         "speed": 120,
@@ -18561,7 +18561,7 @@
         "range": 19,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 17
       }
     },
     {
@@ -18638,7 +18638,7 @@
         "speed": 120,
         "cooldown": 50,
         "sight": 17,
-        "range": 27,
+        "range": 26,
         "minimumRange": 0,
         "healAmount": 0,
         "regenerationAmount": 0
@@ -18721,7 +18721,7 @@
         "range": 34,
         "minimumRange": 15,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 10
       }
     },
     {
@@ -19201,7 +19201,7 @@
         "range": 10,
         "minimumRange": 0,
         "healAmount": 0,
-        "regenerationAmount": 0
+        "regenerationAmount": 21
       }
     },
     {
@@ -19353,7 +19353,7 @@
       },
       "expected": {
         "health": 336,
-        "damage": 782,
+        "damage": 790,
         "armor": 84,
         "speed": 120,
         "cooldown": 50,
@@ -19432,7 +19432,7 @@
         }
       },
       "expected": {
-        "health": 514,
+        "health": 529,
         "damage": 3310,
         "armor": 55,
         "speed": 120,
@@ -20073,7 +20073,7 @@
       },
       "expected": {
         "health": 431,
-        "damage": 381,
+        "damage": 372,
         "armor": 112,
         "speed": 120,
         "cooldown": 50,
@@ -20312,12 +20312,12 @@
         }
       },
       "expected": {
-        "health": 1069,
+        "health": 1067,
         "damage": 2023,
         "armor": 75,
         "speed": 120,
         "cooldown": 50,
-        "sight": 29,
+        "sight": 30,
         "range": 24,
         "minimumRange": 10,
         "healAmount": 0,
@@ -20473,8 +20473,8 @@
       },
       "expected": {
         "health": 1034,
-        "damage": 4356,
-        "armor": 96,
+        "damage": 4342,
+        "armor": 89,
         "speed": 120,
         "cooldown": 50,
         "sight": 21,
@@ -21112,12 +21112,12 @@
         }
       },
       "expected": {
-        "health": 900,
-        "damage": 4764,
+        "health": 897,
+        "damage": 4762,
         "armor": 84,
         "speed": 120,
         "cooldown": 50,
-        "sight": 27,
+        "sight": 28,
         "range": 35,
         "minimumRange": 15,
         "healAmount": 0,
@@ -21272,7 +21272,7 @@
         }
       },
       "expected": {
-        "health": 425,
+        "health": 424,
         "damage": 1946,
         "armor": 119,
         "speed": 120,
@@ -21914,7 +21914,7 @@
       "expected": {
         "health": 883,
         "damage": 5242,
-        "armor": 146,
+        "armor": 151,
         "speed": 120,
         "cooldown": 50,
         "sight": 30,

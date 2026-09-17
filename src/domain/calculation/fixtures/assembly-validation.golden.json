@@ -1,5 +1,5 @@
 {
-  "catalogVersion": "1-fb3d43fdc4dd",
+  "catalogVersion": "1-99da5b29662e",
   "sourceRevision": "fb3d43fdc4dde5a692cd107919fbdbb45c699d18",
   "randomSeed": 149206,
   "randomCases": 512,
@@ -1981,12 +1981,10 @@
         "accessory": 35
       },
       "expected": {
-        "isValid": false,
-        "status": "load-exceeded",
-        "invalidPartSlots": [
-          "leg"
-        ],
-        "weightInvalid": true
+        "isValid": true,
+        "status": "complete",
+        "invalidPartSlots": [],
+        "weightInvalid": false
       }
     },
     {
@@ -3354,11 +3352,10 @@
         "isValid": false,
         "status": "mount-type-mismatch",
         "invalidPartSlots": [
-          "leg",
           "body",
           "weapon"
         ],
-        "weightInvalid": true
+        "weightInvalid": false
       }
     },
     {

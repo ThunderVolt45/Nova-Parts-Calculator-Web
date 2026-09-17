@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -41,9 +42,8 @@ if (dirtyCatalogFiles) {
 }
 
 const sourceRevision = runGit('rev-parse', 'HEAD')
-const catalogVersion = `${CATALOG_SCHEMA_VERSION}-${sourceRevision.slice(0, 12)}`
 const snapshot = {
-  catalogVersion,
+  catalogVersion: '',
   sourceRevision,
   source: {
     legs: readJson('parts_leg.json'),
@@ -53,6 +53,26 @@ const snapshot = {
     subcores: readJson('subcore.json'),
   },
 }
+
+const overrides = JSON.parse(readFileSync(
+  resolve(webRepositoryRoot, 'src/data/catalog/catalog.overrides.json'), 'utf8',
+))
+for (const change of [...overrides.corrections, ...overrides.changes]) {
+  const part = snapshot.source[change.kind].find((item) => item.ID === change.id)
+  if (!part || part.Name !== change.name) {
+    throw new Error(`Catalog override target mismatch: ${change.kind}/${change.id}`)
+  }
+  for (const [field, value] of Object.entries(change.values)) {
+    if (typeof part[field] !== 'number' || typeof value !== 'number') {
+      throw new Error(`Invalid catalog override field: ${change.name}/${field}`)
+    }
+    part[field] = value
+  }
+}
+const contentHash = createHash('sha256')
+  .update(JSON.stringify(snapshot.source)).digest('hex').slice(0, 12)
+const catalogVersion = `${CATALOG_SCHEMA_VERSION}-${contentHash}`
+snapshot.catalogVersion = catalogVersion
 
 writeFileSync(outputPath, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8')
 
