@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "catalog:import": "node scripts/import-reference-catalog.mjs",
+    "catalog:version": "node scripts/update-catalog-version.mjs",
     "gx:mapping": "python scripts/generate-gx-resource-map.py",
     "gx:inspect": "node --experimental-strip-types scripts/inspect-gx-parser.mjs",
     "gx:assembly": "node --experimental-strip-types scripts/inspect-unit-sockets.mjs",

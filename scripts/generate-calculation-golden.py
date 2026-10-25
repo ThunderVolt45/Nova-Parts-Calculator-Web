@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from product_catalog import apply_product_catalog_corrections
+from product_catalog import apply_product_catalog
 
 
 RANDOM_SEED = 1492
@@ -320,7 +320,7 @@ def main():
         )
 
     assemble = load_reference_modules(reference_root)
-    apply_product_catalog_corrections(assemble)
+    apply_product_catalog(assemble)
     input_cases = build_curated_inputs(assemble) + build_random_inputs(assemble)
     cases = [
         {

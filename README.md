@@ -46,8 +46,22 @@ npm run calculation:golden:validation
 
 ## 부품 카탈로그 갱신
 
+부품 수치의 원본은 `src/data/catalog/catalog.snapshot.json`입니다. 밸런스
+패치는 이 파일의 해당 부품 수치를 직접 수정한 뒤 카탈로그 버전과 계산
+기준 데이터를 다시 생성합니다.
+
+```powershell
+npm run catalog:version
+npm run calculation:golden
+npm run calculation:golden:final
+npm run calculation:golden:validation
+npm run gx:mapping
+```
+
 형제 디렉터리의 `Nova-Parts-Calculator-Python` 기준 저장소에서 카탈로그를
-다시 가져오려면 다음 명령을 사용합니다.
+다시 가져오려면 다음 명령을 사용합니다. 스냅숏에 기준 데이터와 다른 직접
+수정 수치가 있으면 덮어쓰지 않고 중단하며, `--force`를 전달하면 기준
+데이터로 덮어씁니다. 이 경우 반영했던 패치 수치를 다시 수정해야 합니다.
 
 ```powershell
 npm run catalog:import

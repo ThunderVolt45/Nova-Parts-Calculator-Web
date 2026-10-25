@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -10,7 +10,10 @@ const REFERENCE_REPOSITORY_NAME = 'Nova-Parts-Calculator-Python'
 const scriptDirectory = dirname(fileURLToPath(import.meta.url))
 const webRepositoryRoot = resolve(scriptDirectory, '..')
 const defaultReferenceRoot = resolve(webRepositoryRoot, '..', REFERENCE_REPOSITORY_NAME)
-const referenceRoot = resolve(process.argv[2] ?? defaultReferenceRoot)
+const cliArguments = process.argv.slice(2)
+const forceOverwrite = cliArguments.includes('--force')
+const referenceRootArgument = cliArguments.find((argument) => argument !== '--force')
+const referenceRoot = resolve(referenceRootArgument ?? defaultReferenceRoot)
 const referenceJsonRoot = resolve(referenceRoot, 'JSON')
 const outputPath = resolve(
   webRepositoryRoot,
@@ -54,21 +57,21 @@ const snapshot = {
   },
 }
 
-const overrides = JSON.parse(readFileSync(
-  resolve(webRepositoryRoot, 'src/data/catalog/catalog.overrides.json'), 'utf8',
-))
-for (const change of [...overrides.corrections, ...overrides.changes]) {
-  const part = snapshot.source[change.kind].find((item) => item.ID === change.id)
-  if (!part || part.Name !== change.name) {
-    throw new Error(`Catalog override target mismatch: ${change.kind}/${change.id}`)
-  }
-  for (const [field, value] of Object.entries(change.values)) {
-    if (typeof part[field] !== 'number' || typeof value !== 'number') {
-      throw new Error(`Invalid catalog override field: ${change.name}/${field}`)
-    }
-    part[field] = value
-  }
+const currentSnapshot = existsSync(outputPath)
+  ? JSON.parse(readFileSync(outputPath, 'utf8'))
+  : undefined
+if (
+  currentSnapshot &&
+  JSON.stringify(currentSnapshot.source) !== JSON.stringify(snapshot.source) &&
+  !forceOverwrite
+) {
+  throw new Error(
+    'Catalog snapshot differs from the reference data.\n' +
+      'Balance patches are edited directly in the snapshot, so importing would discard them.\n' +
+      'Pass --force to overwrite and re-apply the patches manually.',
+  )
 }
+
 const contentHash = createHash('sha256')
   .update(JSON.stringify(snapshot.source)).digest('hex').slice(0, 12)
 const catalogVersion = `${CATALOG_SCHEMA_VERSION}-${contentHash}`
