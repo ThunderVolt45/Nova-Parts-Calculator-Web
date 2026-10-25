@@ -5,6 +5,7 @@ import {
   partsCatalog,
   partsCatalogById,
 } from './catalog.ts'
+import snapshotInput from './catalog.snapshot.json'
 
 describe('partsCatalog', () => {
   it('loads the complete reference catalog snapshot', () => {
@@ -15,6 +16,17 @@ describe('partsCatalog', () => {
     expect(partsCatalog.parts.weapons).toHaveLength(65)
     expect(partsCatalog.parts.accessories).toHaveLength(78)
     expect(partsCatalog.subcores).toHaveLength(13)
+  })
+
+  it('derives the catalog version from the snapshot part data', async () => {
+    const digest = await crypto.subtle.digest(
+      'SHA-256',
+      new TextEncoder().encode(JSON.stringify(snapshotInput.source)),
+    )
+    const contentHash = Array.from(new Uint8Array(digest), (byte) =>
+      byte.toString(16).padStart(2, '0')).join('').slice(0, 12)
+
+    expect(partsCatalog.catalogVersion).toBe(`1-${contentHash}`)
   })
 
   it('uses stable IDs instead of array positions for lookup', () => {

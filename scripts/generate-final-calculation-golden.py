@@ -8,7 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from product_catalog import apply_product_catalog_corrections
+from product_catalog import apply_product_catalog
 
 
 RANDOM_SEED = 1492_05
@@ -48,8 +48,8 @@ def load_calculator(reference_root):
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     sys.path.insert(0, str(reference_root))
     calculator = importlib.import_module("calculator")
-    apply_product_catalog_corrections(calculator)
-    apply_product_catalog_corrections(calculator.assemble)
+    apply_product_catalog(calculator)
+    apply_product_catalog(calculator.assemble)
     qt_widgets = importlib.import_module("PyQt6.QtWidgets")
     application = qt_widgets.QApplication.instance() or qt_widgets.QApplication([])
     return calculator, application, calculator.WindowClass()
